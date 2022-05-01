@@ -1,8 +1,8 @@
 const Query = require('../models/query')
 
-exports.step1Query = async (req, res, next) => {
-  console.log("itt vagyok")
+exports.step1Query = async (req, res, next) => { 
   try {
+    console.log(req.body)
     let {
       email,
       siteName,
