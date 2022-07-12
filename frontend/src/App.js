@@ -22,7 +22,7 @@ function App() {
   const [interpAgeFrom, setInterpAgeFrom] = useState("")
   const [interpAgeTo, setInterpAgeTo] = useState("")
 
-  const [chronoList,setChronoList] = useState([])
+  const [entityList,setentityList] = useState([])
   
   const sendQueryParams = () => {
     axios.post("http://localhost:5000/api/step1", {
@@ -34,8 +34,8 @@ function App() {
       type: 'meta'
 
     }).then((response)=>{
-      console.log(response.data.chronos)
-      //setChronoList(response.data.chronos)
+      console.log(response.data.meta)
+      setentityList(response.data.meta)
     })
   }
 
@@ -54,7 +54,7 @@ function App() {
   const getAllChronos = () =>{
     axios.get("http://localhost:3000/chronology/",{request}).then((response)=>{
       //console.log(response.data.chronos)
-      setChronoList(response.data.chronos)
+      setentityList(response.data.chronos)
     })
   }
 
@@ -112,8 +112,11 @@ function App() {
       <div>
         <button onClick={getAllChronos}>Get entity list</button>
 
-        {chronoList.map((val, key) => {
-            return <div> {val.sample_id} </div>
+        {entityList.map((entity, key) => {
+            entity.map((entityParam, entityKey) => {
+              console.log(entityKey, entityParam)
+            })            
+            //return <div> {entity.sample_id} </div>
           }        
         )}
       </div>

@@ -2,7 +2,7 @@ const Query = require('../models/query')
 
 exports.step1Query = async (req, res, next) => { 
   try {
-    console.log(req.body)
+    console.log(`queryControllers.step1Query: ${JSON.stringify(req.body)}`)
     let {
       email,
       siteName,
