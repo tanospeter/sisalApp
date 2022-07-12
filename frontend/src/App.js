@@ -10,8 +10,9 @@ import Step2Screen from './screens/Step2Screen'
 import DatabaseScreen from './screens/DatabaseScreen'
 
 // components
-import Navbar from './components/Navbar';
-
+import Navbar from './components/Navbar'
+import Table from './components/Table'
+ 
 function App() {
   const [email, setEmail] = useState("")
   const [siteName, setSiteName] = useState("")
@@ -22,7 +23,7 @@ function App() {
   const [interpAgeFrom, setInterpAgeFrom] = useState("")
   const [interpAgeTo, setInterpAgeTo] = useState("")
 
-  const [entityList,setentityList] = useState([])
+  const [entityList,setEntityList] = useState([])
   
   const sendQueryParams = () => {
     axios.post("http://localhost:5000/api/step1", {
@@ -32,10 +33,12 @@ function App() {
       lon: [ longFrom, longTo ],
       age: [ interpAgeFrom, interpAgeTo ],
       type: 'meta'
-
-    }).then((response)=>{
+    }).then((response) => {
       console.log(response.data.meta)
-      setentityList(response.data.meta)
+      const k = Object.keys(response.data.meta[0])
+      console.log(k)
+      setEntityList(response.data.meta)
+      .catch(error => console.log(error))
     })
   }
 
@@ -54,14 +57,17 @@ function App() {
   const getAllChronos = () =>{
     axios.get("http://localhost:3000/chronology/",{request}).then((response)=>{
       //console.log(response.data.chronos)
-      setentityList(response.data.chronos)
+      setEntityList(response.data.chronos)
     })
   }
 
-
+  //Object.keys(entityList[0])}/> 
+  
   return (
     <Router>    
       <Navbar />
+       
+      
             
       <main className="app">
         
@@ -106,19 +112,55 @@ function App() {
           setInterpAgeTo(event.target.value)
         }}/>
         <button onClick={sendQueryParams}>Get entity list</button> 
-        <button onClick={sendQueryParams}>Get chronos list</button>  
+        <button onClick={sendQueryParams}>Get chronos list</button> 
+        
+        <Table data = {entityList} column = {[
+          "publication_doi",
+          "site_id",
+          "entity_id",
+          "entity_name",
+          "entity_status",
+          "corresponding_current",
+          "depth_ref",
+          "cover_thickness",
+          "distance_entrance",
+          "speleothem_type",
+          "drip_type",
+          "d13C",
+          "d18O",
+          "d18O_water_equilibrium",
+          "trace_elements",
+          "organics",
+          "fluid_inclusions",
+          "mineralogy_petrology_fabric",
+          "clumped_isotopes",
+          "noble_gas_temperatures",
+          "C14",
+          "ODL",
+          "Mg_Ca",
+          "contact",
+          "data_DOI_URL",
+          "site_name",
+          "latitude",
+          "longitude",
+          "elevation",
+          "geology",
+          "rock_age",
+          "monitoring",
+          "interp_age"]}/>
+        
+        {
+          
+          entityList.map((val, key) => {            
+            return <div> {val.entity_name} </div>
+          })
+        }
       </div>
       
       <div>
         <button onClick={getAllChronos}>Get entity list</button>
 
-        {entityList.map((entity, key) => {
-            entity.map((entityParam, entityKey) => {
-              console.log(entityKey, entityParam)
-            })            
-            //return <div> {entity.sample_id} </div>
-          }        
-        )}
+       
       </div>
         
         <Routes >          
