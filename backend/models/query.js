@@ -57,18 +57,11 @@ class Step1query {
 
   findStep1Dating() {
     let sql = 
-      `select s.site_id, s.site_name, e.entity_id, e.entity_name, d.* from site s 
-      left join entity e on s.site_id = e.site_id
-      left join dating d on d.entity_id = e.entity_id
-      left join sample sa on e.entity_id = sa.entity_id
-      left join original_chronology oc on sa.sample_id = oc.sample_id
+      `select s.site_id, s.site_name, e.entity_id, e.entity_name, d.* 
+      from dating d 
       where 1 = 1    
-      and s.latitude between ${this.lat[0]} and ${this.lat[1]}
-      and s.longitude between ${this.lon[0]} and ${this.lon[1]}
-      and oc.interp_age between ${this.age[0]} and ${this.age[1]}
-      and lower(s.site_name) like lower('%${this.siteName}%')
-      group by e.entity_id`
-
+      and entity_id in (${this.entity_ids})      
+      group by e.entity_id`       
     return db.execute(sql)
   }
 

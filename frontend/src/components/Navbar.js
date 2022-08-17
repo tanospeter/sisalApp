@@ -3,8 +3,7 @@ import {Link} from 'react-router-dom'
 
 const Navbar = () => {
   return (
-    <nav className = "navbar">
-      
+    <nav className = "navbar">      
       <div className="navbar__logo">
         <h2>SISAL Project</h2>
       </div>
@@ -16,7 +15,7 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/query">
+          <Link to="/step1">
             Querying
           </Link>
         </li>
@@ -25,13 +24,7 @@ const Navbar = () => {
             Database
           </Link>
         </li>
-      </ul>
-      
-      <div className="hamburger__menu">
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
+      </ul>            
     </nav>
   )
 }
