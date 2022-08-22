@@ -6,25 +6,3 @@
   justify-content: center;
   background: #ddd;
 }
-
-.inputArea {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  justify-content: center;         
-  align-items: center;
-}
-
-.inputArea input {
-  width: 300px;
-  height: 50px;
-  font-size: 20px;
-  padding-left: 10px
-}
-
-.inputArea button{
-  width: 300px;
-  height: 50px;
-  margin-top: 20px ;
-}

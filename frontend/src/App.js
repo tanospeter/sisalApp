@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter as Router, Routes , Route } from 'react-router-dom'
-import {useState} from "react"
-import axios from 'axios'
+//import {useState} from "react"
+//import axios from 'axios'
 
 // screens
 import HomeScreen from './screens/HomeScreen'
