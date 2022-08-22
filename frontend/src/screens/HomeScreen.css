@@ -1,0 +1,13 @@
+.intro {
+	line-height: 1.7;
+	font-size: 1.2rem;
+	margin: 0
+}
+.intro p {
+	margin: 0 0 1rem 0
+}
+.intro img {
+	float: right;
+	margin: 0 0 2rem 2rem;
+	border-radius: 7%
+}

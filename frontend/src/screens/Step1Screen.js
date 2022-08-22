@@ -5,6 +5,15 @@ import axios from 'axios'
 import Datatable from '../components/Datatable'
 import XLSX from 'xlsx'
 import {Link} from 'react-router-dom'
+import {
+  Form,
+  Row,
+  Col,
+  FormGroup,
+  Input,
+  Label,
+  Button
+} from 'reactstrap';
 
 const Step1Screen = () => {
   
@@ -50,65 +59,139 @@ const Step1Screen = () => {
     <div className="Step1Screen">
       <div className="wrapper">
         <h2>Quering entity metadata</h2>
-        <div>Please specify the parameters of the query below. Make sure that at least one of the parameters 
+        <p>Please specify the parameters of the query below. Make sure that at least one of the parameters 
           (Site Name, Lat-Lon Coordinates or InterpAge time interval) is defined! If more than one of the above 
           has been defined, they will be filled together for the result of the query. (So there is a logical AND 
-          connection between parameters).</div>
-        <div className="inputArea">                
-          <div className="filteArea">
+          connection between parameters).</p>
+        <p>
+          <Form inline>
+            <Row>
+              <FormGroup floating>
+                <Input
+                  id="Email"
+                  name="email"
+                  placeholder="Email"
+                  type="email"
+                  onChange={(event)=>{
+                    setEmail(event.target.value)
+                  }}
+                />
+                <Label for="Email">
+                  Email
+                </Label>                
+              </FormGroup>
+            </Row>
+            
+            
             <h5 className="filterTitle">Filter type 1 (Site)</h5>
-            <label >Site name</label>
-            <input type="text" onChange={(event)=>{
-              setSiteName(event.target.value)
-            }}/>
-          </div>
-          <div className="filteArea">
+            <Row>
+              <FormGroup floating>
+                <Input
+                  id="SiteName"
+                  name="siteName"
+                  placeholder="Site name"                
+                  onChange={(event)=>{
+                    setSiteName(event.target.value)
+                  }}/>
+                <Label for="SiteName">Site name</Label>
+              </FormGroup>
+            </Row>         
+            
+            
             <h5 className="filterTitle">Filter type 2 (Lat-Lon)</h5>
-            <label >Latitude from</label>
-            <input type="text" onChange={(event)=>{
-              setLatFrom(event.target.value)
-            }}/>
-          
-            <label>Latitude to</label>
-            <input type="text" onChange={(event)=>{
-              setLatTo(event.target.value)
-            }}/>
-                
-            <label>Longitude from</label>
-            <input type="text" onChange={(event)=>{
-              setLongFrom(event.target.value)
-            }}/>
-          
-            <label>Longitude to</label>
-            <input type="text" onChange={(event)=>{
-              setLongTo(event.target.value)
-            }}/>
-          </div>
-          
-          <div className="filteArea">
+            <Row>            
+              <Col md={6}>
+                <FormGroup floating>
+                  <Input
+                    id="LatFrom"
+                    name="latFrom"
+                    placeholder="Latitude from"                
+                    onChange={(event)=>{
+                      setLatFrom(event.target.value)
+                    }}/>
+                  <Label for="LatFrom">Latitude from</Label>
+                </FormGroup>
+              </Col>
+              <Col md={6}>
+                <FormGroup floating>
+                  <Input
+                    id="LatTo"
+                    name="latTo"
+                    placeholder="Latitude to"                
+                    onChange={(event)=>{
+                      setLatTo(event.target.value)
+                    }}/>
+                  <Label for="LatTo">Latitude to</Label>
+                </FormGroup>
+              </Col>            
+            </Row>                   
+            <Row>
+              <Col md={6}>
+                <FormGroup floating>
+                  <Input
+                    id="LonFrom"
+                    name="lonFrom"
+                    placeholder="Longitude from"                
+                    onChange={(event)=>{
+                      setLongFrom(event.target.value)
+                    }}/>
+                  <Label for="LonFrom">Longitude from</Label>
+                </FormGroup>
+              </Col>
+              <Col md={6}>
+                <FormGroup floating>
+                  <Input
+                    id="LonTo"
+                    name="lonTo"
+                    placeholder="Longitude to"                
+                    onChange={(event)=>{
+                      setLongTo(event.target.value)
+                    }}/>
+                  <Label for="LonTo">Longitude to</Label>
+                </FormGroup>
+              </Col>
+            </Row>
+
+
             <h5 className="filterTitle">Filter type 3 (InterpAge)</h5>
-            <label>Iterp_age from</label>
-            <input type="text" onChange={(event)=>{
-              setInterpAgeFrom(event.target.value)
-            }}/>
-
-            <label>Iterp_age to</label>
-            <input type="text" onChange={(event)=>{
-              setInterpAgeTo(event.target.value)
-            }}/>
-          </div>
-
-          <label>Email address</label>
-          <input type="text" onChange={(event)=>{
-            setEmail(event.target.value)
-          }}/>
-          <button onClick={sendQueryParams}>Get entity list</button>           
+            <Row>            
+              <Col md={6}>
+                <FormGroup floating>
+                  <Input
+                    id="LatFrom"
+                    name="latFrom"
+                    placeholder="Iterp_age from"                
+                    onChange={(event)=>{
+                      setInterpAgeFrom(event.target.value)
+                    }}/>
+                  <Label for="LatFrom">Iterp_age from</Label>
+                </FormGroup>
+              </Col>
+              <Col md={6}>
+                <FormGroup floating>
+                  <Input
+                    id="LatTo"
+                    name="latTo"
+                    placeholder="Iterp_age to"                
+                    onChange={(event)=>{
+                      setInterpAgeTo(event.target.value)
+                    }}/>
+                  <Label for="LatTo">Iterp_age to</Label>
+                </FormGroup>
+              </Col>            
+            </Row>                               
+          </Form>
+        </p>       
+        
+        <Button 
+          color="primary"           
+          onClick={sendQueryParams}
+        >Get entity list</Button>           
           
-        </div>
-
         <div>          
           <Datatable data={entityList} />
         </div>
+        
       </div>
     </div>
   )
