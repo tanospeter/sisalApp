@@ -3,8 +3,9 @@ import './Step1Screen.css'
 import {useState} from "react"
 import axios from 'axios'
 import Datatable from '../components/Datatable'
-import XLSX from 'xlsx'
-import {Link} from 'react-router-dom'
+
+//import XLSX from 'xlsx'
+//import {Link} from 'react-router-dom'
 import {
   Form,
   Row,
@@ -28,7 +29,9 @@ const Step1Screen = () => {
 
   const [entityList,setEntityList] = useState([])
   
-  const sendQueryParams = () => {    
+  
+  const sendQueryParams = () => {   
+    setEntityList([]) 
     const siteNameEmpty = siteName === ''
     const latLonEmpty = latFrom === '' && latTo === '' && longFrom === '' && longTo === ''
     const latLonIncomplete = !latLonEmpty && (latFrom === '' || latTo === '' || longFrom === '' || longTo === '')
@@ -41,20 +44,23 @@ const Step1Screen = () => {
     } else if (ageIncomplete){
       alert("The InterpAge interval is incorrect or incomlete!\nPlease revise the begin and end of the interval, and try again! ")
     } else {
-      axios.post("http://localhost:5010/api/step1", {
+      axios.post("http://192.168.0.201:5010/api/step1", {
         email:email,
         siteName: siteName,
         lat: [ latFrom, latTo ],
         lon: [ longFrom, longTo ],
         age: [ interpAgeFrom, interpAgeTo ],
         type: 'meta'
-      }).then((response) => {
-        console.log(response.data.meta)           
-        setEntityList(response.data.meta)      
+      }).then((response) => {          
+        console.log(response.data.meta)                          
+        setEntityList(response.data.meta.map(d => {
+          return Object.assign(d, {select:false})
+        }))         
       }).catch(error => console.log(error))
     }    
   }
-    
+
+      
   return (
     <div className="Step1Screen">
       <div className="wrapper">
@@ -66,35 +72,39 @@ const Step1Screen = () => {
         <p>
           <Form inline>
             <Row>
-              <FormGroup floating>
-                <Input
-                  id="Email"
-                  name="email"
-                  placeholder="Email"
-                  type="email"
-                  onChange={(event)=>{
-                    setEmail(event.target.value)
-                  }}
-                />
-                <Label for="Email">
-                  Email
-                </Label>                
-              </FormGroup>
+              <Col>
+                <FormGroup floating>
+                  <Input
+                    id="Email"
+                    name="email"
+                    placeholder="Email"
+                    type="email"
+                    onChange={(event)=>{
+                      setEmail(event.target.value)
+                    }}
+                  />
+                  <Label for="Email">
+                    Email
+                  </Label>                
+                </FormGroup>
+              </Col>              
             </Row>
             
             
             <h5 className="filterTitle">Filter type 1 (Site)</h5>
             <Row>
-              <FormGroup floating>
-                <Input
-                  id="SiteName"
-                  name="siteName"
-                  placeholder="Site name"                
-                  onChange={(event)=>{
-                    setSiteName(event.target.value)
-                  }}/>
-                <Label for="SiteName">Site name</Label>
-              </FormGroup>
+              <Col>
+                <FormGroup floating>
+                  <Input
+                    id="SiteName"
+                    name="siteName"
+                    placeholder="Site name"                
+                    onChange={(event)=>{
+                      setSiteName(event.target.value)
+                    }}/>
+                  <Label for="SiteName">Site name</Label>
+                </FormGroup>              
+              </Col>              
             </Row>         
             
             
@@ -172,9 +182,10 @@ const Step1Screen = () => {
                   <Input
                     id="LatTo"
                     name="latTo"
-                    placeholder="Iterp_age to"                
+                    placeholder="Iterp_age to"  
+                    value={interpAgeTo}              
                     onChange={(event)=>{
-                      setInterpAgeTo(event.target.value)
+                      setInterpAgeTo(event.target.value)                      
                     }}/>
                   <Label for="LatTo">Iterp_age to</Label>
                 </FormGroup>
@@ -182,16 +193,15 @@ const Step1Screen = () => {
             </Row>                               
           </Form>
         </p>       
-        
-        <Button 
-          color="primary"           
-          onClick={sendQueryParams}
-        >Get entity list</Button>           
-          
-        <div>          
+        <p>
+          <Button 
+            color="primary"           
+            onClick={sendQueryParams}
+          >Get entity list</Button>
+        </p>
+        <p>                    
           <Datatable data={entityList} />
-        </div>
-        
+        </p>
       </div>
     </div>
   )
