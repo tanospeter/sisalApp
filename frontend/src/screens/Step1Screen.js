@@ -53,9 +53,7 @@ const Step1Screen = () => {
         type: 'meta'
       }).then((response) => {          
         console.log(response.data.meta)                          
-        setEntityList(response.data.meta.map(d => {
-          return Object.assign(d, {select:false})
-        }))         
+        setEntityList(response.data.meta)         
       }).catch(error => console.log(error))
     }    
   }
@@ -69,7 +67,7 @@ const Step1Screen = () => {
           (Site Name, Lat-Lon Coordinates or InterpAge time interval) is defined! If more than one of the above 
           has been defined, they will be filled together for the result of the query. (So there is a logical AND 
           connection between parameters).</p>
-        <p>
+        <div>
           <Form inline>
             <Row>
               <Col>
@@ -192,16 +190,16 @@ const Step1Screen = () => {
               </Col>            
             </Row>                               
           </Form>
-        </p>       
-        <p>
+        </div>       
+        <div>
           <Button 
             color="primary"           
             onClick={sendQueryParams}
           >Get entity list</Button>
-        </p>
-        <p>                    
+        </div>
+        <div>                    
           <Datatable data={entityList} />
-        </p>
+        </div>
       </div>
     </div>
   )

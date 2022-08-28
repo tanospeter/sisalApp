@@ -1,10 +1,13 @@
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import './Datatable.css'
 import {Table, Button, Container, Row, Input} from 'reactstrap'
 import {utils, writeFile} from 'xlsx'
-import Step1Screen from '../screens/Step1Screen'
+
 
 const Datatable = ({data}) => {  
+  
+  const [entity,setEntity] = useState([])
+  const d = data
   
   let columns = data[0] && Object.keys(data[0])  
   
@@ -16,35 +19,52 @@ const Datatable = ({data}) => {
 
     writeFile(workBook, "EntityList.xlsx")
   }
-
-  const selectAllEntity = () => {
-    Step1Screen.setEntityList([])    
-  }
-
+ 
   if (columns) {
     return (      
       <div className="datatable">
-        <p>          
+        <div>          
           <Table responsive={true} hover>
             <thead>
-              <tr><th><Input type="checkbox" id="selectAllEntity" onChange={selectAllEntity} chec/></th>{data[0] && columns.map((heading) => <th>{heading}</th>)}</tr>
+              <tr key="faszom"><th><Input 
+                type="checkbox"
+                onChange = { e => {
+                  let checked = e.target.checked
+                  setEntity(
+                    d.map(data => {
+                      data.select = checked
+                      return data
+                    })
+                  )
+                }} /></th>{data[0] && columns.map((heading) => <th>{heading}</th>)}</tr>
             </thead>
             <tbody>
-              {data.map(row => <tr key={row.entity_id}><td><Input type="checkbox" id={row.entity_id} /></td>
-                {
-                  columns.map(column => <td>{row[column]}</td>)
-                }
+              {data.map(row => <tr key={row.entity_id}><td>
+                <Input 
+                  onChange={event => {
+                    let checked = event.target.checked;
+                    setEntity(
+                      d.map(data => {
+                        if (row.entity_id === data.entity_id) {
+                          data.select = checked;
+                        }
+                        return data;
+                      })
+                    );
+                  }}
+                  type="checkbox"
+                  checked={d.select} 
+                />
+                </td> {columns.map(column => <td>{row[column]}</td>)}
               </tr>)}
             </tbody>
           </Table>
-        </p>
-        <p>
-          <Button
-            onClick={handleOnDownload}
-          >
+        </div>
+        <div>
+          <Button onClick={handleOnDownload}>
             Download Entity List
           </Button>
-        </p>        
+        </div>        
       </div>
     )      
   }  
