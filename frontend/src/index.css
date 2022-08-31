@@ -14,3 +14,11 @@ body {
 	margin: 0 auto;
 	width: 95%
 }
+
+.box {
+  margin: 3rem auto;
+  padding: 1rem;
+  border-width: 4px;
+  border-color: #303030;
+  border-radius: 5px;
+}
