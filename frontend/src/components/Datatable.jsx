@@ -30,25 +30,62 @@ const cn = [
 
 const Datatable = ({data}) => {  
   
-  const [entitys,setEntitys] = useState([])
+  const [entities,setEntities] = useState([])
   const [chronos,setChronos] = useState([cn])
   //const [selected,setSelected] = useState([])
-  const d = data
+  //const d = data
   
   let columns = data[0] && Object.keys(data[0])  
-  
+  let d = data
   useEffect(() => {
-    setChronos(cn)
+    setChronos(cn)     
   }, [])
   
 
   const handleOnDownload = () => {
     var workBook = utils.book_new(),
-    workSheet = utils.json_to_sheet(data)
+    workSheet = utils.json_to_sheet(entities.filter((e) => e.isChecked === true))
 
     utils.book_append_sheet(workBook, workSheet, "Sheet1")
 
     writeFile(workBook, "EntityList.xlsx")
+  }
+
+  const selectEntity = (e) => {
+    const {name, checked} = e.target
+    console.log(name, checked)  
+
+    if (entities.length === 0) {
+      
+      if (name === 'allSelect') {      
+        let tempEntity = d.map((entity) => {        
+          return {...entity, isChecked:checked}
+        })        
+        setEntities(tempEntity)         
+      } else {
+        let tempEntity = d.map((entity) => 
+          //console.log(typeof entity.entity_id.toString(), typeof name, entity.entity_id == name) // true
+          entity.entity_id.toString() == name ? {...entity, isChecked:checked} : entity
+        )
+        console.log(tempEntity.entity_id)         
+        setEntities(tempEntity)        
+      }
+    } else {
+      if (name === 'allSelect') {      
+        let tempEntity = entities.map((entity) => {        
+          return {...entity, isChecked:checked}
+        })        
+        setEntities(tempEntity)         
+      } else {
+        let tempEntity = entities.map((entity) => 
+          //console.log(typeof entity.entity_id.toString(), typeof name, entity.entity_id == name) // true
+          entity.entity_id.toString() == name ? {...entity, isChecked:checked} : entity
+        )         
+        console.log(tempEntity.entity_id)
+        setEntities(tempEntity)        
+      }
+    }
+    
   }
 
   const handleChange = (e) => {
@@ -68,7 +105,7 @@ const Datatable = ({data}) => {
 
   /*
   const test = () => {
-    let selected = entitys.filter(e => {
+    let selected = entities.filter(e => {
       return e.select === true      
     })
     selected = selected.map(e => {
@@ -77,108 +114,188 @@ const Datatable = ({data}) => {
     alert (selected)
   }
   */
- 
-  if (columns) {
-    return (            
-      <div className="datatable">
-        <h2>Filtered metadata</h2>
-        <div>          
-          <Table responsive hover size="10">
-            <thead>
-              <tr key="faszom"><th><Input 
-                type="checkbox"
-                onChange = { e => {
-                  let checked = e.target.checked
-                  setEntitys(
-                    d.map(data => {
-                      data.select = checked
-                      return data
-                    })
-                  )
-                }} /></th>{data[0] && columns.map((heading) => <th>{heading}</th>)}</tr>
-            </thead>
-            <tbody>
-              {data.map(row => <tr key={row.entity_id}><td>
-                <Input 
-                  onChange={event => {
-                    let checked = event.target.checked;
-                    setEntitys(
-                      d.map(data => {
-                        if (row.entity_id === data.entity_id) {
-                          data.select = checked;
-                        }
-                        return data;
-                      })
-                    );
-                  }}
+
+  if (columns) {    
+    if (entities.length === 0 || entities.length !== data.length) {
+      return (            
+        <div className="datatable">
+          <h2>Filtered metadata</h2>
+          <div>          
+            <Table responsive hover size="10">
+              <thead>
+                <tr key="faszom"><th><Input 
                   type="checkbox"
-                  checked={d.select} 
-                />
-                </td> {columns.map(column => <td>{row[column]}</td>)}
-              </tr>)}
-            </tbody>
-          </Table>
+                  className="form-check-input"
+                  name="allSelect"
+                  onChange = {selectEntity} />
+                </th>{d[0] && columns.map((heading) => <th>{heading}</th>)}</tr>
+              </thead>
+              <tbody>
+                {
+                  d.map(row => <tr key={row.entity_id}><td>
+                    <Input 
+                      type="checkbox"
+                      className="form-check-input"
+                      name={row.entity_id}
+                      checked={row?.isChecked || false} 
+                      onChange={selectEntity}                  
+                    /></td> {columns.map(column => <td>{row[column]}</td>)}
+                  </tr>)              
+                }
+              </tbody>
+            </Table>
+          </div>
+          <div className="box">
+            <h2>Select chronos</h2>
+            <Container>
+              <Row>
+                <Col sm="4" xs="6">
+                  <div className="form-check">
+                    <Input 
+                      type="checkbox"                   
+                      className="form-check-input"
+                      name="allSelect"
+                      onChange={handleChange} 
+                    />          
+                    <Label>Select all</Label>        
+                  </div>
+                </Col> 
+                {
+                  chronos.map(n =>  
+                    <Col sm="4" xs="6">
+                      <div className="form-check">
+                        <Input 
+                          type="checkbox" 
+                          className="form-check-input" 
+                          name={n.name} 
+                          checked={n?.isChecked || false} 
+                          onChange={handleChange}
+                        />          
+                        <Label>{n.name}</Label>        
+                      </div>
+                    </Col>                  
+                  )
+                }
+              </Row>            
+            </Container>          
+          </div>
+          <div>
+            <ButtonGroup>
+              <Button 
+                color="primary"
+                outline
+                onClick={handleOnDownload}
+              >
+                Download meta data
+              </Button>
+              <Button
+                color="primary"
+                outline 
+                onClick={handleOnDownload}
+              >
+                Download dating information
+              </Button>
+              <Button 
+                color="primary"
+                onClick={handleOnDownload}
+              >
+                Download Sample data (choosen chronology)
+              </Button>
+            </ButtonGroup>
+          </div>        
         </div>
-        <div className="box">
-          <h2>Select chronos</h2>
-          <Container>
-            <Row>
-              <Col sm="4" xs="6">
-                <div className="form-check">
-                  <Input 
-                    type="checkbox"                   
-                    className="form-check-input"
-                    name="allSelect"
-                    onChange={handleChange} 
-                  />          
-                  <Label>Select all</Label>        
-                </div>
-              </Col> 
-              {
-                chronos.map(n =>  
-                  <Col sm="4" xs="6">
-                    <div className="form-check">
-                      <Input 
-                        type="checkbox" 
-                        className="form-check-input" 
-                        name={n.name} 
-                        checked={n?.isChecked || false} 
-                        onChange={handleChange}
-                      />          
-                      <Label>{n.name}</Label>        
-                    </div>
-                  </Col>                  
-                )
-              }
-            </Row>            
-          </Container>          
+      ) 
+    } else {
+      
+       return (            
+        <div className="datatable">
+          <h2>Filtered metadata</h2>
+          <div>          
+            <Table responsive hover size="10">
+              <thead>
+                <tr key="faszom"><th><Input 
+                  type="checkbox"
+                  className="form-check-input"
+                  name="allSelect"
+                  onChange = {selectEntity} />
+                </th>{d[0] && columns.map((heading) => <th>{heading}</th>)}</tr>
+              </thead>
+              <tbody>
+                {
+                  entities.map(row => <tr key={row.entity_id}><td>
+                    <Input 
+                      type="checkbox"
+                      className="form-check-input"
+                      name={row.entity_id}
+                      checked={row?.isChecked || false} 
+                      onChange={selectEntity}                  
+                    /></td> {columns.map(column => <td>{row[column]}</td>)}
+                  </tr>)              
+                }
+              </tbody>
+            </Table>
+          </div>
+          <div className="box">
+            <h2>Select chronos</h2>
+            <Container>
+              <Row>
+                <Col sm="4" xs="6">
+                  <div className="form-check">
+                    <Input 
+                      type="checkbox"                   
+                      className="form-check-input"
+                      name="allSelect"
+                      onChange={handleChange} 
+                    />          
+                    <Label>Select all</Label>        
+                  </div>
+                </Col> 
+                {
+                  chronos.map(n =>  
+                    <Col sm="4" xs="6">
+                      <div className="form-check">
+                        <Input 
+                          type="checkbox" 
+                          className="form-check-input" 
+                          name={n.name} 
+                          checked={n?.isChecked || false} 
+                          onChange={handleChange}
+                        />          
+                        <Label>{n.name}</Label>        
+                      </div>
+                    </Col>                  
+                  )
+                }
+              </Row>            
+            </Container>          
+          </div>
+          <div>
+            <ButtonGroup>
+              <Button 
+                color="primary"
+                outline
+                onClick={handleOnDownload}
+              >
+                Download meta data
+              </Button>
+              <Button
+                color="primary"
+                outline 
+                onClick={handleOnDownload}
+              >
+                Download dating information
+              </Button>
+              <Button 
+                color="primary"
+                onClick={handleOnDownload}
+              >
+                Download Sample data (choosen chronology)
+              </Button>
+            </ButtonGroup>
+          </div>        
         </div>
-        <div>
-          <ButtonGroup>
-            <Button 
-              color="primary"
-              outline
-              onClick={handleOnDownload}
-            >
-              Download meta data
-            </Button>
-            <Button
-              color="primary"
-              outline 
-              onClick={handleOnDownload}
-            >
-              Download dating information
-            </Button>
-            <Button 
-              color="primary"
-              onClick={handleOnDownload}
-            >
-              Download Sample data (choosen chronology)
-            </Button>
-          </ButtonGroup>
-        </div>        
-      </div>
-    )      
+      )
+    }    
   }  
 }
 

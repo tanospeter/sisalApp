@@ -35,6 +35,31 @@ const ChronoCheckboxes = () => {
 
 export default ChronoCheckboxes
 
+/*
+  onChange={event => {
+    let checked = event.target.checked;
+    setEntitys(
+      d.map(data => {
+        if (row.entity_id === data.entity_id) {
+          data.select = checked;
+        }
+        return data;
+      })
+    );
+  }}
+
+
+  e => {
+                  let checked = e.target.checked
+                  setEntitys(
+                    d.map(data => {
+                      data.select = checked
+                      return data
+                    })
+                  )
+                }
+*/
+
 
 /*
   <Col>

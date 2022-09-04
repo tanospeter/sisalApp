@@ -53,7 +53,7 @@ const Step1Screen = () => {
         type: 'meta'
       }).then((response) => {          
         console.log(response.data.meta)                          
-        setEntityList(response.data.meta)         
+        setEntityList(response.data.meta)        
       }).catch(error => console.log(error))
     }    
   }
