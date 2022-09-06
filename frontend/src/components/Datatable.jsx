@@ -45,9 +45,7 @@ const Datatable = ({data}) => {
   const handleOnDownload = () => {
     var workBook = utils.book_new(),
     workSheet = utils.json_to_sheet(entities.filter((e) => e.isChecked === true))
-
     utils.book_append_sheet(workBook, workSheet, "Sheet1")
-
     writeFile(workBook, "EntityList.xlsx")
   }
 

@@ -8,8 +8,9 @@ app.use(cors())
 
 app.use(express.json()) 
 
-app.use("/api/step1", require("./routes/step1Routes"));
-app.use("/api/step2", require("./routes/step2Routes"));
+app.use("/api/getentitymeta", require("./routes/getEntity"));
+app.use("/api/getdatinginfo", require("./routes/getDatingInfo"));
+app.use("/api/getsisalchrono", require("./routes/getSisalChrono"));
 
 app.use((err, req, res, next) => {
   console.log(err.stack);

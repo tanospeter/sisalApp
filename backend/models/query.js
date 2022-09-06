@@ -1,6 +1,7 @@
 const db = require('../config/db')
 
-class Step1query {
+class EntityMetaQuery {
+  
   constructor(email,siteName,lat,lon,age){
     this.email = email
     this.siteName = siteName
@@ -39,7 +40,7 @@ class Step1query {
     }        
   }
 
-  findStep1Meta() {
+  getEntityMeta() {
     let filters = ''
     let sql = `select r.publication_doi, e.*, s.* from site s 
       left join entity e on s.site_id = e.site_id
@@ -119,16 +120,66 @@ class Step1query {
     */
 
   }
+}
 
-  findStep1Dating() {
-    let sql = 
-      `select s.site_id, s.site_name, e.entity_id, e.entity_name, d.* 
-      from dating d 
-      where 1 = 1    
-      and entity_id in (${this.entity_ids})      
-      group by e.entity_id`       
-    return db.execute(sql)
+class datingQuery{
+  
+  constructor(entity_ids){
+    this.entity_ids = entity_ids        
   }
+
+  getDating() {
+    try {
+      let sql = 
+      `select distinct s.site_id, s.site_name, e.entity_id, e.entity_name, d.* from site s 
+      left join entity e on s.site_id = e.site_id
+      left join dating d on d.entity_id = e.entity_id
+      left join sample sa on e.entity_id = sa.entity_id
+      left join original_chronology oc on sa.sample_id = oc.sample_id
+      where 1 = 1
+      and e.entity_id in (${this.entity_ids.join(',')})`      
+      
+      console.log(sql)
+      
+      return db.execute(sql)
+    
+    } catch (error) {
+      error.log(error)
+    }    
+  }
+}
+
+class sisalChronoQuery{
+
+  constructor(entity_ids, chronos){
+    this.entity_ids = entity_ids
+    this.chronos = chronos
+  }
+
+  getSisalChronos() {
+    try {
+      let sql = 
+      `select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${this.chronos.join(', sc.')}, oc.*,d13C.*,d18o.* from site s 
+      left join entity e on s.site_id = e.site_id
+      left join sample sa on e.entity_id = sa.entity_id
+      left join original_chronology oc on sa.sample_id = oc.sample_id
+      left join sisal_chronology sc on sc.sample_id = sa.sample_id 
+      left join d13C on d13c.sample_id = sa.sample_id
+      left join d18O on d18o.sample_id = sa.sample_id      
+      where 1 = 1    
+      and e.entity_id in (${this.entity_ids.join(',')})`
+      
+      console.log(sql)
+      
+      return db.execute(sql)
+
+    } catch (error) {
+      error.log(error)
+    }
+  }
+
+}
+  /*
 
   findStep2Chronos() {
     let sql = 
@@ -149,5 +200,5 @@ class Step1query {
     return db.execute(sql)
   }
 }
-
-module.exports = Step1query
+*/
+module.exports = EntityMetaQuery, datingQuery, sisalChronoQuery

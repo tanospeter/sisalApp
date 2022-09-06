@@ -1,8 +1,8 @@
 const Query = require('../models/query')
 
-exports.step1Query = async (req, res, next) => { 
+exports.EntityMetaQuery = async (req, res, next) => { 
   try {
-    console.log(`queryControllers.step1Query: ${JSON.stringify(req.body)}`)
+    console.log(`queryControllers.EntityMetaQuery: ${JSON.stringify(req.body)}`)
     let {
       email,
       siteName,
@@ -23,7 +23,7 @@ exports.step1Query = async (req, res, next) => {
      
       await query.save()
       
-      const [meta, _] = await query.findStep1Meta()
+      const [meta, _] = await query.getEntityMeta()
 
       res.status(201).json({count: meta.length, meta})
 
@@ -41,8 +41,24 @@ exports.step1Query = async (req, res, next) => {
     next(error)
   }
 }
+// a query.js-t szét kell szedni!
+exports.datingQuery = async (req, res, next) =>{
+  try {
+    let {entity_ids} =req.body
 
-exports.step2Query = async (req, res, next) => {
+    let query = new Query(entity_ids)
+
+    const [dating, _] = await query.getDating()
+
+    res.status(201).json({count: dating.length, dating})
+
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+exports.SisalChronosQuery = async (req, res, next) => {
   try {
     let {
       email,
@@ -61,7 +77,7 @@ exports.step2Query = async (req, res, next) => {
       )
     
       
-    const [chronos, _] = await query.findStep2Chronos()
+    const [chronos, _] = await query.getSisalChronos()
 
     res.status(201).json({count: chronos.length, chronos})    
   

@@ -2,11 +2,11 @@ const express = require('express')
 const queryControllers = require('../controllers/queryControllers')
 const router = express.Router();
 
-//@desc GET all chronos fit to step1 entities
-//@route POST - /api/step1
+//@desc GET all chronos fit to selected entities
+//@route POST - /api/...
 //@access public
 router
   .route("/")  
-  .post(queryControllers.step2Query)
+  .get(queryControllers.datingQuery)
 
 module.exports = router

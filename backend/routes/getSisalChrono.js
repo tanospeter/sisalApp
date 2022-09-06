@@ -2,11 +2,11 @@ const express = require('express')
 const queryControllers = require('../controllers/queryControllers')
 const router = express.Router();
 
-//@desc GET step1 metadata or dating info
-//@route POST - /api/step1
+//@desc GET entity metadata or dating info
+//@route POST - /api/getsisalchrono
 //@access public
 router
   .route("/")
-  .post(queryControllers.step1Query)
+  .post(queryControllers.SisalChronosQuery)
 
 module.exports = router
