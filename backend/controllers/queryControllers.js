@@ -20,23 +20,12 @@ exports.EntityMetaQuery = async (req, res, next) => {
       lon,
       age,
       )
+         
+    await query.save()
     
-    if (req.body.type == 'meta') {
-     
-      await query.save()
-      
-      const [meta, _] = await query.getEntityMeta()
+    const [meta, _] = await query.getEntityMeta()
 
-      res.status(201).json({count: meta.length, meta})
-
-    } else if (req.body.type == 'dating') {
-      
-      const [dating, _] = await query.findStep1Dating()
-      
-      res.status(201).json({count: dating.length, dating})
-
-    }
-    
+    res.status(201).json({count: meta.length, meta})    
   
   } catch (error) {
     console.log(error)
@@ -61,6 +50,7 @@ exports.DatingQuery = async (req, res, next) =>{
 }
 
 exports.SisalChronosQuery = async (req, res, next) => {
+  console.log(req.body)
   try {
     let {
       entity_ids,

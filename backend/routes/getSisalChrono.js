@@ -7,6 +7,6 @@ const router = express.Router();
 //@access public
 router
   .route("/")
-  .get(queryControllers.SisalChronosQuery)
+  .post(queryControllers.SisalChronosQuery)
 
 module.exports = router

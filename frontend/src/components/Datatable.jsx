@@ -2,6 +2,7 @@ import {useState, useEffect} from "react"
 //import ChronoCheckboxes from "./ChronoCheckboxes"
 import {Table, Button, Container, Row, Col, Input, Label, ButtonGroup} from 'reactstrap'
 import {utils, writeFile} from 'xlsx'
+import axios from 'axios'
 
 const cn = [
   {name:'SISAL chronology'},
@@ -31,27 +32,76 @@ const cn = [
 const Datatable = ({data}) => {  
   
   const [entities,setEntities] = useState([])
-  const [chronos,setChronos] = useState([cn])
-  //const [selected,setSelected] = useState([])
-  //const d = data
+  const [chronos,setChronos] = useState([cn])    
   
   let columns = data[0] && Object.keys(data[0])  
   let d = data
   useEffect(() => {
     setChronos(cn)     
-  }, [])
-  
+  }, [])  
 
-  const handleOnDownload = () => {
+  const handleOnDownload = (json, title) => {
     var workBook = utils.book_new(),
-    workSheet = utils.json_to_sheet(entities.filter((e) => e.isChecked === true))
+    workSheet = utils.json_to_sheet(json)
     utils.book_append_sheet(workBook, workSheet, "Sheet1")
-    writeFile(workBook, "EntityList.xlsx")
+    writeFile(workBook, `${title}.xlsx`)
+  }
+
+  const dowloadEntities = () => { 
+    handleOnDownload(entities.filter((item) => item.isChecked === true), "EntityList")
+  }
+
+  const dowloadDating = () => {
+    let selectedEntites = entities.filter((e) => e.isChecked === true)
+
+    if (selectedEntites.length !== 0) {
+      
+      axios.post("http://192.168.0.201:5010/api/getdatinginfo", {        
+        
+        entity_ids:selectedEntites.map((e) => { return e.entity_id})       
+      
+      }).then((response) => {          
+        //console.log(response.data.sisalChronos)  
+        handleOnDownload(response.data.dating,"DatingInfo")              
+      
+      }).catch(error => console.log(error))
+
+    } else {
+      
+      alert("Download request denied! Please select at least one entity!")
+
+    }
+  }
+
+  const dowloadChrono = () => {
+    let selectedChronos = chronos.filter((e) => e.isChecked === true && e.name !== "SISAL chronology")
+    let selectedEntites = entities.filter((e) => e.isChecked === true)
+    //console.log({selectedChronos, selectedEntites})
+
+    if (selectedChronos.length !== 0 && selectedEntites.length !== 0){
+      
+      axios.post("http://192.168.0.201:5010/api/getsisalchrono", {
+        
+        entity_ids:selectedEntites.map((e) => { return e.entity_id}),
+        chronos:selectedChronos.map((c) => { return c.name})
+      
+      }).then((response) => {          
+        //console.log(response.data.sisalChronos)  
+        handleOnDownload(response.data.sisalChronos,"SisalChronos")              
+      
+      }).catch(error => console.log(error))
+
+    } else {
+      
+      alert("Download request denied! Please select at least one entity AND one sisal chronology!")
+    
+    }
+
   }
 
   const selectEntity = (e) => {
     const {name, checked} = e.target
-    console.log(name, checked)  
+    //console.log(name, checked)  
 
     if (entities.length === 0) {
       
@@ -65,7 +115,7 @@ const Datatable = ({data}) => {
           //console.log(typeof entity.entity_id.toString(), typeof name, entity.entity_id == name) // true
           entity.entity_id.toString() == name ? {...entity, isChecked:checked} : entity
         )
-        console.log(tempEntity.entity_id)         
+        //console.log(tempEntity.entity_id)         
         setEntities(tempEntity)        
       }
     } else {
@@ -79,7 +129,7 @@ const Datatable = ({data}) => {
           //console.log(typeof entity.entity_id.toString(), typeof name, entity.entity_id == name) // true
           entity.entity_id.toString() == name ? {...entity, isChecked:checked} : entity
         )         
-        console.log(tempEntity.entity_id)
+        //console.log(tempEntity.entity_id)
         setEntities(tempEntity)        
       }
     }
@@ -100,18 +150,6 @@ const Datatable = ({data}) => {
       setChronos(tempChrono)
     }     
   }
-
-  /*
-  const test = () => {
-    let selected = entities.filter(e => {
-      return e.select === true      
-    })
-    selected = selected.map(e => {
-      return e.entity_id
-    })
-    alert (selected)
-  }
-  */
 
   if (columns) {    
     if (entities.length === 0 || entities.length !== data.length) {
@@ -182,20 +220,20 @@ const Datatable = ({data}) => {
               <Button 
                 color="primary"
                 outline
-                onClick={handleOnDownload}
+                onClick={dowloadEntities}
               >
                 Download meta data
               </Button>
               <Button
                 color="primary"
                 outline 
-                onClick={handleOnDownload}
+                onClick={dowloadDating}
               >
                 Download dating information
               </Button>
               <Button 
                 color="primary"
-                onClick={handleOnDownload}
+                onClick={dowloadChrono}
               >
                 Download Sample data (choosen chronology)
               </Button>
@@ -269,23 +307,24 @@ const Datatable = ({data}) => {
           </div>
           <div>
             <ButtonGroup>
-              <Button 
+              <Button
+                className="downloadMetaDataBtn"                 
                 color="primary"
                 outline
-                onClick={handleOnDownload}
+                onClick={dowloadEntities}
               >
                 Download meta data
               </Button>
               <Button
                 color="primary"
                 outline 
-                onClick={handleOnDownload}
+                onClick={dowloadDating}
               >
                 Download dating information
               </Button>
               <Button 
                 color="primary"
-                onClick={handleOnDownload}
+                onClick={dowloadChrono}
               >
                 Download Sample data (choosen chronology)
               </Button>

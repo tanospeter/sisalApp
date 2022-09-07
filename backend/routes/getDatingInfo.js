@@ -7,6 +7,6 @@ const router = express.Router();
 //@access public
 router
   .route("/")  
-  .get(queryControllers.DatingQuery)
+  .post(queryControllers.DatingQuery)
 
 module.exports = router

@@ -49,8 +49,7 @@ const Step1Screen = () => {
         siteName: siteName,
         lat: [ latFrom, latTo ],
         lon: [ longFrom, longTo ],
-        age: [ interpAgeFrom, interpAgeTo ],
-        type: 'meta'
+        age: [ interpAgeFrom, interpAgeTo ]
       }).then((response) => {          
         console.log(response.data.meta)                          
         setEntityList(response.data.meta)        
