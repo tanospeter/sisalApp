@@ -1,4 +1,6 @@
-const Query = require('../models/query')
+const entityQuery = require('../models/entityQuery')
+const datingQuery = require('../models/datingQuery')
+const chronoQuery = require('../models/chronoQuery')
 
 exports.EntityMetaQuery = async (req, res, next) => { 
   try {
@@ -11,7 +13,7 @@ exports.EntityMetaQuery = async (req, res, next) => {
       age
     } = req.body
     
-    let query = new Query(
+    let query = new entityQuery(
       email,
       siteName,
       lat,
@@ -42,11 +44,11 @@ exports.EntityMetaQuery = async (req, res, next) => {
   }
 }
 // a query.js-t szét kell szedni!
-exports.datingQuery = async (req, res, next) =>{
+exports.DatingQuery = async (req, res, next) =>{
   try {
     let {entity_ids} =req.body
 
-    let query = new Query(entity_ids)
+    let query = new datingQuery(entity_ids)
 
     const [dating, _] = await query.getDating()
 
@@ -61,25 +63,16 @@ exports.datingQuery = async (req, res, next) =>{
 exports.SisalChronosQuery = async (req, res, next) => {
   try {
     let {
-      email,
-      siteName,
-      lat,      
-      lon,
-      age
+      entity_ids,
+      chronos
     } = req.body
     
-    let query = new Query(
-      email,
-      siteName,
-      lat,
-      lon,
-      age,
-      )
+    let query = new chronoQuery(entity_ids, chronos)
     
       
-    const [chronos, _] = await query.getSisalChronos()
+    const [sisalChronos, _] = await query.getSisalChronos()
 
-    res.status(201).json({count: chronos.length, chronos})    
+    res.status(201).json({count: sisalChronos.length, sisalChronos})    
   
   } catch (error) {
     console.log(error)
