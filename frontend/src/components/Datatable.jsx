@@ -36,6 +36,7 @@ const Datatable = ({data}) => {
   
   let columns = data[0] && Object.keys(data[0])  
   let d = data
+  
   useEffect(() => {
     setChronos(cn)     
   }, [])  
@@ -99,12 +100,24 @@ const Datatable = ({data}) => {
 
   }
 
+  const comparePropsAndHook = () => {
+    let entitiesFromData = d.map((entity) => {
+      return entity.entity_id
+    })
+    let entitiesFromEntitiesHook = entities.map((entity) => {
+      return entity.entity_id
+    })
+    
+    return entitiesFromData.toString() === entitiesFromEntitiesHook.toString()
+  }
+
+  // Entity selector function for 'Filtered metadata' section 
   const selectEntity = (e) => {
     const {name, checked} = e.target
     //console.log(name, checked)  
-
-    if (entities.length === 0) {
-      
+    const isIdentical = comparePropsAndHook()
+    if (!isIdentical) { 
+      // prop and hook are not identical     
       if (name === 'allSelect') {      
         let tempEntity = d.map((entity) => {        
           return {...entity, isChecked:checked}
@@ -119,6 +132,7 @@ const Datatable = ({data}) => {
         setEntities(tempEntity)        
       }
     } else {
+      //prop and hook are identical
       if (name === 'allSelect') {      
         let tempEntity = entities.map((entity) => {        
           return {...entity, isChecked:checked}
@@ -135,7 +149,8 @@ const Datatable = ({data}) => {
     }
     
   }
-
+  
+  // Checkbox handling function for 'Select chronos' section
   const handleChange = (e) => {
     const {name, checked} = e.target    
     if (name === 'allSelect') {
@@ -151,8 +166,9 @@ const Datatable = ({data}) => {
     }     
   }
 
-  if (columns) {    
-    if (entities.length === 0 || entities.length !== data.length) {
+  if (columns) { 
+    const isIdentical = comparePropsAndHook()   
+    if (!isIdentical) {
       return (            
         <div className="datatable">
           <h2>Filtered metadata</h2>
