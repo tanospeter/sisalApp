@@ -40,7 +40,7 @@ class EntityMetaQuery {
     }        
   }
 
-  getEntityMeta() {
+  queryBuilder() {
     let filters = ''
     let sql = `select r.publication_doi, e.*, s.* from site s 
       left join entity e on s.site_id = e.site_id
@@ -56,69 +56,65 @@ class EntityMetaQuery {
     const latLonFilled = this.lat[0] !='' && this.lat[1] !='' && this.lon[0] !='' && this.lon[1] !=''
     const ageFilled = this.age[0] !='' && this.age[1] !=''
     
-    try {
-      if (siteNameFilled) {
-        if (latLonFilled) {
-          if (ageFilled) {
-            console.log('siteNameFilled, latLonFilled, ageFilled')
-            filters = ` and lower(s.site_name) like lower('%${this.siteName}%')
-            and s.latitude between ${this.lat[0]} and ${this.lat[1]}
-            and s.longitude between ${this.lon[0]} and ${this.lon[1]}
-            and oc.interp_age between ${this.age[0]} and ${this.age[1]}`
-          }
-          else {
-            console.log('siteNameFilled, latLonFilled')
-            filters = ` and lower(s.site_name) like lower('%${this.siteName}%')
-            and s.latitude between ${this.lat[0]} and ${this.lat[1]}
-            and s.longitude between ${this.lon[0]} and ${this.lon[1]}`
-          } 
+   
+    if (siteNameFilled) {
+      if (latLonFilled) {
+        if (ageFilled) {
+          console.log('siteNameFilled, latLonFilled, ageFilled')
+          filters = ` and lower(s.site_name) like lower('%${this.siteName}%')
+          and s.latitude between ${this.lat[0]} and ${this.lat[1]}
+          and s.longitude between ${this.lon[0]} and ${this.lon[1]}
+          and oc.interp_age between ${this.age[0]} and ${this.age[1]}`
         }
         else {
-          if (ageFilled) {
-            console.log('siteNameFilled, ageFilled')
-            filters = ` and lower(s.site_name) like lower('%${this.siteName}%')            
-            and oc.interp_age between ${this.age[0]} and ${this.age[1]}`
-          } else {
-            console.log('siteNameFilled')
-            filters = ` and lower(s.site_name) like lower('%${this.siteName}%')`
-          }
-        }
+          console.log('siteNameFilled, latLonFilled')
+          filters = ` and lower(s.site_name) like lower('%${this.siteName}%')
+          and s.latitude between ${this.lat[0]} and ${this.lat[1]}
+          and s.longitude between ${this.lon[0]} and ${this.lon[1]}`
+        } 
       }
       else {
-        if (latLonFilled) {
-          if (ageFilled) {
-            console.log('latLonFilled, ageFilled')
-            filters = ` and s.latitude between ${this.lat[0]} and ${this.lat[1]}
-            and s.longitude between ${this.lon[0]} and ${this.lon[1]}
-            and oc.interp_age between ${this.age[0]} and ${this.age[1]}`
-          } else {
-            console.log('latLonFilled')
-            filters = `  and s.latitude between ${this.lat[0]} and ${this.lat[1]}
-            and s.longitude between ${this.lon[0]} and ${this.lon[1]}`
-          }          
+        if (ageFilled) {
+          console.log('siteNameFilled, ageFilled')
+          filters = ` and lower(s.site_name) like lower('%${this.siteName}%')            
+          and oc.interp_age between ${this.age[0]} and ${this.age[1]}`
         } else {
-          if (ageFilled) {
-            console.log('ageFilled')
-            filters = ` and oc.interp_age between ${this.age[0]} and ${this.age[1]}`
-          }
+          console.log('siteNameFilled')
+          filters = ` and lower(s.site_name) like lower('%${this.siteName}%')`
         }
       }
-      sql = sql + filters + ' group by e.entity_id'
-      console.log(sql)
+    }
+    else {
+      if (latLonFilled) {
+        if (ageFilled) {
+          console.log('latLonFilled, ageFilled')
+          filters = ` and s.latitude between ${this.lat[0]} and ${this.lat[1]}
+          and s.longitude between ${this.lon[0]} and ${this.lon[1]}
+          and oc.interp_age between ${this.age[0]} and ${this.age[1]}`
+        } else {
+          console.log('latLonFilled')
+          filters = `  and s.latitude between ${this.lat[0]} and ${this.lat[1]}
+          and s.longitude between ${this.lon[0]} and ${this.lon[1]}`
+        }          
+      } else {
+        if (ageFilled) {
+          console.log('ageFilled')
+          filters = ` and oc.interp_age between ${this.age[0]} and ${this.age[1]}`
+        }
+      }
+    }
+    sql = sql + filters + ' group by e.entity_id'
+    console.log(sql) 
+    return sql
+  }
+
+  getEntityMeta(sql) {
+    try{
+      //let sql = this.queryBuilder()      
       return db.execute(sql)
     } catch (error) {
       error.log(error)
     }
-      
-    
-    /*
-      sql =`and s.latitude between ${this.lat[0]} and ${this.lat[1]}
-        and s.longitude between ${this.lon[0]} and ${this.lon[1]}
-        and oc.interp_age between ${this.age[0]} and ${this.age[1]}
-        and lower(s.site_name) like lower('%${this.siteName}%')
-        group by e.entity_id`
-    */
-
   }
 }
 

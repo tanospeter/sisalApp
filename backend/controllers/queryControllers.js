@@ -23,25 +23,29 @@ exports.EntityMetaQuery = async (req, res, next) => {
          
     await query.save()
     
-    const [meta, _] = await query.getEntityMeta()
+    let sql = query.queryBuilder()
+    
+    const [meta, _] = await query.getEntityMeta(sql)
 
-    res.status(201).json({count: meta.length, meta})    
+    res.status(201).json({meta,sql})
   
   } catch (error) {
     console.log(error)
     next(error)
   }
 }
-// a query.js-t szét kell szedni!
+
 exports.DatingQuery = async (req, res, next) =>{
   try {
     let {entity_ids} =req.body
 
     let query = new datingQuery(entity_ids)
 
-    const [dating, _] = await query.getDating()
+    let sql = query.queryBuilder()
 
-    res.status(201).json({count: dating.length, dating})
+    const [dating, _] = await query.getDating(sql)
+
+    res.status(201).json({dating, sql})
 
   } catch (error) {
     console.log(error)
@@ -59,10 +63,11 @@ exports.SisalChronosQuery = async (req, res, next) => {
     
     let query = new chronoQuery(entity_ids, chronos)
     
+    let sql = query.queryBuilder()
       
-    const [sisalChronos, _] = await query.getSisalChronos()
+    const [sisalChronos, _] = await query.getSisalChronos(sql)
 
-    res.status(201).json({count: sisalChronos.length, sisalChronos})    
+    res.status(201).json({sisalChronos, sql})    
   
   } catch (error) {
     console.log(error)

@@ -29,7 +29,7 @@ const cn = [
   {name:'StalAge_age_uncert_neg'}
 ]  
 
-const Datatable = ({data}) => {  
+const Datatable = ({data, query}) => {  
   
   const [entities,setEntities] = useState([])
   const [chronos,setChronos] = useState([cn])    
@@ -41,15 +41,17 @@ const Datatable = ({data}) => {
     setChronos(cn)     
   }, [])  
 
-  const handleOnDownload = (json, title) => {
+  const handleOnDownload = (query, sql, title) => {
     var workBook = utils.book_new(),
-    workSheet = utils.json_to_sheet(json)
-    utils.book_append_sheet(workBook, workSheet, "Sheet1")
+    workSheet1 = utils.json_to_sheet(query),
+    workSheet2 = utils.json_to_sheet(sql)
+    utils.book_append_sheet(workBook, workSheet1, title)
+    utils.book_append_sheet(workBook, workSheet2, 'SQL query')
     writeFile(workBook, `${title}.xlsx`)
   }
 
   const dowloadEntities = () => { 
-    handleOnDownload(entities.filter((item) => item.isChecked === true), "EntityList")
+    handleOnDownload(entities.filter((item) => item.isChecked === true), [{sql:query}], "EntityList")
   }
 
   const dowloadDating = () => {
@@ -63,7 +65,7 @@ const Datatable = ({data}) => {
       
       }).then((response) => {          
         //console.log(response.data.sisalChronos)  
-        handleOnDownload(response.data.dating,"DatingInfo")              
+        handleOnDownload(response.data.dating, [{sql:response.data.sql}], "DatingInfo")              
       
       }).catch(error => console.log(error))
 
@@ -88,7 +90,7 @@ const Datatable = ({data}) => {
       
       }).then((response) => {          
         //console.log(response.data.sisalChronos)  
-        handleOnDownload(response.data.sisalChronos,"SisalChronos")              
+        handleOnDownload(response.data.sisalChronos, [{sql:response.data.sql}], "SisalChronos")              
       
       }).catch(error => console.log(error))
 

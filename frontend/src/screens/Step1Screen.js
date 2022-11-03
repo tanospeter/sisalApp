@@ -28,7 +28,7 @@ const Step1Screen = () => {
   const [interpAgeTo, setInterpAgeTo] = useState("")
 
   const [entityList,setEntityList] = useState([])
-  
+  const [query, setQuery] = useState([])
   
   const sendQueryParams = () => {       
     setEntityList([]) 
@@ -51,7 +51,8 @@ const Step1Screen = () => {
         lon: [ longFrom, longTo ],
         age: [ interpAgeFrom, interpAgeTo ]
       }).then((response) => {          
-        console.log(response.data.meta)                          
+        console.log(response.data)
+        setQuery(response.data.sql)                          
         setEntityList(response.data.meta)        
       }).catch(error => console.log(error))
     }    
@@ -199,7 +200,7 @@ const Step1Screen = () => {
           </div>
         </div>
         <div className="box">                    
-          <Datatable data={entityList} />
+          <Datatable data={entityList} query={query} />
         </div>
       </div>
     </div>

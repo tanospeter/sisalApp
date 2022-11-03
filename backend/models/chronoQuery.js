@@ -6,10 +6,8 @@ class SisalChronoQuery{
     this.entity_ids = entity_ids
     this.chronos = chronos
   }
-
-  getSisalChronos() {
-    try {
-      let sql = 
+  queryBuilder() {
+    let sql = 
       `select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${this.chronos.join(', sc.')}, oc.*,d13C.*,d18o.* from site s 
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
@@ -20,10 +18,13 @@ class SisalChronoQuery{
       where 1 = 1    
       and e.entity_id in (${this.entity_ids.join(',')})`
       
-      console.log(sql)
-      
-      return db.execute(sql)
+    console.log(sql)
+    return sql
+  }
 
+  getSisalChronos(sql) {
+    try {      
+      return db.execute(sql)
     } catch (error) {
       error.log(error)
     }
