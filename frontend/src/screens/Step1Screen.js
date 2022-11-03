@@ -30,7 +30,7 @@ const Step1Screen = () => {
   const [entityList,setEntityList] = useState([])
   
   
-  const sendQueryParams = () => {   
+  const sendQueryParams = () => {       
     setEntityList([]) 
     const siteNameEmpty = siteName === ''
     const latLonEmpty = latFrom === '' && latTo === '' && longFrom === '' && longTo === ''
@@ -44,7 +44,7 @@ const Step1Screen = () => {
     } else if (ageIncomplete){
       alert("The InterpAge interval is incorrect or incomlete!\nPlease revise the begin and end of the interval, and try again! ")
     } else {
-      axios.post("http://192.168.0.201:5010/api/getentitymeta", {
+      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getentitymeta`, {
         email:email,
         siteName: siteName,
         lat: [ latFrom, latTo ],

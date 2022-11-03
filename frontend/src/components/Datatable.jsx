@@ -56,7 +56,7 @@ const Datatable = ({data}) => {
 
     if (selectedEntites.length !== 0) {
       
-      axios.post("http://192.168.0.201:5010/api/getdatinginfo", {        
+      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getdatinginfo`, {        
         
         entity_ids:selectedEntites.map((e) => { return e.entity_id})       
       
@@ -80,7 +80,7 @@ const Datatable = ({data}) => {
 
     if (selectedChronos.length !== 0 && selectedEntites.length !== 0){
       
-      axios.post("http://192.168.0.201:5010/api/getsisalchrono", {
+      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getsisalchrono`, {
         
         entity_ids:selectedEntites.map((e) => { return e.entity_id}),
         chronos:selectedChronos.map((c) => { return c.name})
