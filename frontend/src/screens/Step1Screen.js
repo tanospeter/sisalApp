@@ -163,6 +163,7 @@ const Step1Screen = () => {
 
 
               <h5 className="filterTitle">Filter type 3 (InterpAge)</h5>
+              <p>Usage is mandatory for advanced querying!</p>
               <Row>            
                 <Col md={6}>
                   <FormGroup floating>

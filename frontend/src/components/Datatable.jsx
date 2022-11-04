@@ -1,8 +1,9 @@
 import {useState, useEffect} from "react"
 //import ChronoCheckboxes from "./ChronoCheckboxes"
-import {Table, Button, Container, Row, Col, Input, Label, ButtonGroup} from 'reactstrap'
+import {Table, Button, Container, Row, Col, Input, Label, ButtonGroup, Collapse, CardBody, Card, Form,  FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap'
 import {utils, writeFile} from 'xlsx'
 import axios from 'axios'
+import PropTypes from 'prop-types';
 
 const cn = [
   {name:'SISAL chronology'},
@@ -28,6 +29,7 @@ const cn = [
   {name:'StalAge_age_uncert_pos'},
   {name:'StalAge_age_uncert_neg'}
 ]  
+
 
 const Datatable = ({data, query}) => {  
   
@@ -90,7 +92,7 @@ const Datatable = ({data, query}) => {
       
       }).then((response) => {          
         //console.log(response.data.sisalChronos)  
-        handleOnDownload(response.data.sisalChronos, [{sql:response.data.sql}], "SisalChronos")              
+        handleOnDownload(response.data.sisalChronos, [{sql:response.data.sql}], "SampleData")              
       
       }).catch(error => console.log(error))
 
@@ -168,6 +170,18 @@ const Datatable = ({data, query}) => {
     }     
   }
 
+  // Colapsed filed
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => setIsOpen(!isOpen);
+
+  // handling dropdown controller  
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [dropdownState, setDropdownState] = useState('Select The Chronology')
+  const toggleDropdown = () => setDropdownOpen(prevState => !prevState)
+  
+  const cnAdv = ['SISAL chronology','lin_interp_age','lin_reg_age','Bchron_age','Bacon_age','OxCal_age','copRa_age','StalAge_age']
+
   if (columns) { 
     const isIdentical = comparePropsAndHook()   
     if (!isIdentical) {
@@ -232,7 +246,7 @@ const Datatable = ({data, query}) => {
                 }
               </Row>            
             </Container>          
-          </div>
+          </div>          
           <div>
             <ButtonGroup>
               <Button 
@@ -256,6 +270,85 @@ const Datatable = ({data, query}) => {
                 Download Sample data (choosen chronology)
               </Button>
             </ButtonGroup>
+          </div>
+          <div className="box">
+            <Button color="link" onClick={toggle} style={{ marginBottom: '1rem' }}>
+              Advanced Query Parameters
+            </Button>
+            <Collapse isOpen={isOpen}>
+              <Card>
+                <CardBody>                  
+                  <Form inline>
+                    <Row>
+                      <Col>
+                        <h5 className="filterTitle">Advanced query filter 1</h5>                                              
+                        <FormGroup floating>
+                          <Input
+                            id="DatingInformation"
+                            name="dating"
+                            placeholder="Min number of dating information"                            
+                            /*onChange={(event)=>{
+                              setEmail(event.target.value)
+                            }}*/
+                          />
+                          <Label for="Min number of dating information">
+                          At least n radiometric dates in each and every entity (numeric)
+                          </Label>                
+                        </FormGroup>                        
+                      </Col>  
+                      <Col></Col>                                 
+                    </Row>
+                    <Row>
+                      <h5 className="filterTitle">Advanced query filter 2</h5>
+                      <Col>                          
+                        <FormGroup floating>
+                          <Input
+                            id="DatingInformation"
+                            name="dating"
+                            placeholder="Min number of dating information"                            
+                            /*onChange={(event)=>{
+                              setEmail(event.target.value)
+                            }}*/
+                          />
+                          <Label for="Min number of dating information">
+                            Max gap in the chosen chronology (numeric)
+                          </Label>                
+                        </FormGroup>
+                      </Col>
+                      <Col>                          
+                      <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} direction='right' size='lg'>
+                          <DropdownToggle caret>{dropdownState}</DropdownToggle>
+                          <DropdownMenu>
+                            {/*
+                            <DropdownItem>Some Action</DropdownItem>
+                            <DropdownItem text>Dropdown Item Text</DropdownItem>
+                            <DropdownItem disabled>Action (disabled)</DropdownItem>
+                            <DropdownItem divider />
+                            <DropdownItem>Foo Action</DropdownItem>
+                            <DropdownItem>Bar Action</DropdownItem>
+                            <DropdownItem>Quo Action</DropdownItem>*/}
+                            <DropdownItem header>Select a chronology</DropdownItem>
+                            {cnAdv.map((c) => {return <DropdownItem onClick={() => setDropdownState(c)}>{c}</DropdownItem> })}
+                          </DropdownMenu>
+                        </Dropdown>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Button 
+                          color="primary"                          
+                          onClick={dowloadEntities}
+                        >
+                          Download advanced result
+                        </Button>
+                      </Col>
+                      <Col>
+                      </Col>                      
+                    </Row>
+                  </Form>
+                </CardBody>
+              </Card>
+            </Collapse>
           </div>        
         </div>
       ) 
