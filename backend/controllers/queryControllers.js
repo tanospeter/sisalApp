@@ -1,6 +1,7 @@
 const entityQuery = require('../models/entityQuery')
 const datingQuery = require('../models/datingQuery')
 const chronoQuery = require('../models/chronoQuery')
+const advancedQuery = require('../models/advancedQuery')
 
 exports.EntityMetaQuery = async (req, res, next) => { 
   try {
@@ -69,6 +70,25 @@ exports.SisalChronosQuery = async (req, res, next) => {
 
     res.status(201).json({sisalChronos, sql})    
   
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
+}
+
+exports.AdvancedQuery = async (req, res, next) =>{
+  try {
+    let {entity_ids} = req.body
+    console.log(req.body)
+    
+    let query = new advancedQuery(entity_ids)
+
+    /*let sql = query.queryBuilder()
+
+    const [dating, _] = await query.getDating(sql)
+
+    res.status(201).json({dating, sql})*/
+
   } catch (error) {
     console.log(error)
     next(error)

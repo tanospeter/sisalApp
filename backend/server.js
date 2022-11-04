@@ -11,6 +11,7 @@ app.use(express.json())
 app.use("/api/getentitymeta", require("./routes/getEntity"));
 app.use("/api/getdatinginfo", require("./routes/getDatingInfo"));
 app.use("/api/getsisalchrono", require("./routes/getSisalChrono"));
+app.use("/api/getAdvancedRes", require("./routes/getAdvancedRes"));
 
 app.use((err, req, res, next) => {
   console.log(err.stack);
