@@ -104,6 +104,8 @@ const Datatable = ({data, query}) => {
 
   }
 
+  const downloadAdvRes = () => {}
+
   const comparePropsAndHook = () => {
     let entitiesFromData = d.map((entity) => {
       return entity.entity_id
@@ -177,7 +179,7 @@ const Datatable = ({data, query}) => {
 
   // handling dropdown controller  
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [dropdownState, setDropdownState] = useState('Select The Chronology')
+  const [dropdownState, setDropdownState] = useState('Select a chronology')
   const toggleDropdown = () => setDropdownOpen(prevState => !prevState)
   
   const cnAdv = ['SISAL chronology','lin_interp_age','lin_reg_age','Bchron_age','Bacon_age','OxCal_age','copRa_age','StalAge_age']
@@ -318,15 +320,7 @@ const Datatable = ({data, query}) => {
                       <Col>                          
                       <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} direction='right' size='lg'>
                           <DropdownToggle caret>{dropdownState}</DropdownToggle>
-                          <DropdownMenu>
-                            {/*
-                            <DropdownItem>Some Action</DropdownItem>
-                            <DropdownItem text>Dropdown Item Text</DropdownItem>
-                            <DropdownItem disabled>Action (disabled)</DropdownItem>
-                            <DropdownItem divider />
-                            <DropdownItem>Foo Action</DropdownItem>
-                            <DropdownItem>Bar Action</DropdownItem>
-                            <DropdownItem>Quo Action</DropdownItem>*/}
+                          <DropdownMenu>                            
                             <DropdownItem header>Select a chronology</DropdownItem>
                             {cnAdv.map((c) => {return <DropdownItem onClick={() => setDropdownState(c)}>{c}</DropdownItem> })}
                           </DropdownMenu>
@@ -337,7 +331,7 @@ const Datatable = ({data, query}) => {
                       <Col>
                         <Button 
                           color="primary"                          
-                          onClick={dowloadEntities}
+                          onClick={downloadAdvRes}
                         >
                           Download advanced result
                         </Button>
