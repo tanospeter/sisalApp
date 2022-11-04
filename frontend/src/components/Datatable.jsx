@@ -1,9 +1,8 @@
 import {useState, useEffect} from "react"
 //import ChronoCheckboxes from "./ChronoCheckboxes"
-import {Table, Button, Container, Row, Col, Input, Label, ButtonGroup, Collapse, CardBody, Card, Form,  FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap'
+import {Table, Button, Container, Row, Col, Input, Label, ButtonGroup, Collapse, CardBody, Card, Form,  FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, FormText} from 'reactstrap'
 import {utils, writeFile} from 'xlsx'
 import axios from 'axios'
-import PropTypes from 'prop-types';
 
 const cn = [
   {name:'SISAL chronology'},
@@ -34,7 +33,9 @@ const cn = [
 const Datatable = ({data, query}) => {  
   
   const [entities,setEntities] = useState([])
-  const [chronos,setChronos] = useState([cn])    
+  const [chronos,setChronos] = useState([cn]) 
+  const [advancedFilter1, setAdvancedFilter1] = useState("")
+  const [advancedFilter2, setAdvancedFilter2] = useState("")
   
   let columns = data[0] && Object.keys(data[0])  
   let d = data
@@ -104,7 +105,29 @@ const Datatable = ({data, query}) => {
 
   }
 
-  const downloadAdvRes = () => {}
+  const downloadAdvRes = () => {
+    let selectedEntit_ids = entities.filter((e) => e.isChecked === true).map((e) => {return e.entity_id})
+    let minDate = advancedFilter1
+    let maxGap = advancedFilter2
+    let selectedChrono = dropdownState
+    console.log({selectedEntit_ids, minDate, maxGap, selectedChrono})
+    
+    if (selectedEntit_ids.length !== 0) {
+      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getAdvancedRes`, {        
+        
+        params:{selectedEntit_ids, minDate, maxGap, selectedChrono}       
+      
+      }).then((response) => {          
+        console.log(response.data)  
+        //handleOnDownload(response.data.dating, [{sql:response.data.sql}], "DatingInfo")              
+      
+      }).catch(error => console.log(error))
+    } else {
+      
+      alert("Download request denied! Please select at least one entity!")
+
+    }
+  }
 
   const comparePropsAndHook = () => {
     let entitiesFromData = d.map((entity) => {
@@ -132,7 +155,7 @@ const Datatable = ({data, query}) => {
       } else {
         let tempEntity = d.map((entity) => 
           //console.log(typeof entity.entity_id.toString(), typeof name, entity.entity_id == name) // true
-          entity.entity_id.toString() == name ? {...entity, isChecked:checked} : entity
+          entity.entity_id.toString() === name ? {...entity, isChecked:checked} : entity
         )
         //console.log(tempEntity.entity_id)         
         setEntities(tempEntity)        
@@ -147,7 +170,7 @@ const Datatable = ({data, query}) => {
       } else {
         let tempEntity = entities.map((entity) => 
           //console.log(typeof entity.entity_id.toString(), typeof name, entity.entity_id == name) // true
-          entity.entity_id.toString() == name ? {...entity, isChecked:checked} : entity
+          entity.entity_id.toString() === name ? {...entity, isChecked:checked} : entity
         )         
         //console.log(tempEntity.entity_id)
         setEntities(tempEntity)        
@@ -283,19 +306,26 @@ const Datatable = ({data, query}) => {
                   <Form inline>
                     <Row>
                       <Col>
-                        <h5 className="filterTitle">Advanced query filter 1</h5>                                              
+                        <h5 className="filterTitle">Advanced query filter 1</h5>                                                                 
                         <FormGroup floating>
                           <Input
-                            id="DatingInformation"
-                            name="dating"
-                            placeholder="Min number of dating information"                            
-                            /*onChange={(event)=>{
-                              setEmail(event.target.value)
-                            }}*/
+                            id="AdvQueryFilterDatingInformation"
+                            name="AdvQueryFilterDatingInformation"
+                            placeholder="Min number of radoimetric date"                            
+                            onChange={(event)=>{
+                              if(isNaN(event.target.value)){
+                                alert('"Advanced query filter 1" got NaN value. Please enter a natural number!')
+                                event.target.value=''
+                              }
+                              else {setAdvancedFilter1(event.target.value)}                              
+                            }}
                           />
-                          <Label for="Min number of dating information">
-                          At least n radiometric dates in each and every entity (numeric)
-                          </Label>                
+                          <Label for="Min number of radoimetric date">
+                            At least n radiometric dates in each and every entity (numeric)
+                          </Label>
+                          <FormText>
+                            NOTE: Leave blank this field if you don't want to use this filter!
+                          </FormText>              
                         </FormGroup>                        
                       </Col>  
                       <Col></Col>                                 
@@ -305,16 +335,23 @@ const Datatable = ({data, query}) => {
                       <Col>                          
                         <FormGroup floating>
                           <Input
-                            id="DatingInformation"
-                            name="dating"
-                            placeholder="Min number of dating information"                            
-                            /*onChange={(event)=>{
-                              setEmail(event.target.value)
-                            }}*/
+                            id="AdvQueryFilterChronoGap"
+                            name="AdvQueryFilterChronoGap"
+                            placeholder="Max gap in chrono"                            
+                            onChange={(event)=>{
+                              if(isNaN(event.target.value)){
+                                alert('"Advanced query filter 2" got NaN value. Please enter a natural number!')
+                                event.target.value=''
+                              }
+                              else {setAdvancedFilter2(event.target.value)}
+                            }}
                           />
-                          <Label for="Min number of dating information">
+                          <Label for="Max gap in chrono">
                             Max gap in the chosen chronology (numeric)
-                          </Label>                
+                          </Label>
+                          <FormText>
+                            NOTE: Leave blank this field if you don't want to use this filter!
+                          </FormText>                
                         </FormGroup>
                       </Col>
                       <Col>                          
@@ -433,8 +470,93 @@ const Datatable = ({data, query}) => {
               >
                 Download Sample data (choosen chronology)
               </Button>
-            </ButtonGroup>
-          </div>        
+            </ButtonGroup>            
+          </div> 
+          <div className="box">
+            <Button color="link" onClick={toggle} style={{ marginBottom: '1rem' }}>
+              Advanced Query Parameters
+            </Button>
+            <Collapse isOpen={isOpen}>
+              <Card>
+                <CardBody>                  
+                  <Form inline>
+                    <Row>
+                      <Col>
+                        <h5 className="filterTitle">Advanced query filter 1</h5>                                                                 
+                        <FormGroup floating>
+                          <Input
+                            id="AdvQueryFilterDatingInformation"
+                            name="AdvQueryFilterDatingInformation"
+                            placeholder="Min number of radoimetric date"                            
+                            onChange={(event)=>{
+                              if(isNaN(event.target.value)){
+                                alert('"Advanced query filter 1" got NaN value. Please enter a natural number!')
+                                event.target.value=''
+                              }
+                              else {setAdvancedFilter1(event.target.value)}                              
+                            }}
+                          />
+                          <Label for="Min number of radoimetric date">
+                            At least n radiometric dates in each and every entity (numeric)
+                          </Label>
+                          <FormText>
+                            NOTE: Leave blank this field if you don't want to use this filter!
+                          </FormText>              
+                        </FormGroup>                        
+                      </Col>  
+                      <Col></Col>                                 
+                    </Row>
+                    <Row>
+                      <h5 className="filterTitle">Advanced query filter 2</h5>
+                      <Col>                          
+                        <FormGroup floating>
+                          <Input
+                            id="AdvQueryFilterChronoGap"
+                            name="AdvQueryFilterChronoGap"
+                            placeholder="Max gap in chrono"                            
+                            onChange={(event)=>{
+                              if(isNaN(event.target.value)){
+                                alert('"Advanced query filter 2" got NaN value. Please enter a natural number!')
+                                event.target.value=''
+                              }
+                              else {setAdvancedFilter2(event.target.value)}
+                            }}
+                          />
+                          <Label for="Max gap in chrono">
+                            Max gap in the chosen chronology (numeric)
+                          </Label>
+                          <FormText>
+                            NOTE: Leave blank this field if you don't want to use this filter!
+                          </FormText>                
+                        </FormGroup>
+                      </Col>
+                      <Col>                          
+                      <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown} direction='right' size='lg'>
+                          <DropdownToggle caret>{dropdownState}</DropdownToggle>
+                          <DropdownMenu>                            
+                            <DropdownItem header>Select a chronology</DropdownItem>
+                            {cnAdv.map((c) => {return <DropdownItem onClick={() => setDropdownState(c)}>{c}</DropdownItem> })}
+                          </DropdownMenu>
+                        </Dropdown>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <Button 
+                          color="primary"                          
+                          onClick={downloadAdvRes}
+                        >
+                          Download advanced result
+                        </Button>
+                      </Col>
+                      <Col>
+                      </Col>                      
+                    </Row>
+                  </Form>
+                </CardBody>
+              </Card>
+            </Collapse>
+          </div>       
         </div>
       )
     }    
