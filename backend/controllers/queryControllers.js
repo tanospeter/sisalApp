@@ -77,17 +77,21 @@ exports.SisalChronosQuery = async (req, res, next) => {
 }
 
 exports.AdvancedQuery = async (req, res, next) =>{
-  try {
-    let {entity_ids} = req.body
-    console.log(req.body)
+  try {    
+    console.log(req.body.params)
     
-    let query = new advancedQuery(entity_ids)
+    let query = new advancedQuery(req.body.params)
 
-    /*let sql = query.queryBuilder()
+    let sql = query.queryBuilder()
+    
+    const [entity, _] = await query.runAdvancedQuery(sql.sqlEntity)
+    const [dating, __] = await query.runAdvancedQuery(sql.sqlDating)
+    const [chrono, ___] = await query.runAdvancedQuery(sql.sqlChrono)
 
-    const [dating, _] = await query.getDating(sql)
+    let filteredEntityIdsByDating = query.countDateByEntity (req.body.params.selectedEntity_ids, req.body.params.minDate, dating)
+    let filteredEntityIdsByChrono = query.chronoFiltering(chrono,req.body.params.maxGap,req.body.params.selectedEntity_ids,req.body.params.selectedChrono)
 
-    res.status(201).json({dating, sql})*/
+    res.status(201).json({dating, entity, chrono, sql, filteredEntityIdsByDating, filteredEntityIdsByChrono})
 
   } catch (error) {
     console.log(error)

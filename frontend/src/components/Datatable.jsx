@@ -106,16 +106,16 @@ const Datatable = ({data, query}) => {
   }
 
   const downloadAdvRes = () => {
-    let selectedEntit_ids = entities.filter((e) => e.isChecked === true).map((e) => {return e.entity_id})
+    let selectedEntity_ids = entities.filter((e) => e.isChecked === true).map((e) => {return e.entity_id})
     let minDate = advancedFilter1
     let maxGap = advancedFilter2
     let selectedChrono = dropdownState
-    console.log({selectedEntit_ids, minDate, maxGap, selectedChrono})
+    console.log({selectedEntity_ids, minDate, maxGap, selectedChrono})
     
-    if (selectedEntit_ids.length !== 0) {
+    if (selectedEntity_ids.length !== 0) {
       axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getAdvancedRes`, {        
         
-        params:{selectedEntit_ids, minDate, maxGap, selectedChrono}       
+        params:{selectedEntity_ids, minDate, maxGap, selectedChrono}       
       
       }).then((response) => {          
         console.log(response.data)  

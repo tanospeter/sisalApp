@@ -16,8 +16,7 @@ class SisalChronoQuery{
       left join d13C on d13c.sample_id = sa.sample_id
       left join d18O on d18o.sample_id = sa.sample_id      
       where 1 = 1    
-      and e.entity_id in (${this.entity_ids.join(',')})`
-      
+      and e.entity_id in (${this.entity_ids.join(',')})`    
     console.log(sql)
     return sql
   }
