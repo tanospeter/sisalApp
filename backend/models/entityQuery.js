@@ -46,8 +46,8 @@ class EntityMetaQuery {
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
-      left join d13C on d13c.sample_id = sa.sample_id
-      left join d18O on d18o.sample_id = sa.sample_id
+      left join d13c on d13c.sample_id = sa.sample_id
+      left join d18o on d18o.sample_id = sa.sample_id
       join entity_link_reference elr on elr.entity_id = e.entity_id
       join reference r on r.ref_id = elr.ref_id
       where 1 = 1`

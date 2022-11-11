@@ -12,8 +12,8 @@ class AdvancedQuery{
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
-      left join d13C on d13c.sample_id = sa.sample_id
-      left join d18O on d18o.sample_id = sa.sample_id
+      left join d13c on d13c.sample_id = sa.sample_id
+      left join d18o on d18o.sample_id = sa.sample_id
       join entity_link_reference elr on elr.entity_id = e.entity_id
       join reference r on r.ref_id = elr.ref_id
       where 1 = 1
@@ -28,13 +28,13 @@ class AdvancedQuery{
       where 1 = 1
       and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})`      
     
-    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${this.advQueryParams.selectedChrono}, oc.*,d13C.*,d18o.* from site s 
+    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${this.advQueryParams.selectedChrono}, oc.*,d13c.*,d18o.* from site s 
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
       left join sisal_chronology sc on sc.sample_id = sa.sample_id 
-      left join d13C on d13c.sample_id = sa.sample_id
-      left join d18O on d18o.sample_id = sa.sample_id      
+      left join d13c on d13c.sample_id = sa.sample_id
+      left join d18o on d18o.sample_id = sa.sample_id      
       where 1 = 1    
       and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})`
       
