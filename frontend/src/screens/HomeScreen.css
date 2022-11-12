@@ -1,13 +1,21 @@
 .intro {
 	line-height: 1.7;
 	font-size: 1.2rem;
-	margin: 0
+	margin: 0;
 }
+
 .intro p {
-	margin: 0 0 1rem 0
+	margin: 0 0 1rem 0;
+	text-align: justify;
 }
+
 .intro img {
 	float: right;
 	margin: 0 0 2rem 2rem;
-	border-radius: 7%
+	border-radius: 7%;
+}
+
+.title {
+	margin: 5rem 0 2rem 0;
+	text-align: center;
 }
