@@ -88,7 +88,7 @@ exports.AdvancedQuery = async (req, res, next) =>{
     const [dating, __] = await query.runAdvancedQuery(sql.sqlDating)
     const [chrono, ___] = await query.runAdvancedQuery(sql.sqlChrono)
 
-    let filteredEntityIdsByDating = query.countDateByEntity (req.body.params.selectedEntity_ids, req.body.params.minDate, dating)
+    let filteredEntityIdsByDating = query.countDateByEntity (req.body.params.selectedEntity_ids, req.body.params.minDate, req.body.params.selectedInterpAgeRange, dating)
     let filteredEntityIdsByChrono = query.chronoFiltering(chrono,req.body.params.maxGap,req.body.params.selectedEntity_ids,req.body.params.selectedChrono)
 
     res.status(201).json({dating, entity, chrono, sql, filteredEntityIdsByDating, filteredEntityIdsByChrono})

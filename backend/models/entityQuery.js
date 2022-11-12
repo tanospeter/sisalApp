@@ -42,15 +42,18 @@ class EntityMetaQuery {
 
   queryBuilder() {
     let filters = ''
-    let sql = `select distinct r.publication_doi, e.*, s.* from site s 
-      left join entity e on s.site_id = e.site_id
-      left join sample sa on e.entity_id = sa.entity_id
-      left join original_chronology oc on sa.sample_id = oc.sample_id
-      left join d13C on d13c.sample_id = sa.sample_id
-      left join d18O on d18o.sample_id = sa.sample_id
-      join entity_link_reference elr on elr.entity_id = e.entity_id
-      join reference r on r.ref_id = elr.ref_id
-      where 1 = 1`
+    let sql = `select distinct ref.doi, e.*, s.* from site s
+    left join entity e on s.site_id = e.site_id
+    left join sample sa on e.entity_id = sa.entity_id
+    left join original_chronology oc on sa.sample_id = oc.sample_id
+    left join d13C on d13c.sample_id = sa.sample_id
+    left join d18O on d18o.sample_id = sa.sample_id
+    left join (
+      select elr.entity_id as entity_id, GROUP_CONCAT(r.publication_DOI ORDER BY r.publication_DOI ASC SEPARATOR '; ') as doi from reference r
+      join entity_link_reference elr on r.ref_id = elr.ref_id
+      group by elr.entity_id
+    ) ref on ref.entity_id = e.entity_id
+    where 1 = 1`
     
     const siteNameFilled = this.siteName != ''
     const latLonFilled = this.lat[0] !='' && this.lat[1] !='' && this.lon[0] !='' && this.lon[1] !=''

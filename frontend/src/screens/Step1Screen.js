@@ -201,7 +201,7 @@ const Step1Screen = () => {
           </div>
         </div>
         <div className="box">                    
-          <Datatable data={entityList} query={query} />
+          <Datatable data={entityList} query={query} interpAgeFrom={interpAgeFrom} interpAgeTo={interpAgeTo}/>
         </div>
       </div>
     </div>

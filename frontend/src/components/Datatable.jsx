@@ -30,7 +30,7 @@ const cn = [
 ]  
 
 
-const Datatable = ({data, query}) => {  
+const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {  
   
   const [entities,setEntities] = useState([])
   const [chronos,setChronos] = useState([cn]) 
@@ -110,12 +110,13 @@ const Datatable = ({data, query}) => {
     let minDate = advancedFilter1
     let maxGap = advancedFilter2
     let selectedChrono = dropdownState
-    console.log({selectedEntity_ids, minDate, maxGap, selectedChrono})
+    let selectedInterpAgeRange = [interpAgeFrom, interpAgeTo]
+    console.log({selectedEntity_ids, minDate, maxGap, selectedChrono, selectedInterpAgeRange})
     
     if (selectedEntity_ids.length !== 0) {
       axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getAdvancedRes`, {        
         
-        params:{selectedEntity_ids, minDate, maxGap, selectedChrono}       
+        params:{selectedEntity_ids, minDate, maxGap, selectedChrono, selectedInterpAgeRange}       
       
       }).then((response) => {          
         console.log(response.data)  
