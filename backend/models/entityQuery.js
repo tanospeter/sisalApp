@@ -42,7 +42,7 @@ class EntityMetaQuery {
 
   queryBuilder() {
     let filters = ''
-    let sql = `select r.publication_doi, e.*, s.* from site s 
+    let sql = `select distinct r.publication_doi, e.*, s.* from site s 
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
@@ -103,7 +103,8 @@ class EntityMetaQuery {
         }
       }
     }
-    sql = sql + filters + ' group by e.entity_id'
+    //sql = sql + filters + ' group by e.entity_id'
+    sql = sql + filters
     console.log(sql) 
     return sql
   }
