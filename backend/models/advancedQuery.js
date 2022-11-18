@@ -8,17 +8,19 @@ class AdvancedQuery{
   
   queryBuilder() {
     
-    let sqlEntity = `select r.publication_doi, e.*, s.* from site s 
+    let sqlEntity = `select distinct ref.doi, e.*, s.* from site s
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
       left join d13c on d13c.sample_id = sa.sample_id
       left join d18o on d18o.sample_id = sa.sample_id
-      join entity_link_reference elr on elr.entity_id = e.entity_id
-      join reference r on r.ref_id = elr.ref_id
+      left join (
+        select elr.entity_id as entity_id, GROUP_CONCAT(r.publication_DOI ORDER BY r.publication_DOI ASC SEPARATOR '; ') as doi from reference r
+        join entity_link_reference elr on r.ref_id = elr.ref_id
+        group by elr.entity_id
+      ) ref on ref.entity_id = e.entity_id
       where 1 = 1
-      and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})
-      group by e.entity_id`
+      and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})`
 
     let sqlDating = `select distinct s.site_id, s.site_name, e.entity_id, e.entity_name, d.* from site s 
       left join entity e on s.site_id = e.site_id
@@ -52,12 +54,25 @@ class AdvancedQuery{
   }
 
   // Advanced query filter 1
-  countDateByEntity (entity_ids, minDate, dating) {
+  countDateByEntity (entity_ids, minDate, selectedInterpAgeRange, dating) {
+    let ageStart = Number(selectedInterpAgeRange[0])
+    let ageEnd = Number(selectedInterpAgeRange[1])
+    console.log(ageStart, ageEnd, ageStart > 0 && ageEnd > 0)
+    let count
     let c = entity_ids.map((e) => {
-      let count = dating
-        .filter((e) => e.date_used !== "no")
-        .filter((ee) => ee.entity_id === e).length;
-      return { entity_id: e, count: count };
+      if (ageStart > 0 && ageEnd > 0) {        
+        let faszom = dating
+          .filter((e) => e.date_used !== "no" && e.uncorr_age >= ageStart && e.uncorr_age<= ageEnd)          
+          .filter((ee) => ee.entity_id === e)
+        console.log(faszom)
+        count = faszom.length; 
+      }
+      else{
+        count = dating
+          .filter((e) => e.date_used !== "no")
+          .filter((ee) => ee.entity_id === e).length;        
+      }
+      return { entity_id: e, count: count };      
     });  
   
     return c
