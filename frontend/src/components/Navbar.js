@@ -29,8 +29,7 @@ const Navbar2 = () => {
         dark={true}
         light={false}
       >
-        <NavbarBrand>
-          <NavLink to="/" className="navbar-brand">
+        <NavLink to="/" className="navbar-brand" >
             <img
               alt="logo"
               src={logo}
@@ -39,9 +38,7 @@ const Navbar2 = () => {
                 width: 40
               }}
             />
-            SISAL
-          </NavLink>
-        </NavbarBrand>
+            SISALv2</NavLink>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>

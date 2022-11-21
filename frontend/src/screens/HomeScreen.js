@@ -59,19 +59,19 @@ const HomeSrean = () => {
           </p>
           <p>
             At least one of the following “Filter types” must be correctly filled out
-            <ul>
-              <li>
-                Site name
-              </li>
-              <li>
-                Latitude and Longitude (from - to; default is global coverage values XXXXXXXXX )
-              </li>
-              <li>
-                Interp_age (from - to) which stands for calendar age of the sample in years according to the original published
-                age model. For details see Sect. 2.2 and Table S9 of <a href="https://essd.copernicus.org/articles/10/1687/2018/">Atsawawaranunt et al. (2018)</a>.
-              </li>
-            </ul>
           </p>
+          <ul>
+            <li>
+              Site name
+            </li>
+            <li>
+              Latitude and Longitude (from - to; default is global coverage values XXXXXXXXX )
+            </li>
+            <li>
+              Interp_age (from - to) which stands for calendar age of the sample in years according to the original published
+              age model. For details see Sect. 2.2 and Table S9 of <a href="https://essd.copernicus.org/articles/10/1687/2018/">Atsawawaranunt et al. (2018)</a>.
+            </li>
+          </ul>
           <h3>Selection based on the metadata - 2nd step</h3>
           <p>
             Now a subset of records can be selected based on their metadata (e.g. mineralogy), also extracted from the SISAL database.
@@ -97,17 +97,17 @@ const HomeSrean = () => {
           <p>Advanced querying provides the tool to extract SISAL database information based on available radiometric ages and sample
             data resolution. This option is available after one Basic filter is applied and a corresponding list of records/data received.
             Two filters can be applied and combined.
-            <ul>
-              <li>
-                minimum number of radiometric ages for the chosen record(s) regarding the whole available time interval, or shorter if
-                filter is applied in the Basic querying part; 1st Step
-              </li>
-              <li>
-                maximum allowed age gap in the chosen original chronology (interp_age), or in another chosen SISAL chronology,
-                regarding the whole available time interval, or shorter if filter is applied in the Basic querying part; 1st Step
-              </li>
-            </ul>
           </p>
+          <ul>
+            <li>
+              minimum number of radiometric ages for the chosen record(s) regarding the whole available time interval, or shorter if
+              filter is applied in the Basic querying part; 1st Step
+            </li>
+            <li>
+              maximum allowed age gap in the chosen original chronology (interp_age), or in another chosen SISAL chronology,
+              regarding the whole available time interval, or shorter if filter is applied in the Basic querying part; 1st Step
+            </li>
+          </ul>
         </div>
       </div>
     </div>
