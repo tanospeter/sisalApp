@@ -12,12 +12,11 @@ import DatabaseScreen from './screens/DatabaseScreen'
 
 // components
 import Navbar from './components/Navbar'
-
  
 function App() {
    
   return (            
-    <Router>      
+    <Router basename={process.env.REACT_APP_SERVER_BASEURL}>      
       <Navbar/>
       <main>
         <Routes>

@@ -1,5 +1,5 @@
 import './Navbar.css'
-import {Link} from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import React, { useState } from 'react';
 import logo from '../pic/fav.png'
 import {
@@ -9,7 +9,6 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -28,41 +27,37 @@ const Navbar2 = () => {
         expand="md"
         color="dark"
         dark={true}
-        light={false}        
+        light={false}
       >
-        <NavbarBrand href="/">
-          <img
-            alt="logo"
-            src={logo}
-            style={{
-              height: 40,
-              width: 40
-            }}
-          />
-          SISAL
+        <NavbarBrand>
+          <NavLink to="/" className="navbar-brand">
+            <img
+              alt="logo"
+              src={logo}
+              style={{
+                height: 40,
+                width: 40
+              }}
+            />
+            SISAL
+          </NavLink>
         </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
             <NavItem>
-              <NavLink href="/step1/">Querying</NavLink>
+              <NavLink to="step1" className="nav-link">Querying</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/database/">
-              database
+              <NavLink to="database" className="nav-link">
+                SISALv3 EER
               </NavLink>
             </NavItem>
-            <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                Options
-              </DropdownToggle>
-              <DropdownMenu end>
-                <DropdownItem>Option 1</DropdownItem>
-                <DropdownItem>Option 2</DropdownItem>
-                <DropdownItem divider />
-                <DropdownItem>Reset</DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
+            <NavItem>
+              <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank" className="nav-link">
+                Publications
+              </a>
+            </NavItem>
           </Nav>
           <NavbarText>PAST GLOBAL CHANGES</NavbarText>
         </Collapse>
