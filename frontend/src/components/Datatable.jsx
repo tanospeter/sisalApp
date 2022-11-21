@@ -62,7 +62,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
 
     if (selectedEntites.length !== 0) {
       
-      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getdatinginfo`, {        
+      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getdatinginfo`, {        
         
         entity_ids:selectedEntites.map((e) => { return e.entity_id})       
       
@@ -86,7 +86,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
 
     if (selectedChronos.length !== 0 && selectedEntites.length !== 0){
       
-      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getsisalchrono`, {
+      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getsisalchrono`, {
         
         entity_ids:selectedEntites.map((e) => { return e.entity_id}),
         chronos:selectedChronos.map((c) => { return c.name})
@@ -114,7 +114,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
     console.log({selectedEntity_ids, minDate, maxGap, selectedChrono, selectedInterpAgeRange})
     
     if (selectedEntity_ids.length !== 0) {
-      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/api/getAdvancedRes`, {        
+      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getAdvancedRes`, {        
         
         params:{selectedEntity_ids, minDate, maxGap, selectedChrono, selectedInterpAgeRange}       
       
