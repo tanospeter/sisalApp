@@ -12,6 +12,7 @@ import DatabaseScreen from './screens/DatabaseScreen'
 
 // components
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
  
 function App() {
    
@@ -25,7 +26,8 @@ function App() {
           <Route exact path="/step2" element={<Step2Screen/>}/> 
           <Route exact path="/database" element={<DatabaseScreen/>}/>
         </Routes>
-      </main>         
+      </main>
+      <Footer />  
     </Router>
   );
 }
