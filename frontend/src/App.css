@@ -1,8 +1,11 @@
-
 /*régi verzió*/
 .app {
   display: flex;
   flex-direction: column;
   justify-content: center;
   background: #ddd;
+}
+
+.content {
+  margin-bottom: 10rem;
 }

@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter as Router, Routes , Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import {useState} from "react"
 //import axios from 'axios'
@@ -13,21 +13,21 @@ import DatabaseScreen from './screens/DatabaseScreen'
 // components
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
- 
+
 function App() {
-   
-  return (            
-    <Router basename={process.env.REACT_APP_SERVER_BASEURL}>      
-      <Navbar/>
-      <main>
+
+  return (
+    <Router basename={process.env.REACT_APP_SERVER_BASEURL}>
+      <Navbar />
+      <main className='content'>
         <Routes>
-          <Route exact path="/" element={<HomeScreen/>}/>
-          <Route exact path="/step1" element={<Step1Screen/>}/>
-          <Route exact path="/step2" element={<Step2Screen/>}/> 
-          <Route exact path="/database" element={<DatabaseScreen/>}/>
+          <Route exact path="/" element={<HomeScreen />} />
+          <Route exact path="/step1" element={<Step1Screen />} />
+          <Route exact path="/step2" element={<Step2Screen />} />
+          <Route exact path="/database" element={<DatabaseScreen />} />
         </Routes>
       </main>
-      <Footer />  
+      <Footer />
     </Router>
   );
 }
