@@ -4,6 +4,7 @@ import {Table, Button, Container, Row, Col, Input, Label, ButtonGroup, Collapse,
 import {utils, writeFile} from 'xlsx'
 import axios from 'axios'
 
+/*
 const cn = [
   {name:'SISAL chronology'},
   {name:'lin_interp_age'},
@@ -28,7 +29,16 @@ const cn = [
   {name:'StalAge_age_uncert_pos'},
   {name:'StalAge_age_uncert_neg'}
 ]  
-
+*/
+const cn = [  
+  {name:'lin_interp_age'},  
+  {name:'lin_reg_age'},  
+  {name:'Bchron_age'},
+  {name:'Bacon_age'},
+  {name:'OxCal_age'},
+  {name:'copRa_age'},
+  {name:'StalAge_age'}
+]  
 
 const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {  
   
@@ -45,12 +55,17 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   }, [])  
 
   const handleOnDownload = (query, sql, title) => {
-    var workBook = utils.book_new(),
-    workSheet1 = utils.json_to_sheet(query),
-    workSheet2 = utils.json_to_sheet(sql)
-    utils.book_append_sheet(workBook, workSheet1, title)
-    utils.book_append_sheet(workBook, workSheet2, 'SQL query')
-    writeFile(workBook, `${title}.xlsx`)
+    if (query.length <= 12000) {
+      var workBook = utils.book_new(),
+      workSheet1 = utils.json_to_sheet(query),
+      workSheet2 = utils.json_to_sheet(sql)
+      utils.book_append_sheet(workBook, workSheet1, title)
+      utils.book_append_sheet(workBook, workSheet2, 'SQL query')
+      writeFile(workBook, `${title}.xlsx`)
+    } else {
+      alert("Download request denied! There are too many lines in the result (max 12.000 lines allowed)! Please narrow your search!")
+    }
+    
   }
 
   const dowloadEntities = () => { 
@@ -120,7 +135,46 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
       
       }).then((response) => {          
         console.log(response.data)  
-        //handleOnDownload(response.data.dating, [{sql:response.data.sql}], "DatingInfo")              
+        if (response.data.chrono.length <= 12000) {
+          var workBook = utils.book_new(),        
+          workSheet0 = utils.json_to_sheet([{reportInfo:response.data.reportInfo}]),
+          workSheet1 = utils.json_to_sheet(response.data.entityFiltered),
+          workSheet2 = utils.json_to_sheet(response.data.datingFiltered),
+          workSheet3 = utils.json_to_sheet(response.data.chronoFiltered),
+          workSheet4 = utils.json_to_sheet([
+            {
+              sqlEntity:response.data.sqlFiltered.sqlEntity,
+              sqlDating:response.data.sqlFiltered.sqlDating,
+              sqlChrono:response.data.sqlFiltered.sqlChrono
+            }
+          ]),
+          workSheet5 = utils.json_to_sheet(response.data.entity),
+          workSheet6 = utils.json_to_sheet(response.data.dating),
+          workSheet7 = utils.json_to_sheet(response.data.chrono),
+          workSheet8 = utils.json_to_sheet([
+            {
+              sqlEntity:response.data.sql.sqlEntity,
+              sqlDating:response.data.sql.sqlDating,
+              sqlChrono:response.data.sql.sqlChrono
+            }
+          ])
+          
+          utils.book_append_sheet(workBook, workSheet0, 'reportInfo')
+          utils.book_append_sheet(workBook, workSheet1, 'entityAdvFiltered')
+          utils.book_append_sheet(workBook, workSheet2, 'datingAdvFiltered')
+          utils.book_append_sheet(workBook, workSheet3, 'chronoAdvFiltered')
+          utils.book_append_sheet(workBook, workSheet4, 'SQLsAdvFiltered')
+          utils.book_append_sheet(workBook, workSheet5, 'entity')
+          utils.book_append_sheet(workBook, workSheet6, 'dating')
+          utils.book_append_sheet(workBook, workSheet7, 'chrono')
+          utils.book_append_sheet(workBook, workSheet8, 'SQLs')
+
+                
+          writeFile(workBook, `advancedRes.xlsx`) 
+        } else {
+          alert("Download request denied! There are too many lines in the result (max 12.000 lines allowed)! Please narrow your search!")
+        }
+                   
       
       }).catch(error => console.log(error))
     } else {
@@ -206,7 +260,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   const [dropdownState, setDropdownState] = useState('Select a chronology')
   const toggleDropdown = () => setDropdownOpen(prevState => !prevState)
   
-  const cnAdv = ['SISAL chronology','lin_interp_age','lin_reg_age','Bchron_age','Bacon_age','OxCal_age','copRa_age','StalAge_age']
+  const cnAdv = ['Author chronology (interp_age)','lin_interp_age','lin_reg_age','Bchron_age','Bacon_age','OxCal_age','copRa_age','StalAge_age']
 
   if (columns) { 
     const isIdentical = comparePropsAndHook()   
@@ -217,7 +271,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
           <div>          
             <Table responsive hover size="10">
               <thead>
-                <tr key="faszom"><th><Input 
+                <tr key="f"><th><Input 
                   type="checkbox"
                   className="form-check-input"
                   name="allSelect"
@@ -392,7 +446,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
           <div>          
             <Table responsive hover size="10">
               <thead>
-                <tr key="faszom"><th><Input 
+                <tr key="f"><th><Input 
                   type="checkbox"
                   className="form-check-input"
                   name="allSelect"

@@ -90,8 +90,49 @@ exports.AdvancedQuery = async (req, res, next) =>{
 
     let filteredEntityIdsByDating = query.countDateByEntity (req.body.params.selectedEntity_ids, req.body.params.minDate, req.body.params.selectedInterpAgeRange, dating)
     let filteredEntityIdsByChrono = query.chronoFiltering(chrono,req.body.params.maxGap,req.body.params.selectedEntity_ids,req.body.params.selectedChrono)
+    console.log(filteredEntityIdsByChrono)
+    let filteredEntityIdsByAdvancedFilters = filteredEntityIdsByDating.concat(filteredEntityIdsByChrono)
+    
+    filteredEntityIdsByAdvancedFilters = filteredEntityIdsByAdvancedFilters.filter((item,index)=>{
+      return (filteredEntityIdsByAdvancedFilters.indexOf(item) == index)
+    })
 
-    res.status(201).json({dating, entity, chrono, sql, filteredEntityIdsByDating, filteredEntityIdsByChrono})
+    let reportInfo = {
+      selectedEntity_ids : req.body.params.selectedEntity_ids,
+      FilterType3 : req.body.params.selectedInterpAgeRange,
+      AdvancedFilter1 : req.body.params.minDate,
+      AdvancedFilter2SelectedChrono : req.body.params.selectedChrono,
+      AdvancedFilter2MaxGap : req.body.params.maxGap,
+      ResEntity_idsAdvancedFilter1 : filteredEntityIdsByDating,
+      ResEntity_idsAdvancedFilter2 : filteredEntityIdsByChrono,
+      ResEntity_idsAdvancedFilters : filteredEntityIdsByAdvancedFilters
+    }
+
+    let queryFiltered = new advancedQuery({
+      selectedEntity_ids : filteredEntityIdsByAdvancedFilters,
+      selectedChrono : req.body.params.selectedChrono
+    })
+
+    let sqlFiltered = queryFiltered.queryBuilder()
+    
+    const [entityFiltered, ____] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlEntity)
+    const [datingFiltered, _____] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlDating)
+    const [chronoFiltered, ______] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlChrono)
+
+    res.status(201).json({
+      dating, 
+      entity, 
+      chrono, 
+      sql, 
+      filteredEntityIdsByDating, 
+      filteredEntityIdsByChrono, 
+      filteredEntityIdsByAdvancedFilters, 
+      reportInfo : JSON.stringify(reportInfo),
+      sqlFiltered,
+      entityFiltered,
+      datingFiltered,
+      chronoFiltered
+    })
 
   } catch (error) {
     console.log(error)

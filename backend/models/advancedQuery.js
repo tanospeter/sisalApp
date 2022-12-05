@@ -30,7 +30,7 @@ class AdvancedQuery{
       where 1 = 1
       and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})`      
     
-    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${this.advQueryParams.selectedChrono}, oc.*,d13c.*,d18o.* from site s 
+    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${this.advQueryParams.selectedChrono},sc.${this.advQueryParams.selectedChrono}_uncert_pos,sc.${this.advQueryParams.selectedChrono}_uncert_neg, oc.*,d13c.*,d18o.* from site s 
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
@@ -61,11 +61,11 @@ class AdvancedQuery{
     let count
     let c = entity_ids.map((e) => {
       if (ageStart > 0 && ageEnd > 0) {        
-        let faszom = dating
+        let f = dating
           .filter((e) => e.date_used !== "no" && e.uncorr_age >= ageStart && e.uncorr_age<= ageEnd)          
           .filter((ee) => ee.entity_id === e)
-        console.log(faszom)
-        count = faszom.length; 
+        console.log(f)
+        count = f.length; 
       }
       else{
         count = dating
@@ -106,8 +106,12 @@ class AdvancedQuery{
       let max = m(d)
       return {entity_id:e, max}
     })
-    
-    return maxes.filter(e => e.max < maxGap && e.max !== 0)
+    console.log(maxes)
+    return maxes
+      .filter(e => e.max < maxGap && e.max !== 0)
+      .map((e) => {
+        return e.entity_id
+      })
   }
 
 

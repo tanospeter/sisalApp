@@ -6,9 +6,14 @@ class SisalChronoQuery{
     this.entity_ids = entity_ids
     this.chronos = chronos
   }
+
   queryBuilder() {
+    let chronoWithUncert = this.chronos.map((e) => {  
+      return `${e}, sc.${e}_uncert_pos, sc.${e}_uncert_neg`
+    })
+
     let sql = 
-      `select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${this.chronos.join(', sc.')}, oc.*,d13c.*,d18o.* from site s 
+      `select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${chronoWithUncert.join(', sc.')}, oc.*,d13c.*,d18o.* from site s 
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
