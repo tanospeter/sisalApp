@@ -260,7 +260,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   const [dropdownState, setDropdownState] = useState('Select a chronology')
   const toggleDropdown = () => setDropdownOpen(prevState => !prevState)
   
-  const cnAdv = ['Author chronology (interp_age)','lin_interp_age','lin_reg_age','Bchron_age','Bacon_age','OxCal_age','copRa_age','StalAge_age']
+  const cnAdv = [/*'Author chronology (interp_age)',*/'lin_interp_age','lin_reg_age','Bchron_age','Bacon_age','OxCal_age','copRa_age','StalAge_age']
 
   if (columns) { 
     const isIdentical = comparePropsAndHook()   
