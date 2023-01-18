@@ -65,7 +65,7 @@ const HomeSrean = () => {
               Site name
             </li>
             <li>
-              Latitude and Longitude (from - to; default is global coverage values XXXXXXXXX )
+              Latitude and Longitude (from - to; default is global coverage values from -90 to 90 and from -180 to 180). In the first column the southern and western boundaries should be provided for latitude and longitude respectively. Latitude in degrees decimal (N= +, S= -) and longitude in degrees decimal (E= +, W= -).   Other formats are not accepted, the App will return no results.
             </li>
             <li>
               Interp_age (from - to) which stands for calendar age of the sample in years according to the original published

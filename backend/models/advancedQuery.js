@@ -30,7 +30,15 @@ class AdvancedQuery{
       where 1 = 1
       and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})`      
     
-    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${this.advQueryParams.selectedChrono},sc.${this.advQueryParams.selectedChrono}_uncert_pos,sc.${this.advQueryParams.selectedChrono}_uncert_neg, oc.*,d13c.*,d18o.* from site s 
+    
+    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name,` 
+    
+    if (this.advQueryParams.selectedChrono == 'Original author chronology') {
+      sqlChrono = sqlChrono + `oc.interp_age, oc.*,`
+    }  else {
+      sqlChrono = sqlChrono + `sc.${this.advQueryParams.selectedChrono},sc.${this.advQueryParams.selectedChrono}_uncert_pos,sc.${this.advQueryParams.selectedChrono}_uncert_neg,`
+    }
+    sqlChrono = sqlChrono + `d13c.*,d18o.* from site s 
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
@@ -39,6 +47,10 @@ class AdvancedQuery{
       left join d18o on d18o.sample_id = sa.sample_id      
       where 1 = 1    
       and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})`
+
+    if (this.advQueryParams.selectedInterpAgeRange[0].length !== 0 && this.advQueryParams.selectedInterpAgeRange[1].length !== 0 ) {
+      sqlChrono = sqlChrono + `\nand oc.interp_age between ${this.advQueryParams.selectedInterpAgeRange[0]} and ${this.advQueryParams.selectedInterpAgeRange[1]}`
+    }
       
     console.log({sqlEntity,sqlDating,sqlChrono})
     
@@ -57,14 +69,15 @@ class AdvancedQuery{
   countDateByEntity (entity_ids, minDate, selectedInterpAgeRange, dating) {
     let ageStart = Number(selectedInterpAgeRange[0])
     let ageEnd = Number(selectedInterpAgeRange[1])
-    console.log(ageStart, ageEnd, ageStart > 0 && ageEnd > 0)
+    //console.log(ageStart, ageEnd, ageStart > 0 && ageEnd > 0)
+    //console.log(`dating:${JSON.stringify(dating)}`)
     let count
     let c = entity_ids.map((e) => {
       if (ageStart > 0 && ageEnd > 0) {        
         let f = dating
           .filter((e) => e.date_used !== "no" && e.uncorr_age >= ageStart && e.uncorr_age<= ageEnd)          
           .filter((ee) => ee.entity_id === e)
-        console.log(f)
+        //console.log(f)
         count = f.length; 
       }
       else{
@@ -72,11 +85,12 @@ class AdvancedQuery{
           .filter((e) => e.date_used !== "no")
           .filter((ee) => ee.entity_id === e).length;        
       }
+      //console.log(`entity_id: ${e}, count: ${count}`)
       return { entity_id: e, count: count };      
     });  
   
     return c
-      .filter((e) => e.count > minDate)
+      .filter((e) => e.count >= minDate)
       .map((e) => {
         return e.entity_id;
       });
@@ -84,7 +98,10 @@ class AdvancedQuery{
 
   // Advanced query filter 2
   chronoFiltering(chrono,maxGap,entity_ids,selectedChrono){
-    console.log(maxGap,entity_ids,selectedChrono)
+    if (selectedChrono == 'Original author chronology') {
+      selectedChrono = 'interp_age'
+    }
+    //console.log(chrono,maxGap,entity_ids,selectedChrono)
     function m(a) {
       let max = 0;
       a.forEach(e => {
@@ -108,7 +125,7 @@ class AdvancedQuery{
     })
     console.log(maxes)
     return maxes
-      .filter(e => e.max < maxGap && e.max !== 0)
+      .filter(e => e.max <= maxGap && e.max !== 0)
       .map((e) => {
         return e.entity_id
       })

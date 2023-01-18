@@ -55,7 +55,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   }, [])  
 
   const handleOnDownload = (query, sql, title) => {
-    if (query.length <= 12000) {
+    if (query.length <= 30000) {
       var workBook = utils.book_new(),
       workSheet1 = utils.json_to_sheet(query),
       workSheet2 = utils.json_to_sheet(sql)
@@ -63,13 +63,19 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
       utils.book_append_sheet(workBook, workSheet2, 'SQL query')
       writeFile(workBook, `${title}.xlsx`)
     } else {
-      alert("Download request denied! There are too many lines in the result (max 12.000 lines allowed)! Please narrow your search!")
+      alert("Download request denied! In the case of queries that result in a high number of samples > 30,000 lines could take up to multiple minutes. Therefore, for such tasks use the MySQL database or the flat csv files located https://researchdata.reading.ac.uk/256/. The SISAL App is limited to providing 30,000 lines of output. Another option is to reduce the number of selected entities in the Filtered metadata list, or move to the Advanced querying to narrow the output.")
     }
     
   }
 
   const dowloadEntities = () => { 
-    handleOnDownload(entities.filter((item) => item.isChecked === true), [{sql:query}], "EntityList")
+    let selectedEntites = entities.filter((e) => e.isChecked === true)
+    if (selectedEntites.length !== 0) {
+      handleOnDownload(selectedEntites, [{sql:query}], "EntityList")  
+    } else {
+      alert("Download request denied! Please select at least one entity!")
+    }
+    
   }
 
   const dowloadDating = () => {
@@ -104,8 +110,8 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
       axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getsisalchrono`, {
         
         entity_ids:selectedEntites.map((e) => { return e.entity_id}),
-        chronos:selectedChronos.map((c) => { return c.name})
-      
+        chronos:selectedChronos.map((c) => { return c.name}),
+        age: [interpAgeFrom, interpAgeTo]   
       }).then((response) => {          
         //console.log(response.data.sisalChronos)  
         handleOnDownload(response.data.sisalChronos, [{sql:response.data.sql}], "SampleData")              
@@ -135,7 +141,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
       
       }).then((response) => {          
         console.log(response.data)  
-        if (response.data.chrono.length <= 12000) {
+        if (response.data.chrono.length <= 30000) {
           var workBook = utils.book_new(),        
           workSheet0 = utils.json_to_sheet([{reportInfo:response.data.reportInfo}]),
           workSheet1 = utils.json_to_sheet(response.data.entityFiltered),
@@ -172,7 +178,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
                 
           writeFile(workBook, `advancedRes.xlsx`) 
         } else {
-          alert("Download request denied! There are too many lines in the result (max 12.000 lines allowed)! Please narrow your search!")
+          alert("Download request denied! In the case of queries that result in a high number of samples > 30,000 lines could take up to multiple minutes. Therefore, for such tasks use the MySQL database or the flat csv files located https://researchdata.reading.ac.uk/256/. The SISAL App is limited to providing 30,000 lines of output. Another option is to reduce the number of selected entities in the Filtered metadata list, or move to the Advanced querying to narrow the output.")
         }
                    
       
@@ -260,7 +266,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   const [dropdownState, setDropdownState] = useState('Select a chronology')
   const toggleDropdown = () => setDropdownOpen(prevState => !prevState)
   
-  const cnAdv = [/*'Author chronology (interp_age)',*/'lin_interp_age','lin_reg_age','Bchron_age','Bacon_age','OxCal_age','copRa_age','StalAge_age']
+  const cnAdv = ['Original author chronology','lin_interp_age','lin_reg_age','Bchron_age','Bacon_age','OxCal_age','copRa_age','StalAge_age']
 
   if (columns) { 
     const isIdentical = comparePropsAndHook()   
@@ -295,6 +301,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
           </div>
           <div className="box">
             <h2>Select chronos</h2>
+            <p>The original author chronology is included in every case. SISAL chronologies can also be selected from below.</p>
             <Container>
               <Row>
                 <Col sm="4" xs="6">

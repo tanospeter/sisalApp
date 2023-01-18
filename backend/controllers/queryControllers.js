@@ -59,10 +59,11 @@ exports.SisalChronosQuery = async (req, res, next) => {
   try {
     let {
       entity_ids,
-      chronos
+      chronos,
+      age
     } = req.body
     
-    let query = new chronoQuery(entity_ids, chronos)
+    let query = new chronoQuery(entity_ids, chronos, age)
     
     let sql = query.queryBuilder()
       
@@ -90,12 +91,15 @@ exports.AdvancedQuery = async (req, res, next) =>{
 
     let filteredEntityIdsByDating = query.countDateByEntity (req.body.params.selectedEntity_ids, req.body.params.minDate, req.body.params.selectedInterpAgeRange, dating)
     let filteredEntityIdsByChrono = query.chronoFiltering(chrono,req.body.params.maxGap,req.body.params.selectedEntity_ids,req.body.params.selectedChrono)
-    console.log(filteredEntityIdsByChrono)
+    console.log(`filteredEntityIdsByChrono:${filteredEntityIdsByChrono}`)
     let filteredEntityIdsByAdvancedFilters = filteredEntityIdsByDating.concat(filteredEntityIdsByChrono)
+    console.log(filteredEntityIdsByAdvancedFilters)
     
     filteredEntityIdsByAdvancedFilters = filteredEntityIdsByAdvancedFilters.filter((item,index)=>{
       return (filteredEntityIdsByAdvancedFilters.indexOf(item) == index)
     })
+
+    console.log(filteredEntityIdsByAdvancedFilters)
 
     let reportInfo = {
       selectedEntity_ids : req.body.params.selectedEntity_ids,
@@ -108,32 +112,50 @@ exports.AdvancedQuery = async (req, res, next) =>{
       ResEntity_idsAdvancedFilters : filteredEntityIdsByAdvancedFilters
     }
 
-    let queryFiltered = new advancedQuery({
-      selectedEntity_ids : filteredEntityIdsByAdvancedFilters,
-      selectedChrono : req.body.params.selectedChrono
-    })
+    if(filteredEntityIdsByAdvancedFilters.length !== 0) {
+      
+      let queryFiltered = new advancedQuery({
+        selectedEntity_ids : filteredEntityIdsByAdvancedFilters,
+        selectedChrono : req.body.params.selectedChrono,
+        selectedInterpAgeRange: req.body.params.selectedInterpAgeRange
+      })
 
-    let sqlFiltered = queryFiltered.queryBuilder()
-    
-    const [entityFiltered, ____] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlEntity)
-    const [datingFiltered, _____] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlDating)
-    const [chronoFiltered, ______] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlChrono)
+      let sqlFiltered = queryFiltered.queryBuilder()
+      
+      const [entityFiltered, ____] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlEntity)
+      const [datingFiltered, _____] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlDating)
+      const [chronoFiltered, ______] = await queryFiltered.runAdvancedQuery(sqlFiltered.sqlChrono)
 
-    res.status(201).json({
-      dating, 
-      entity, 
-      chrono, 
-      sql, 
-      filteredEntityIdsByDating, 
-      filteredEntityIdsByChrono, 
-      filteredEntityIdsByAdvancedFilters, 
-      reportInfo : JSON.stringify(reportInfo),
-      sqlFiltered,
-      entityFiltered,
-      datingFiltered,
-      chronoFiltered
-    })
-
+      res.status(201).json({
+        dating, 
+        entity, 
+        chrono, 
+        sql, 
+        filteredEntityIdsByDating, 
+        filteredEntityIdsByChrono, 
+        filteredEntityIdsByAdvancedFilters, 
+        reportInfo : JSON.stringify(reportInfo),
+        sqlFiltered,
+        entityFiltered,
+        datingFiltered,
+        chronoFiltered
+      })
+    } else {
+      res.status(201).json({
+        dating, 
+        entity, 
+        chrono, 
+        sql, 
+        filteredEntityIdsByDating, 
+        filteredEntityIdsByChrono, 
+        filteredEntityIdsByAdvancedFilters, 
+        reportInfo : JSON.stringify(reportInfo),
+        sqlFiltered: [],
+        entityFiltered: [],
+        datingFiltered: [],
+        chronoFiltered: []
+      })
+    }
   } catch (error) {
     console.log(error)
     next(error)

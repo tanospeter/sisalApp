@@ -162,7 +162,7 @@ const Step1Screen = () => {
               </Row>
 
 
-              <h5 className="filterTitle">Filter type 3 (InterpAge)</h5>
+              <h5 className="filterTitle">Filter type 3 (Interp_age)</h5>
               <p>Usage is mandatory for advanced querying!</p>
               <Row>            
                 <Col md={6}>

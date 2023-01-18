@@ -2,9 +2,10 @@ const db = require('../config/db')
 
 class SisalChronoQuery{
 
-  constructor(entity_ids, chronos){
+  constructor(entity_ids, chronos, age){
     this.entity_ids = entity_ids
     this.chronos = chronos
+    this.age = age
   }
 
   queryBuilder() {
@@ -13,7 +14,7 @@ class SisalChronoQuery{
     })
 
     let sql = 
-      `select s.site_id, s.site_name, e.entity_id, e.entity_name, sc.${chronoWithUncert.join(', sc.')}, oc.*,d13c.*,d18o.* from site s 
+      `select s.site_id, s.site_name, e.entity_id, e.entity_name, oc.interp_age, oc.*, sc.${chronoWithUncert.join(', sc.')},d13c.*,d18o.* from site s 
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
       left join original_chronology oc on sa.sample_id = oc.sample_id
@@ -21,7 +22,11 @@ class SisalChronoQuery{
       left join d13c on d13c.sample_id = sa.sample_id
       left join d18o on d18o.sample_id = sa.sample_id      
       where 1 = 1    
-      and e.entity_id in (${this.entity_ids.join(',')})`    
+      and e.entity_id in (${this.entity_ids.join(',')})`
+    console.log(this.age)  
+    if (this.age[0].length !== 0 && this.age[1].length !== 0 ) {
+      sql = sql + `\nand oc.interp_age between ${this.age[0]} and ${this.age[1]}`
+    }
     console.log(sql)
     return sql
   }
