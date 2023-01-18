@@ -31,13 +31,12 @@ class AdvancedQuery{
       and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})`      
     
     
-    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name,` 
+    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name,oc.interp_age, oc.*,` 
     
-    if (this.advQueryParams.selectedChrono == 'Original author chronology') {
-      sqlChrono = sqlChrono + `oc.interp_age, oc.*,`
-    }  else {
+    if (this.advQueryParams.selectedChrono !== 'Original author chronology') {
       sqlChrono = sqlChrono + `sc.${this.advQueryParams.selectedChrono},sc.${this.advQueryParams.selectedChrono}_uncert_pos,sc.${this.advQueryParams.selectedChrono}_uncert_neg,`
-    }
+    } 
+
     sqlChrono = sqlChrono + `d13c.*,d18o.* from site s 
       left join entity e on s.site_id = e.site_id
       left join sample sa on e.entity_id = sa.entity_id
