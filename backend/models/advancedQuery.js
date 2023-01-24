@@ -33,7 +33,7 @@ class AdvancedQuery{
     
     let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name,oc.interp_age, oc.*,` 
     
-    if (this.advQueryParams.selectedChrono !== 'Original author chronology') {
+    if (this.advQueryParams.selectedChrono !== 'Original author chronology' && this.advQueryParams.selectedChrono !== 'Select a chronology') {
       sqlChrono = sqlChrono + `sc.${this.advQueryParams.selectedChrono},sc.${this.advQueryParams.selectedChrono}_uncert_pos,sc.${this.advQueryParams.selectedChrono}_uncert_neg,`
     } 
 
@@ -72,9 +72,9 @@ class AdvancedQuery{
     //console.log(`dating:${JSON.stringify(dating)}`)
     let count
     let c = entity_ids.map((e) => {
-      if (ageStart > 0 && ageEnd > 0) {        
+      if (ageStart != '' && ageEnd != '') {        
         let f = dating
-          .filter((e) => e.date_used !== "no" && e.uncorr_age >= ageStart && e.uncorr_age<= ageEnd)          
+          .filter((e) => e.date_used !== "no" && e.corr_age >= ageStart && e.corr_age<= ageEnd)          
           .filter((ee) => ee.entity_id === e)
         //console.log(f)
         count = f.length; 

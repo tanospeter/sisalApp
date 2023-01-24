@@ -90,10 +90,12 @@ exports.AdvancedQuery = async (req, res, next) =>{
     const [chrono, ___] = await query.runAdvancedQuery(sql.sqlChrono)
 
     let filteredEntityIdsByDating = query.countDateByEntity (req.body.params.selectedEntity_ids, req.body.params.minDate, req.body.params.selectedInterpAgeRange, dating)
+    console.log(`filteredEntityIdsByDating:${filteredEntityIdsByDating}`)
     let filteredEntityIdsByChrono = query.chronoFiltering(chrono,req.body.params.maxGap,req.body.params.selectedEntity_ids,req.body.params.selectedChrono)
     console.log(`filteredEntityIdsByChrono:${filteredEntityIdsByChrono}`)
-    let filteredEntityIdsByAdvancedFilters = filteredEntityIdsByDating.concat(filteredEntityIdsByChrono)
-    console.log(filteredEntityIdsByAdvancedFilters)
+    //let filteredEntityIdsByAdvancedFilters = filteredEntityIdsByDating.concat(filteredEntityIdsByChrono)
+    let filteredEntityIdsByAdvancedFilters = filteredEntityIdsByDating.filter(element => filteredEntityIdsByChrono.includes(element))
+    console.log(`filteredEntityIdsByAdvancedFilters: ${filteredEntityIdsByAdvancedFilters}`)
     
     filteredEntityIdsByAdvancedFilters = filteredEntityIdsByAdvancedFilters.filter((item,index)=>{
       return (filteredEntityIdsByAdvancedFilters.indexOf(item) == index)

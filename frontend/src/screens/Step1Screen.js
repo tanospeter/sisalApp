@@ -34,9 +34,9 @@ const Step1Screen = () => {
     setEntityList([]) 
     const siteNameEmpty = siteName === ''
     const latLonEmpty = latFrom === '' && latTo === '' && longFrom === '' && longTo === ''
-    const latLonIncomplete = !latLonEmpty && (latFrom === '' || latTo === '' || longFrom === '' || longTo === '')
+    const latLonIncomplete = !latLonEmpty && (latFrom === '' || latTo === '' || longFrom === '' || longTo === '' || latFrom > latTo || longFrom > longTo)
     const ageEmpty = interpAgeFrom === '' && interpAgeTo === ''
-    const ageIncomplete = !ageEmpty && (interpAgeFrom === '' || interpAgeTo === '')
+    const ageIncomplete = !ageEmpty && (interpAgeFrom === '' || interpAgeTo === '' || interpAgeFrom > interpAgeTo)
     if (siteNameEmpty && latLonEmpty && ageEmpty) {
       alert("None of the query's filter parameters are specified correctly!\nPlease specify the Site Name and/or Lat-Lon coordinates and/or interval of InterpAge and try again!")
     } else if (latLonIncomplete) {

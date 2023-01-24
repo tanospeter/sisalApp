@@ -68,8 +68,16 @@ const HomeSrean = () => {
               Latitude and Longitude (from - to; default is global coverage values from -90 to 90 and from -180 to 180). In the first column the southern and western boundaries should be provided for latitude and longitude respectively. Latitude in degrees decimal (N= +, S= -) and longitude in degrees decimal (E= +, W= -).   Other formats are not accepted, the App will return no results.
             </li>
             <li>
-              Interp_age (from - to) which stands for calendar age of the sample in years according to the original published
+              Interp_age (from younger - to older) which stands for calendar age of the sample in years according to the original published
               age model. For details see Sect. 2.2 and Table S9 of <a href="https://essd.copernicus.org/articles/10/1687/2018/">Atsawawaranunt et al. (2018)</a>.
+            </li>
+            <li>
+              University of Reading page: <a href="https://researchdata.reading.ac.uk/256/">https://researchdata.reading.ac.uk/256/</a>. 
+              <p/>Please note, in case of large output tables, querying may take up to minutes.
+            </li>
+            <li>
+              The SISAL app a stepping stone in the usage of the SISAL database (and other databases like it).
+              <p/>The extracted Sample data is trimmed according to the temporal constraints if applied in 'Filter type 3 (Interp_age)', while the complete dating information table is given for the selected record(s) meeting the filter criteria applied
             </li>
           </ul>
           <h3>Selection based on the metadata - 2nd step</h3>

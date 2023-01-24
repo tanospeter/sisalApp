@@ -133,8 +133,16 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
     let selectedChrono = dropdownState
     let selectedInterpAgeRange = [interpAgeFrom, interpAgeTo]
     console.log({selectedEntity_ids, minDate, maxGap, selectedChrono, selectedInterpAgeRange})
-    
     if (selectedEntity_ids.length !== 0) {
+      alert("Download request denied! Please select at least one entity!")
+    }
+    else if (maxGap.length !==0 && selectedChrono === 'Select a chronology' ){
+      alert("Download request denied! Please select a chronology or Leave blank this field if you don't want to use 'Advanced query filter 2'!")
+    }
+    else if (selectedInterpAgeRange[0] > selectedInterpAgeRange[1]) {
+      alert("Download request denied! Filter type 3 (Interp_age) younger > older!")
+    }
+    else {
       axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getAdvancedRes`, {        
         
         params:{selectedEntity_ids, minDate, maxGap, selectedChrono, selectedInterpAgeRange}       
@@ -183,11 +191,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
                    
       
       }).catch(error => console.log(error))
-    } else {
-      
-      alert("Download request denied! Please select at least one entity!")
-
-    }
+    } 
   }
 
   const comparePropsAndHook = () => {
