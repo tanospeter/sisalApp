@@ -127,13 +127,13 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   }
 
   const downloadAdvRes = () => {
-    let selectedEntity_ids = entities.filter((e) => e.isChecked === true).map((e) => {return e.entity_id})
+    let selectedEntity_ids = entities.filter((e) => e.isChecked === true).map((e) => {return e.entity_id})    
     let minDate = advancedFilter1
     let maxGap = advancedFilter2
     let selectedChrono = dropdownState
     let selectedInterpAgeRange = [interpAgeFrom, interpAgeTo]
     console.log({selectedEntity_ids, minDate, maxGap, selectedChrono, selectedInterpAgeRange})
-    if (selectedEntity_ids.length !== 0) {
+    if (selectedEntity_ids.length === 0) {
       alert("Download request denied! Please select at least one entity!")
     }
     else if (maxGap.length !==0 && selectedChrono === 'Select a chronology' ){

@@ -123,14 +123,17 @@ class AdvancedQuery{
       return {entity_id:e, max}
     })
     console.log(maxes)
-    return maxes
+    if (maxGap !=='') {
+      return maxes
       .filter(e => e.max <= maxGap && e.max !== 0)
       .map((e) => {
         return e.entity_id
       })
-  }
-
-
-  
+    } else {
+      return maxes.map((e) => {
+        return e.entity_id
+      })
+    }    
+  } 
 }
 module.exports = AdvancedQuery
