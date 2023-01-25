@@ -42,7 +42,7 @@ class EntityMetaQuery {
 
   queryBuilder() {
     let filters = ''
-    let sql = `select distinct ref.doi, e.*, s.* from site s
+    let sql = `select distinct ref.doi, s.site_name, e.*, s.* from site s
     left join entity e on s.site_id = e.site_id
     left join sample sa on e.entity_id = sa.entity_id
     left join original_chronology oc on sa.sample_id = oc.sample_id

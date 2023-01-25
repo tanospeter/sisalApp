@@ -42,7 +42,7 @@ const Step1Screen = () => {
     } else if (latLonIncomplete) {
       alert("The coordinates are incorrect or some are missing!\nPlease revise the coordinates, and try again!")
     } else if (ageIncomplete){
-      alert("The InterpAge interval is incorrect or incomlete!\nPlease revise the begin and end of the interval, and try again! ")
+      alert("The InterpAge interval is incorrect or incomplete!\nPlease revise the beginning and end of the interval, and try again! ")
     } else {
       axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`, {
         email:email,
@@ -162,7 +162,7 @@ const Step1Screen = () => {
               </Row>
 
 
-              <h5 className="filterTitle">Filter type 3 (Interp_age)</h5>
+              <h5 className="filterTitle">Filter type 3 (interp_age)</h5>
               <p>Usage is mandatory for advanced querying!</p>
               <Row>            
                 <Col md={6}>
@@ -174,7 +174,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setInterpAgeFrom(event.target.value)
                       }}/>
-                    <Label for="LatFrom">Iterp_age from</Label>
+                    <Label for="LatFrom">interp_age from</Label>
                   </FormGroup>
                 </Col>
                 <Col md={6}>
@@ -187,7 +187,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setInterpAgeTo(event.target.value)                      
                       }}/>
-                    <Label for="LatTo">Iterp_age to</Label>
+                    <Label for="LatTo">interp_age to</Label>
                   </FormGroup>
                 </Col>            
               </Row>                               

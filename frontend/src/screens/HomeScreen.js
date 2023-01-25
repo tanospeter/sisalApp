@@ -77,7 +77,7 @@ const HomeSrean = () => {
             </li>
             <li>
               The SISAL app a stepping stone in the usage of the SISAL database (and other databases like it).
-              <p/>The extracted Sample data is trimmed according to the temporal constraints if applied in 'Filter type 3 (Interp_age)', while the complete dating information table is given for the selected record(s) meeting the filter criteria applied
+              <p/>The extracted Sample data is trimmed according to the temporal constraints if applied in 'Filter type 3 (interp_age)', while the complete dating information table is given for the selected record(s) meeting the filter criteria applied
             </li>
           </ul>
           <h3>Selection based on the metadata - 2nd step</h3>
