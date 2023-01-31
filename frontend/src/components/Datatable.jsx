@@ -390,7 +390,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
                             At least n radiometric dates in each and every entity (numeric)
                           </Label>
                           <FormText>
-                            NOTE: Leave blank this field if you don't want to use this filter!
+                            NOTE: Leave this field blank if you do not want to use this filter!
                           </FormText>              
                         </FormGroup>                        
                       </Col>  
@@ -416,7 +416,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
                             Max gap in the chosen chronology (numeric)
                           </Label>
                           <FormText>
-                            NOTE: Leave blank this field if you don't want to use this filter!
+                            NOTE: Leave this field blank if you do not want to use this filter!
                           </FormText>                
                         </FormGroup>
                       </Col>
@@ -566,7 +566,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
                             At least n radiometric dates in each and every entity (numeric)
                           </Label>
                           <FormText>
-                            NOTE: Leave blank this field if you don't want to use this filter!
+                            NOTE: Leave this field blank if you do not want to use this filter!
                           </FormText>              
                         </FormGroup>                        
                       </Col>  
@@ -592,7 +592,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
                             Max gap in the chosen chronology (numeric)
                           </Label>
                           <FormText>
-                            NOTE: Leave blank this field if you don't want to use this filter!
+                            NOTE: Leave this field blank if you do not want to use this filter!
                           </FormText>                
                         </FormGroup>
                       </Col>
