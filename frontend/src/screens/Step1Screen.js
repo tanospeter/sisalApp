@@ -34,15 +34,15 @@ const Step1Screen = () => {
     setEntityList([]) 
     const siteNameEmpty = siteName === ''
     const latLonEmpty = latFrom === '' && latTo === '' && longFrom === '' && longTo === ''
-    const latLonIncomplete = !latLonEmpty && (latFrom === '' || latTo === '' || longFrom === '' || longTo === '' || latFrom > latTo || longFrom > longTo)
+    const latLonIncomplete = !latLonEmpty && (latFrom === '' || latTo === '' || longFrom === '' || longTo === '' || parseInt(latFrom) > parseInt(latTo) || parseInt(longFrom) > parseInt(longTo))
     const ageEmpty = interpAgeFrom === '' && interpAgeTo === ''
-    const ageIncomplete = !ageEmpty && (interpAgeFrom === '' || interpAgeTo === '' || interpAgeFrom > interpAgeTo)
+    const ageIncomplete = !ageEmpty && (interpAgeFrom === '' || interpAgeTo === '' || parseInt(interpAgeFrom) > parseInt(interpAgeTo))
     if (siteNameEmpty && latLonEmpty && ageEmpty) {
       alert("None of the query's filter parameters are specified correctly!\nPlease specify the Site Name and/or Lat-Lon coordinates and/or interval of InterpAge and try again!")
     } else if (latLonIncomplete) {
-      alert("The coordinates are incorrect or some are missing!\nPlease revise the coordinates, and try again!")
+      alert("The coordinates are incorrect or some are missing! Please revise the coordinates, and try again! Default is global coverage from -90° to 90° and from -180° to 180°.")
     } else if (ageIncomplete){
-      alert("The InterpAge interval is incorrect or incomplete!\nPlease revise the beginning and end of the interval, and try again! ")
+      alert("The interp_age interval is incorrect or incomplete!\nPlease revise the beginning (younger) and end (older) of the interval, and try again!")
     } else {
       axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`, {
         email:email,
@@ -97,7 +97,7 @@ const Step1Screen = () => {
                     <Input
                       id="SiteName"
                       name="siteName"
-                      placeholder="Site name"                
+                      placeholder="site_name"                
                       onChange={(event)=>{
                         setSiteName(event.target.value)
                       }}/>
@@ -114,7 +114,7 @@ const Step1Screen = () => {
                     <Input
                       id="LatFrom"
                       name="latFrom"
-                      placeholder="Latitude from"                
+                      placeholder="Latitude from -90°"                
                       onChange={(event)=>{
                         setLatFrom(event.target.value)
                       }}/>
@@ -126,7 +126,7 @@ const Step1Screen = () => {
                     <Input
                       id="LatTo"
                       name="latTo"
-                      placeholder="Latitude to"                
+                      placeholder="Latitude to 90°"                
                       onChange={(event)=>{
                         setLatTo(event.target.value)
                       }}/>
@@ -140,7 +140,7 @@ const Step1Screen = () => {
                     <Input
                       id="LonFrom"
                       name="lonFrom"
-                      placeholder="Longitude from"                
+                      placeholder="Longitude from -180°"                
                       onChange={(event)=>{
                         setLongFrom(event.target.value)
                       }}/>
@@ -152,7 +152,7 @@ const Step1Screen = () => {
                     <Input
                       id="LonTo"
                       name="lonTo"
-                      placeholder="Longitude to"                
+                      placeholder="Longitude to 180°"                
                       onChange={(event)=>{
                         setLongTo(event.target.value)
                       }}/>
@@ -170,7 +170,7 @@ const Step1Screen = () => {
                     <Input
                       id="LatFrom"
                       name="latFrom"
-                      placeholder="Iterp_age from"                
+                      placeholder="interp_age from (years BP)"                
                       onChange={(event)=>{
                         setInterpAgeFrom(event.target.value)
                       }}/>
@@ -182,7 +182,7 @@ const Step1Screen = () => {
                     <Input
                       id="LatTo"
                       name="latTo"
-                      placeholder="Iterp_age to"  
+                      placeholder="Iterp_age to (years BP)"  
                       value={interpAgeTo}              
                       onChange={(event)=>{
                         setInterpAgeTo(event.target.value)                      
