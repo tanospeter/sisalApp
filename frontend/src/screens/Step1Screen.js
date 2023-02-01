@@ -101,7 +101,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setSiteName(event.target.value)
                       }}/>
-                    <Label for="SiteName">Site name</Label>
+                    <Label for="SiteName">site_name</Label>
                   </FormGroup>              
                 </Col>              
               </Row>         
@@ -118,7 +118,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setLatFrom(event.target.value)
                       }}/>
-                    <Label for="LatFrom">Latitude from</Label>
+                    <Label for="LatFrom">Latitude from -90°</Label>
                   </FormGroup>
                 </Col>
                 <Col md={6}>
@@ -130,7 +130,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setLatTo(event.target.value)
                       }}/>
-                    <Label for="LatTo">Latitude to</Label>
+                    <Label for="LatTo">Latitude to 90°</Label>
                   </FormGroup>
                 </Col>            
               </Row>                   
@@ -144,7 +144,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setLongFrom(event.target.value)
                       }}/>
-                    <Label for="LonFrom">Longitude from</Label>
+                    <Label for="LonFrom">Longitude from -180°</Label>
                   </FormGroup>
                 </Col>
                 <Col md={6}>
@@ -156,7 +156,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setLongTo(event.target.value)
                       }}/>
-                    <Label for="LonTo">Longitude to</Label>
+                    <Label for="LonTo">Longitude to 180°</Label>
                   </FormGroup>
                 </Col>
               </Row>
@@ -174,7 +174,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setInterpAgeFrom(event.target.value)
                       }}/>
-                    <Label for="LatFrom">interp_age from</Label>
+                    <Label for="LatFrom">interp_age from (years BP)</Label>
                   </FormGroup>
                 </Col>
                 <Col md={6}>
@@ -187,7 +187,7 @@ const Step1Screen = () => {
                       onChange={(event)=>{
                         setInterpAgeTo(event.target.value)                      
                       }}/>
-                    <Label for="LatTo">interp_age to</Label>
+                    <Label for="LatTo">interp_age to (years BP)</Label>
                   </FormGroup>
                 </Col>            
               </Row>                               

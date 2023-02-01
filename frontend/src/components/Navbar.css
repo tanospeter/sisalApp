@@ -1,12 +1,40 @@
 .navbar-brand {
-  color: orange;
+  color: rgb(148, 70, 236);
   font-weight: 700;
 }
 
+.navbar-brand.active {
+  color: rgb(148, 70, 236);
+}
+
 .navbar-brand:hover {
-  color: rgb(255, 136, 0);
+  color: rgb(126, 30, 182);
 }
 
 .navbar-brand img {
   margin-right: 0.5rem
+}
+
+.navbar-query {
+  border: 1px solid orange;
+}
+
+.navbar-item .nav-link {
+  border: 1px solid rgba(0, 0, 0,0);
+}
+
+.navbar-query .nav-link {
+  color: orange;
+  font-weight: 500;
+}
+
+
+.navbar-query .nav-link.active {
+  color: orange;
+  font-weight: 500;
+}
+
+.navbar-query:hover .nav-link {
+  color: rgb(255, 136, 0);
+  border-color:  rgb(255, 136, 0);
 }

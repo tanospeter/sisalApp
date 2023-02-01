@@ -3,7 +3,7 @@ import './DatabaseScreen.css'
 const DatabaseScreen = () => {
   return (
     <div className="DatabaseScreen">
-      <embed src="data/EER_SISALv3.pdf" />
+      <embed src="data/EER_SISALv2.pdf" />
     </div>
   )
 }

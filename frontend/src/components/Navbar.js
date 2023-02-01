@@ -42,15 +42,15 @@ const Navbar2 = () => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
-            <NavItem>
+            <NavItem className="navbar-query">
               <NavLink to="step1" className="nav-link">Querying</NavLink>
             </NavItem>
-            <NavItem>
+            <NavItem className="navbar-item">
               <NavLink to="database" className="nav-link">
-                SISALv3 EER
+                SISALv2 EER
               </NavLink>
             </NavItem>
-            <NavItem>
+            <NavItem className="navbar-item">
               <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank" className="nav-link">
                 Publications
               </a>
