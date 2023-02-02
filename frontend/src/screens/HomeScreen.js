@@ -25,13 +25,13 @@ const HomeSrean = () => {
             The <a href="https://essd.copernicus.org/articles/12/2579/2020/" target="_blank">SISALv2 database</a> created by the
             PAGES-SISAL Working Group provides 700 speleothem records from 293 cave sites, 500 of which have standardized chronologies.
             The database provides increased access to records, extensive metadata and has enabled regional-to-global scale analysis of
-            climatic patterns using a variety of approaches. Some examples can be seen in the PAGES-SISAL <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank">product</a> page.
+            climatic patterns using a variety of approaches. Some examples can be seen in the 
+            PAGES-SISAL <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank">product</a> page.
           </p>
           <p>
             The structure of the SISAL <a href="https://tanospeter.github.io/sisalv2_eer.html" target="_blank">database</a> requires
             use of codes (SQL, R, Python, MATLAB) which may make it difficult to access  the database for everyday research. Thus, 
-            a <a href="https://pastglobalchanges.org/science/wg/sisal/intro" target="_blank">project</a> 
-            was initiated within 
+            a <a href="https://pastglobalchanges.org/science/wg/sisal/intro" target="_blank">project</a> was initiated within 
             the <a href="https://pastglobalchanges.org/science/wg/sisal/intro" target="_blank">PAGES-SISAL Working Group</a> to construct
             a web-based interface to access the SISAL database using an online javascript web app, with a user-friendly GUI front-end
             to increase SISAL database accessibility. In addition to increasing data access, the '<strong>SISAL webApp</strong>' is
@@ -74,8 +74,8 @@ const HomeSrean = () => {
             <li>
               interp_age (from younger - to older) according to the original author-generated age model expressed in year BP, where BP
               refers to “before present”, where present is 1950 CE. For details see Sect. 2.2 and Table S9 
-              of <a href="https://essd.copernicus.org/articles/10/1687/2018/" target="_blank">Atsawawaranunt et al. (2018)</a> 
-              and the <a href="https://researchdata.reading.ac.uk/256/" target="_blank">SISAL page at University of Reading</a>.
+              of <a href="https://essd.copernicus.org/articles/10/1687/2018/" target="_blank">Atsawawaranunt et al. (2018)</a> and 
+              the <a href="https://researchdata.reading.ac.uk/256/" target="_blank">SISAL page at University of Reading</a>.
             </li>
           </ul>
           <p>
