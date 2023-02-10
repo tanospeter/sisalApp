@@ -38,7 +38,7 @@ const Step1Screen = () => {
     const ageEmpty = interpAgeFrom === '' && interpAgeTo === ''
     const ageIncomplete = !ageEmpty && (interpAgeFrom === '' || interpAgeTo === '' || parseInt(interpAgeFrom) > parseInt(interpAgeTo))
     if (siteNameEmpty && latLonEmpty && ageEmpty) {
-      alert("None of the query's filter parameters are specified correctly!\nPlease specify the Site Name and/or Lat-Lon coordinates and/or interval of InterpAge and try again!")
+      alert("None of the query's filter parameters are specified correctly!\nPlease specify the site_name and/or Lat-Lon coordinates and/or interp_age interval and try again! Please see the user guide for instructions on the main page.")
     } else if (latLonIncomplete) {
       alert("The coordinates are incorrect or some are missing! Please revise the coordinates, and try again! Default is global coverage from -90° to 90° and from -180° to 180°.")
     } else if (ageIncomplete){
