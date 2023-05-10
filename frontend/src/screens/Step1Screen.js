@@ -44,7 +44,7 @@ const Step1Screen = () => {
     } else if (ageIncomplete){
       alert("The interp_age interval is incorrect or incomplete!\nPlease revise the beginning (younger) and end (older) of the interval, and try again!")
     } else {
-      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`, {
+      axios.post(`https://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`, {
         email:email,
         siteName: siteName,
         lat: [ latFrom, latTo ],
