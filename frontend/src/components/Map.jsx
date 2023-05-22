@@ -18,13 +18,7 @@ const Map = ({ data }) => {
     id: item.entity_id,
     coordinates: [item.latitude, item.longitude]
   }));
-
-  // const markers = [
-  //     { id: 1, coordinates: ['51.505', '-0.09'] }, // London
-  //     { id: 2, coordinates: ['40.7128', '-74.0060'] }, // New York
-  //     { id: 3, coordinates: [34.0522, -118.2437] }, // Los Angeles
-  //   ];
-
+  
   var center = markers.length == 0 ? [51.505, -0.09] : markers[0].coordinates;
 
   useEffect(() => {
