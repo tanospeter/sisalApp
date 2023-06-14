@@ -33,7 +33,7 @@ const Map = ({ data }) => {
     {markers.map((marker) => (
       <Marker key={marker.id} position={marker.coordinates}>
         <Popup>
-        <strong>Site Name</strong>: {marker.site_name} <br/> <strong>Site ID</strong>: {marker.site_id} <br/> <strong>Geology</strong>: {marker.geology} <br/> <strong>Rock age</strong>: {marker.rock_age}
+        <strong>site_name</strong>: {marker.site_name} <br/> <strong>site_id</strong>: {marker.site_id} <br/> <strong>geology</strong>: {marker.geology} <br/> <strong>rock_age</strong>: {marker.rock_age}
         </Popup>
       </Marker>
     ))}
