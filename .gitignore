@@ -25,3 +25,4 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 frontend/package-lock.json
+frontend/src/pic/PAGES_logo_o.png

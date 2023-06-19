@@ -17,3 +17,8 @@ footer a {
 footer a:hover {
     color: rgb(255, 136, 0);
 }
+
+.visitors {
+    text-align: center;
+    padding-bottom: 80px;
+}
