@@ -31,7 +31,7 @@ class AdvancedQuery{
       and e.entity_id in (${this.advQueryParams.selectedEntity_ids.join(',')})`      
     
     
-    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, e.entity_name,oc.interp_age, oc.*,` 
+    let sqlChrono =`select s.site_id, s.site_name, e.entity_id, sa.depth_sample, e.entity_name,oc.interp_age, oc.*,` 
     
     if (this.advQueryParams.selectedChrono !== 'Original author chronology' && this.advQueryParams.selectedChrono !== 'Select a chronology') {
       sqlChrono = sqlChrono + `sc.${this.advQueryParams.selectedChrono},sc.${this.advQueryParams.selectedChrono}_uncert_pos,sc.${this.advQueryParams.selectedChrono}_uncert_neg,`
