@@ -46,6 +46,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   const [chronos,setChronos] = useState([cn]) 
   const [advancedFilter1, setAdvancedFilter1] = useState("")
   const [advancedFilter2, setAdvancedFilter2] = useState("")
+  //const [ini,setIni] = useState("")
   
   let columns = data[0] && Object.keys(data[0])  
   let d = data
@@ -626,7 +627,16 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
         </div>
       )
     }    
-  }  
+  }
+  else {
+    if (query.length !== 0) {
+      return (            
+        <div className="datatable">
+          <h2>No data retrieved!</h2>        
+        </div>
+      )
+    }
+  } 
 }
 
 export default Datatable

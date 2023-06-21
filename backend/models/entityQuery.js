@@ -2,12 +2,13 @@ const db = require('../config/db')
 
 class EntityMetaQuery {
   
-  constructor(email,siteName,lat,lon,age){
+  constructor(email,siteName,lat,lon,age, speleothemType){
     this.email = email
     this.siteName = siteName
     this.lat = lat
     this.lon = lon
     this.age = age    
+    this.speleothemType = speleothemType    
   }
 
   save() {    
@@ -42,6 +43,7 @@ class EntityMetaQuery {
 
   queryBuilder() {
     let filters = ''
+    let speleothemTypeFilter = ''
     let sql = `select distinct ref.doi, s.site_name, e.*, s.* from site s
     left join entity e on s.site_id = e.site_id
     left join sample sa on e.entity_id = sa.entity_id
@@ -59,7 +61,16 @@ class EntityMetaQuery {
     const latLonFilled = this.lat[0] !='' && this.lat[1] !='' && this.lon[0] !='' && this.lon[1] !=''
     const ageFilled = this.age[0] !='' && this.age[1] !=''
     
-   
+    let nonComposite = this.speleothemType[0].isChecked
+    let composite = this.speleothemType[1].isChecked
+    
+    if (composite === true) {
+      if (nonComposite === false) {
+        speleothemTypeFilter = ` and speleothem_type in ('composite')`
+      }
+    } else {speleothemTypeFilter = ` and speleothem_type not in ('composite')`}
+    console.log(`speleothemTypeFilter = ${speleothemTypeFilter}`)
+
     if (siteNameFilled) {
       if (latLonFilled) {
         if (ageFilled) {
@@ -107,7 +118,7 @@ class EntityMetaQuery {
       }
     }
     //sql = sql + filters + ' group by e.entity_id'
-    sql = sql + filters
+    sql = sql + filters + speleothemTypeFilter
     console.log(sql) 
     return sql
   }

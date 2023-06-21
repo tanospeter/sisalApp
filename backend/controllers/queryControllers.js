@@ -11,8 +11,9 @@ exports.EntityMetaQuery = async (req, res, next) => {
       siteName,
       lat,      
       lon,
-      age
-    } = req.body
+      age,
+      speleothemType
+    } = req.body    
     
     let query = new entityQuery(
       email,
@@ -20,6 +21,7 @@ exports.EntityMetaQuery = async (req, res, next) => {
       lat,
       lon,
       age,
+      speleothemType
       )
          
     await query.save()

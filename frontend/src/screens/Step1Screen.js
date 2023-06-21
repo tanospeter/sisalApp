@@ -1,6 +1,6 @@
 import './Step1Screen.css'
 //import { BrowserRouter as Router, Routes , Route } from 'react-router-dom'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from 'axios'
 import Datatable from '../components/Datatable'
 
@@ -19,6 +19,11 @@ import {
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Map from '../components/Map';
 
+const tempSpeleothemType = [
+  {name: 'non-composite', isChecked: true},
+  {name: 'composite', isChecked: false}
+]
+
 const Step1Screen = () => {
 
   const [email, setEmail] = useState("")
@@ -33,6 +38,11 @@ const Step1Screen = () => {
   const [entityList, setEntityList] = useState([])
   const [query, setQuery] = useState([])
 
+  const [speleothemType, setSpeleothemType] = useState([tempSpeleothemType])
+  useEffect(() => {
+    setSpeleothemType(tempSpeleothemType)     
+  }, [])  
+
   const sendQueryParams = () => {
     setEntityList([])
     const siteNameEmpty = siteName === ''
@@ -46,21 +56,33 @@ const Step1Screen = () => {
       alert("The coordinates are incorrect or some are missing! Please revise the coordinates, and try again! Default is global coverage from -90° to 90° and from -180° to 180°.")
     } else if (ageIncomplete) {
       alert("The interp_age interval is incorrect or incomplete!\nPlease revise the beginning (younger) and end (older) of the interval, and try again!")
-    } else {
+    } else if (speleothemType[0].isChecked === false && speleothemType[1].isChecked === false) {
+      alert("Please select at least one speleothem_type!")
+    }else {
       axios.post(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`, {
         email: email,
         siteName: siteName,
         lat: [latFrom, latTo],
         lon: [longFrom, longTo],
-        age: [interpAgeFrom, interpAgeTo]
+        age: [interpAgeFrom, interpAgeTo],
+        speleothemType: speleothemType
       }).then((response) => {
         console.log(response.data)
         setQuery(response.data.sql)
         setEntityList(response.data.meta)
       }).catch(error => console.log(error))
     }
-  }
+  }  
 
+  const selectSpeleothemType = (e) => {
+    const {name, checked} = e.target
+    console.log(name, checked, speleothemType)
+    let tmp = speleothemType.map((st) => 
+      st.name === name ? {...st, isChecked:checked} : st
+    ) 
+    console.log(tmp)   
+    setSpeleothemType(tmp)    
+  }
 
   return (
     <div className="Step1Screen">
@@ -193,6 +215,33 @@ const Step1Screen = () => {
                     <Label for="LatTo">interp_age to (years BP)</Label>
                   </FormGroup>
                 </Col>
+              </Row>
+              <Row>
+                <h5 className="filterTitle">Included speleothem_type(s)</h5>
+                <p>At least one of the checkboxes below must be checked!</p>                
+                  <Col sm="4" xs="6">
+                    <div className="form-check">
+                      <Input 
+                        type="checkbox"                   
+                        className="form-check-input"
+                        defaultChecked="checked"
+                        name="non-composite"
+                        onChange={selectSpeleothemType} 
+                      />          
+                      <Label>Non-Composite</Label>        
+                    </div>
+                  </Col>
+                  <Col sm="4" xs="6">
+                    <div className="form-check">
+                      <Input 
+                        type="checkbox"                   
+                        className="form-check-input"
+                        name="composite"                        
+                        onChange={selectSpeleothemType} 
+                      />          
+                      <Label>Composite</Label>        
+                    </div>
+                  </Col>                                 
               </Row>
             </Form>
           </div>
