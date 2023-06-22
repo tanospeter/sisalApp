@@ -1,5 +1,6 @@
 import './HomeScreen.css'
 import logo from '../pic/PAGES_logo.png'
+import {Alert} from 'reactstrap';
 
 const HomeSrean = () => {
   return (
@@ -8,7 +9,7 @@ const HomeSrean = () => {
         <div className="title">
           <h1>The SISAL webApp</h1>
           <p>
-            - explore the speleothem climate and environment archives of the world -
+            - explore the speleothem climate and environmental archives of the world -
           </p>
         </div>
         <div className="intro">
@@ -16,7 +17,7 @@ const HomeSrean = () => {
           <a href="https://pastglobalchanges.org/science/wg/sisal/intro"><img src={logo} alt="" /></a>
           <p>
             Speleothem (cave carbonate) archives are widely distributed in terrestrial regions around the world, and provide
-            high-resolution records of past changes in climate and environment, mainly encoded in oxygen and carbon 
+            high-resolution records of past changes in climate and environment, mainly encoded in oxygen and carbon
             isotopes. <a href="https://pastglobalchanges.org/science/wg/sisal/intro" target="_blank">SISAL</a> (Speleothem Isotope Synthesis
             and AnaLysis) is an international working group of the Past Global Changes (PAGES) project, which aims to provide a
             comprehensive compilation of speleothem isotope records for climate reconstruction and model evaluation.
@@ -25,13 +26,13 @@ const HomeSrean = () => {
             The <a href="https://essd.copernicus.org/articles/12/2579/2020/" target="_blank">SISALv2 database</a> created by the
             PAGES-SISAL Working Group provides 700 speleothem records from 293 cave sites, 500 of which have standardized chronologies.
             The database provides increased access to records, extensive metadata and has enabled regional-to-global scale analysis of
-            climatic patterns using a variety of approaches. Some examples can be seen in the 
+            climatic patterns using a variety of approaches. Some examples can be seen in the
             PAGES-SISAL <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank">product</a> page.
           </p>
           <p>
             The structure of the SISAL <a href="https://tanospeter.github.io/sisalv2_eer.html" target="_blank">database</a> requires
-            use of codes (SQL, R, Python, MATLAB) which may make it difficult to access  the database for everyday research. Thus, 
-            a <a href="https://pastglobalchanges.org/science/wg/sisal/intro" target="_blank">project</a> was initiated within 
+            use of codes (SQL, R, Python, MATLAB) which may make it difficult to access  the database for everyday research. Thus,
+            a <a href="https://pastglobalchanges.org/science/wg/sisal/intro" target="_blank">project</a> was initiated within
             the <a href="https://pastglobalchanges.org/science/wg/sisal/intro" target="_blank">PAGES-SISAL Working Group</a> to construct
             a web-based interface to access the SISAL database using an online javascript web app, with a user-friendly GUI front-end
             to increase SISAL database accessibility. In addition to increasing data access, the '<strong>SISAL webApp</strong>' is
@@ -54,7 +55,7 @@ const HomeSrean = () => {
             With the SISAL webApp one can query the SISALv2 database using a simple online tool accessible from any web-browser. It
             provides the user with the metadata of the queried speleothem records, their sample data (δ<sup>18</sup>O and δ<sup>13</sup>C) and dating
             information including the original author-generated - as well as SISAL-generated standardized - chronologies. For further
-            information on database versions, publications and how-to guides please visit 
+            information on database versions, publications and how-to guides please visit
             the <a href="https://researchdata.reading.ac.uk/256/" target="_blank">SISAL page at University of Reading</a>.
           </p>
           <h3>1. Basic querying - 1<sup>st</sup> step</h3>
@@ -73,11 +74,14 @@ const HomeSrean = () => {
             </li>
             <li>
               interp_age (from younger - to older) according to the original author-generated age model expressed in year BP, where BP
-              refers to “before present”, where present is 1950 CE. For details see Sect. 2.2 and Table S9 
-              of <a href="https://essd.copernicus.org/articles/10/1687/2018/" target="_blank">Atsawawaranunt et al. (2018)</a> and 
+              refers to “before present”, where present is 1950 CE. For details see Sect. 2.2 and Table S9
+              of <a href="https://essd.copernicus.org/articles/10/1687/2018/" target="_blank">Atsawawaranunt et al. (2018)</a> and
               the <a href="https://researchdata.reading.ac.uk/256/" target="_blank">SISAL page at University of Reading</a>.
             </li>
           </ul>
+          <p>
+            The user can chose from either querying only non-composite records (tick 'Non-Composite' check-box), querying only composite records (tick 'Composite' check-box) or both (tick both 'Non-Composite' and 'Composite' check-boxes).
+          </p>
           <p>
             Please note, in case of large output tables (maximized in 30,000 lines), querying may take up to minutes.
           </p>
@@ -85,8 +89,8 @@ const HomeSrean = () => {
           <p>
             Now a subset of records can be selected based on their metadata (e.g. mineralogy). Besides the author-generated chronologies
             alternative age-depth models (with corresponding uncertainties) were provided by SISAL
-            (<a href="https://essd.copernicus.org/articles/12/2579/2020/" target="_blank">Comas-Bru et al. 2020</a>) for records that 
-            are not composites (i.e. time series based on more than one speleothem record) and which are <sup>230</sup>Th/U dated (see Sect. 2.1 
+            (<a href="https://essd.copernicus.org/articles/12/2579/2020/" target="_blank">Comas-Bru et al. 2020</a>) for records that
+            are not composites (i.e. time series based on more than one speleothem record) and which are <sup>230</sup>Th/U dated (see Sect. 2.1
             in <a href="https://essd.copernicus.org/articles/12/2579/2020/" target="_blank">Comas-Bru et al. 2020</a>). The original
             author-generated chronology is a default output and the user of the App has to choose at least one SISAL chronology to be
             extracted - including uncertainties - for the queried records.
@@ -117,14 +121,18 @@ const HomeSrean = () => {
           </p>
           <ul>
             <li>
-            minimum number of radiometric ages for the chosen record(s) regarding the whole available time interval, or shorter if filter is 
-            applied in the Basic querying part: 1<sup>st</sup> Step. Note that only those ages are considered, which were 'date_used ≠ no' in the database.
+              minimum number of radiometric ages for the chosen record(s) regarding the whole available time interval, or shorter if filter is
+              applied in the Basic querying part: 1<sup>st</sup> Step. Note that only those ages are considered, which were 'date_used ≠ no' in the database.
             </li>
             <li>
-            maximum allowed 'age gap' (hiatus and/or sampling step) in the chosen original chronology (interp_age), or in another chosen 
-            SISAL chronology, regarding the whole available time interval, or shorter if filter is applied in the Basic querying part: 1<sup>st</sup> Step.
+              maximum allowed 'age gap' (hiatus and/or sampling step) in the chosen original chronology (interp_age), or in another chosen
+              SISAL chronology, regarding the whole available time interval, or shorter if filter is applied in the Basic querying part: 1<sup>st</sup> Step.
             </li>
           </ul>
+          <Alert color='info'>
+            <span>🛈</span>
+            <span>When using the SISALwebApp please cite the app itself http://geochem.hu/SISAL_webApp/ AND the corresponding paper Hatvani, I.G. , Kern, Z., Tanos, P., Wilhelm, M., Lechleitner, F.A., Kaushal, N., 2023. The SISAL webApp: exploring the speleothem climate and environmental archives of the world. Quaternary Research, in second review.</span>
+          </Alert>
         </div>
       </div>
     </div>

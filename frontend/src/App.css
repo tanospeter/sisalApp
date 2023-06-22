@@ -9,3 +9,15 @@
 .content {
   margin-bottom: 10rem;
 }
+
+.alert-info {
+  width: 95%;
+  margin: auto;
+  display: grid;
+  text-align: justify;
+  grid-template-columns: auto auto;
+  column-gap: 10px;
+  background-color: white !important;
+  border-color: #055160 !important;
+}
+

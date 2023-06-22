@@ -13,7 +13,8 @@ import {
   FormGroup,
   Input,
   Label,
-  Button
+  Button,
+  Alert
 } from 'reactstrap';
 
 import { MapContainer, TileLayer } from 'react-leaflet';
@@ -88,6 +89,10 @@ const Step1Screen = () => {
     <div className="Step1Screen">
       <div className="wrapper">
         <div className="box">
+          <Alert color='info'>
+          <span>🛈</span>
+          <span>When using the SISALwebApp please cite the app itself http://geochem.hu/SISAL_webApp/ AND the corresponding paper Hatvani, I.G. , Kern, Z., Tanos, P., Wilhelm, M., Lechleitner, F.A., Kaushal, N., 2023. The SISAL webApp: exploring the speleothem climate and environmental archives of the world. Quaternary Research, in second review.</span>
+        </Alert>
           <h2>Quering entity metadata</h2>
           <p>Please specify the parameters of the query below. Make sure that at least one of the parameters
             (Site Name, Lat-Lon Coordinates or InterpAge time interval) is defined! If more than one of the above
