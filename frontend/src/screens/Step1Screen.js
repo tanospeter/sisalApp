@@ -21,8 +21,8 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import Map from '../components/Map';
 
 const tempSpeleothemType = [
-  {name: 'non-composite', isChecked: true},
-  {name: 'composite', isChecked: false}
+  { name: 'non-composite', isChecked: true },
+  { name: 'composite', isChecked: false }
 ]
 
 const Step1Screen = () => {
@@ -41,8 +41,8 @@ const Step1Screen = () => {
 
   const [speleothemType, setSpeleothemType] = useState([tempSpeleothemType])
   useEffect(() => {
-    setSpeleothemType(tempSpeleothemType)     
-  }, [])  
+    setSpeleothemType(tempSpeleothemType)
+  }, [])
 
   const sendQueryParams = () => {
     setEntityList([])
@@ -59,7 +59,7 @@ const Step1Screen = () => {
       alert("The interp_age interval is incorrect or incomplete!\nPlease revise the beginning (younger) and end (older) of the interval, and try again!")
     } else if (speleothemType[0].isChecked === false && speleothemType[1].isChecked === false) {
       alert("Please select at least one speleothem_type!")
-    }else {
+    } else {
       axios.post(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`, {
         email: email,
         siteName: siteName,
@@ -73,16 +73,16 @@ const Step1Screen = () => {
         setEntityList(response.data.meta)
       }).catch(error => console.log(error))
     }
-  }  
+  }
 
   const selectSpeleothemType = (e) => {
-    const {name, checked} = e.target
+    const { name, checked } = e.target
     console.log(name, checked, speleothemType)
-    let tmp = speleothemType.map((st) => 
-      st.name === name ? {...st, isChecked:checked} : st
-    ) 
-    console.log(tmp)   
-    setSpeleothemType(tmp)    
+    let tmp = speleothemType.map((st) =>
+      st.name === name ? { ...st, isChecked: checked } : st
+    )
+    console.log(tmp)
+    setSpeleothemType(tmp)
   }
 
   return (
@@ -90,9 +90,12 @@ const Step1Screen = () => {
       <div className="wrapper">
         <div className="box">
           <Alert color='info'>
-          <span>🛈</span>
-          <span>When using the SISALwebApp please cite the app itself http://geochem.hu/SISAL_webApp/ AND the corresponding paper Hatvani, I.G. , Kern, Z., Tanos, P., Wilhelm, M., Lechleitner, F.A., Kaushal, N., 2023. The SISAL webApp: exploring the speleothem climate and environmental archives of the world. Quaternary Research, in second review.</span>
-        </Alert>
+            <span>🛈</span>
+            <span>When using the SISALwebApp please cite the app itself http://geochem.hu/SISAL_webApp/ AND the corresponding paper <strong>
+              Hatvani IG, Kern Z, Tanos P, Wilhelm M, Lechleitner FA, Kaushal N
+                (2023). The SISAL webApp: exploring the speleothem climate and environmental archives of the world. Quaternary Research 1-7. <a href="https://doi.org/10.1017/qua.2023.39">https://doi.org/10.1017/qua.2023.39</a>
+            </strong> .</span>
+          </Alert>
           <h2>Quering entity metadata</h2>
           <p>Please specify the parameters of the query below. Make sure that at least one of the parameters
             (Site Name, Lat-Lon Coordinates or InterpAge time interval) is defined! If more than one of the above
@@ -223,30 +226,30 @@ const Step1Screen = () => {
               </Row>
               <Row>
                 <h5 className="filterTitle">Included speleothem_type(s)</h5>
-                <p>At least one of the checkboxes below must be checked!</p>                
-                  <Col sm="4" xs="6">
-                    <div className="form-check">
-                      <Input 
-                        type="checkbox"                   
-                        className="form-check-input"
-                        defaultChecked="checked"
-                        name="non-composite"
-                        onChange={selectSpeleothemType} 
-                      />          
-                      <Label>Non-Composite</Label>        
-                    </div>
-                  </Col>
-                  <Col sm="4" xs="6">
-                    <div className="form-check">
-                      <Input 
-                        type="checkbox"                   
-                        className="form-check-input"
-                        name="composite"                        
-                        onChange={selectSpeleothemType} 
-                      />          
-                      <Label>Composite</Label>        
-                    </div>
-                  </Col>                                 
+                <p>At least one of the checkboxes below must be checked!</p>
+                <Col sm="4" xs="6">
+                  <div className="form-check">
+                    <Input
+                      type="checkbox"
+                      className="form-check-input"
+                      defaultChecked="checked"
+                      name="non-composite"
+                      onChange={selectSpeleothemType}
+                    />
+                    <Label>Non-Composite</Label>
+                  </div>
+                </Col>
+                <Col sm="4" xs="6">
+                  <div className="form-check">
+                    <Input
+                      type="checkbox"
+                      className="form-check-input"
+                      name="composite"
+                      onChange={selectSpeleothemType}
+                    />
+                    <Label>Composite</Label>
+                  </div>
+                </Col>
               </Row>
             </Form>
           </div>
@@ -261,14 +264,14 @@ const Step1Screen = () => {
           <Datatable data={entityList} query={query} interpAgeFrom={interpAgeFrom} interpAgeTo={interpAgeTo} />
         </div>
       </div>
-      
-     <MapContainer center={[51.505, -0.09]} zoom={3} style={{ height: '400px', width: '100%' }}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Map data={entityList} />
-     </MapContainer>
+
+      <MapContainer center={[51.505, -0.09]} zoom={3} style={{ height: '400px', width: '100%' }}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Map data={entityList} />
+      </MapContainer>
     </div>
   )
 }
