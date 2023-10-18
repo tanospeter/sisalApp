@@ -84,7 +84,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
 
     if (selectedEntites.length !== 0) {
       
-      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getdatinginfo`, {        
+      axios.post(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getdatinginfo`, {        
         
         entity_ids:selectedEntites.map((e) => { return e.entity_id})       
       
@@ -108,7 +108,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
 
     if (selectedChronos.length !== 0 && selectedEntites.length !== 0){
       
-      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getsisalchrono`, {
+      axios.post(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getsisalchrono`, {
         
         entity_ids:selectedEntites.map((e) => { return e.entity_id}),
         chronos:selectedChronos.map((c) => { return c.name}),
@@ -144,7 +144,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
       alert("Download request denied! Filter type 3 (interp_age) younger > older!")
     }
     else {
-      axios.post(`http://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getAdvancedRes`, {        
+      axios.post(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getAdvancedRes`, {        
         
         params:{selectedEntity_ids, minDate, maxGap, selectedChrono, selectedInterpAgeRange}       
       
