@@ -1,0 +1,1 @@
+Ez a fájl csak a dev_v3 ágban szerepelhet a masterben nem!
