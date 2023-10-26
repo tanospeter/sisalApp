@@ -38,12 +38,22 @@ const cn = [
   {name:'OxCal_age'},
   {name:'copRa_age'},
   {name:'StalAge_age'}
-]  
+]
+
+const caSrNames = [
+  {name:'ba_ca'},
+  {name:'mg_ca'},
+  {name:'p_ca'},
+  {name:'sr_ca'},
+  {name:'u_ca'},
+  {name:'sr_isotopes'},
+]
 
 const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {  
   
   const [entities,setEntities] = useState([])
   const [chronos,setChronos] = useState([cn]) 
+  const [caSr,setCaSr] = useState([caSrNames])
   const [advancedFilter1, setAdvancedFilter1] = useState("")
   const [advancedFilter2, setAdvancedFilter2] = useState("")
   //const [ini,setIni] = useState("")
@@ -54,6 +64,10 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   useEffect(() => {
     setChronos(cn)     
   }, [])  
+
+  useEffect(() => {
+    setCaSr(caSrNames)
+  }, [])
 
   const handleOnDownload = (query, sql, title) => {
     if (query.length <= 30000) {
@@ -261,6 +275,22 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
     }     
   }
 
+  // Checkbox handling function for 'Select X_Ca; Sr_isotopes' section
+  const handleChangeCaSr = (e) => {
+    const {name, checked} = e.target    
+    if (name === 'allSelect') {
+      let tempCaSr = caSr.map((c) => {
+        return {...c, isChecked:checked}
+      })
+      setCaSr(tempCaSr)
+    } else {
+      let tempCaSr = caSr.map((c) =>
+        c.name === name ? {...c, isChecked:checked} : c
+      ) 
+      setCaSr(tempCaSr)
+    }     
+  }
+
   // Colapsed filed
   const [isOpen, setIsOpen] = useState(false);
 
@@ -338,6 +368,40 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
                 }
               </Row>            
             </Container>          
+          </div>
+          <div className="box">
+            <h2>Select X_Ca; Sr_isotopes</h2>
+            <Container>
+              <Row>
+                <Col sm="4" xs="6">
+                  <div className="form-check">
+                    <Input 
+                      type="checkbox"                   
+                      className="form-check-input"
+                      name="allSelect"
+                      onChange={handleChangeCaSr} 
+                    />          
+                    <Label>Select all</Label>        
+                  </div>
+                </Col>
+                {
+                  caSr.map(n =>  
+                    <Col sm="4" xs="6">
+                      <div className="form-check">
+                        <Input 
+                          type="checkbox" 
+                          className="form-check-input" 
+                          name={n.name} 
+                          checked={n?.isChecked || false} 
+                          onChange={handleChangeCaSr}
+                        />          
+                        <Label>{n.name}</Label>        
+                      </div>
+                    </Col>                  
+                  )
+                }
+              </Row>
+            </Container>
           </div>          
           <div>
             <ButtonGroup>
@@ -482,6 +546,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
           </div>
           <div className="box">
             <h2>Select chronos</h2>
+            <p>The original author chronology is included in every case. SISAL chronologies can also be selected from below.</p>
             <Container>
               <Row>
                 <Col sm="4" xs="6">
@@ -513,6 +578,40 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
                 }
               </Row>            
             </Container>          
+          </div>
+          <div className="box">
+            <h2>Select X_Ca; Sr_isotopes</h2>
+            <Container>
+              <Row>
+                <Col sm="4" xs="6">
+                  <div className="form-check">
+                    <Input 
+                      type="checkbox"                   
+                      className="form-check-input"
+                      name="allSelect"
+                      onChange={handleChangeCaSr} 
+                    />          
+                    <Label>Select all</Label>        
+                  </div>
+                </Col>
+                {
+                  caSr.map(n =>  
+                    <Col sm="4" xs="6">
+                      <div className="form-check">
+                        <Input 
+                          type="checkbox" 
+                          className="form-check-input" 
+                          name={n.name} 
+                          checked={n?.isChecked || false} 
+                          onChange={handleChangeCaSr}
+                        />          
+                        <Label>{n.name}</Label>        
+                      </div>
+                    </Col>                  
+                  )
+                }
+              </Row>
+            </Container>
           </div>
           <div>
             <ButtonGroup>

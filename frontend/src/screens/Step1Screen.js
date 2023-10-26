@@ -60,6 +60,7 @@ const Step1Screen = () => {
     } else if (speleothemType[0].isChecked === false && speleothemType[1].isChecked === false) {
       alert("Please select at least one speleothem_type!")
     } else {
+      console.log(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`)
       axios.post(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`, {
         email: email,
         siteName: siteName,
