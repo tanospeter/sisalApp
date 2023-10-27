@@ -62,3 +62,30 @@ left join d18o on d18o.sample_id = sa.sample_id
 where 1 = 1    
 and e.entity_id in (1,2,3,4,5,6,7,8,9,10)
 and oc.interp_age between 800 and 300000;
+
+-- v3 tables checks
+select
+(select count(sample_id) from sample) as count_sample,
+(select count(sample_id) from ba_ca) as count_ba_ca,
+(select count(sample_id) from mg_ca) as count_mg_ca,
+(select count(sample_id) from p_ca) as count_p_ca,
+(select count(sample_id) from sr_ca) as count_sr_ca,
+(select count(sample_id) from u_ca) as count_u_ca,
+(select count(sample_id) from sr_isotopes) as count_sr_isotopes;
+
+-- CaSr sample query
+select s.site_id, s.site_name, e.entity_id, e.entity_name, sa.depth_sample, oc.*, sc.lin_interp_age, sc.lin_interp_age_uncert_pos, sc.lin_interp_age_uncert_neg,sc.lin_reg_age, sc.lin_reg_age_uncert_pos, sc.lin_reg_age_uncert_neg,sc.Bchron_age, sc.Bchron_age_uncert_pos, sc.Bchron_age_uncert_neg,sc.Bacon_age, sc.Bacon_age_uncert_pos, sc.Bacon_age_uncert_neg,sc.OxCal_age, sc.OxCal_age_uncert_pos, sc.OxCal_age_uncert_neg,sc.copRa_age, sc.copRa_age_uncert_pos, sc.copRa_age_uncert_neg,sc.StalAge_age, sc.StalAge_age_uncert_pos, sc.StalAge_age_uncert_neg, d13c.*, d18o.* from site s,ba_ca.ba_ca_measurement, ba_ca.ba_ca_precision,mg_ca.mg_ca_measurement, mg_ca.mg_ca_precision,p_ca.p_ca_measurement, p_ca.p_ca_precision,sr_ca.sr_ca_measurement, sr_ca.sr_ca_precision,u_ca.u_ca_measurement, u_ca.u_ca_precision,sr_isotopes.sr_isotopes_measurement, sr_isotopes.sr_isotopes_precision
+left join entity e on s.site_id = e.site_id
+left join sample sa on e.entity_id = sa.entity_id
+left join original_chronology oc on sa.sample_id = oc.sample_id
+left join sisal_chronology sc on sc.sample_id = sa.sample_id
+left join d13c on d13c.sample_id = sa.sample_id
+left join d18o on d18o.sample_id = sa.sample_id
+left join ba_ca on sa.sample_id = ba_ca.sample.id
+left join mg_ca on sa.sample_id = mg_ca.sample.id
+left join p_ca on sa.sample_id = p_ca.sample.id
+left join sr_ca on sa.sample_id = sr_ca.sample.id
+left join u_ca on sa.sample_id = u_ca.sample.id
+left join sr_isotopes on sa.sample_id = sr_isotopes.sample.id
+where e.entity_id in (40,41,42,43,44,617,618,619,706)
+and oc.interp_age between 800 and 300000

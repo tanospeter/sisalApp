@@ -118,7 +118,8 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
   const dowloadChrono = () => {
     let selectedChronos = chronos.filter((e) => e.isChecked === true && e.name !== "SISAL chronology")
     let selectedEntites = entities.filter((e) => e.isChecked === true)
-    //console.log({selectedChronos, selectedEntites})
+    let selectedCaSrs = caSr.filter((e) => e.isChecked === true)
+    console.log({selectedChronos, selectedEntites, selectedCaSrs})
 
     if (selectedChronos.length !== 0 && selectedEntites.length !== 0){
       
@@ -126,7 +127,8 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
         
         entity_ids:selectedEntites.map((e) => { return e.entity_id}),
         chronos:selectedChronos.map((c) => { return c.name}),
-        age: [interpAgeFrom, interpAgeTo]   
+        age: [interpAgeFrom, interpAgeTo],
+        caSrs:selectedCaSrs.map((e) => {return e.name})  
       }).then((response) => {          
         //console.log(response.data.sisalChronos)  
         handleOnDownload(response.data.sisalChronos, [{sql:response.data.sql}], "SampleData")              

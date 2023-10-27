@@ -62,10 +62,11 @@ exports.SisalChronosQuery = async (req, res, next) => {
     let {
       entity_ids,
       chronos,
-      age
+      age,
+      caSrs
     } = req.body
     
-    let query = new chronoQuery(entity_ids, chronos, age)
+    let query = new chronoQuery(entity_ids, chronos, age, caSrs)
     
     let sql = query.queryBuilder()
       
