@@ -38,7 +38,7 @@ const Navbar2 = () => {
                 width: 40
               }}
             />
-            SISALv2</NavLink>
+            SISALv3</NavLink>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
@@ -47,7 +47,7 @@ const Navbar2 = () => {
             </NavItem>
             <NavItem className="navbar-item">
               <NavLink to="database" className="nav-link">
-                SISALv2 EER
+                SISALv3 EER
               </NavLink>
             </NavItem>
             <NavItem className="navbar-item">
