@@ -41,12 +41,12 @@ const cn = [
 ]
 
 const caSrNames = [
-  {name:'ba_ca'},
-  {name:'mg_ca'},
-  {name:'p_ca'},
-  {name:'sr_ca'},
-  {name:'u_ca'},
-  {name:'sr_isotopes'},
+  {name:'Ba_Ca'},
+  {name:'Mg_Ca'},
+  {name:'P_Ca'},
+  {name:'Sr_Ca'},
+  {name:'U_Ca'},
+  {name:'Sr_isotopes'},
 ]
 
 const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {  

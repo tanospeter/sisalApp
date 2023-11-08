@@ -15,7 +15,7 @@ class SisalChronoQuery{
     })
     //console.log(chronoWithUncert)
 
-    let select = `select s.site_id, s.site_name, e.entity_id, e.entity_name, sa.depth_sample, oc.*, ${chronoWithUncert}, d13c.*, d18o.*`
+    let select = `select s.site_id, s.site_name, e.entity_id, e.entity_name, sa.depth_sample, oc.*, ${chronoWithUncert}, d13C.*, d18O.*`
     
     let from = `\nfrom site s`
 
@@ -24,8 +24,8 @@ class SisalChronoQuery{
 left join sample sa on e.entity_id = sa.entity_id
 left join original_chronology oc on sa.sample_id = oc.sample_id
 left join sisal_chronology sc on sc.sample_id = sa.sample_id 
-left join d13c on d13c.sample_id = sa.sample_id
-left join d18o on d18o.sample_id = sa.sample_id`
+left join d13C on d13C.sample_id = sa.sample_id
+left join d18O on d18O.sample_id = sa.sample_id`
     
     let where = `\nwhere e.entity_id in (${this.entity_ids.join(',')})`
 
