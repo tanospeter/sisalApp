@@ -1,11 +1,12 @@
 import './HomeScreen.css'
 import logo from '../pic/PAGES_logo.png'
-import {Alert} from 'reactstrap';
+import { Alert } from 'reactstrap';
 
 const HomeSrean = () => {
   return (
     <div className="homescreen">
       <div className="wrapper">
+          <Alert color="warning" className='mx-5 mt-4 text-center'>To access the SISAL webApp, click <a href="./step1">HERE</a>!</Alert>
         <div className="title">
           <h1>The SISAL webApp</h1>
           <p>
@@ -23,8 +24,7 @@ const HomeSrean = () => {
             comprehensive compilation of speleothem isotope records for climate reconstruction and model evaluation.
           </p>
           <p>
-            The <a href="https://essd.copernicus.org/articles/12/2579/2020/" target="_blank">SISALv2 database</a> created by the
-            PAGES-SISAL Working Group provides 700 speleothem records from 293 cave sites, 500 of which have standardized chronologies.
+            The <a href="https://essd.copernicus.org/preprints/essd-2023-364/" target='_blank'>SISALv3 database</a> created by the PAGES-SISAL Working Group contains speleothem data from 364 sites from across the globe, including spatiotemporal coverage for stable oxygen (831) and carbon (588) isotope records and trace elements: 94 Mg/Ca, 83 Sr/Ca, 51 Ba/Ca, 25 U/Ca, 29 P/Ca and 14 Sr-isotope records.
             The database provides increased access to records, extensive metadata and has enabled regional-to-global scale analysis of
             climatic patterns using a variety of approaches. Some examples can be seen in the
             PAGES-SISAL <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank">product</a> page.
@@ -45,11 +45,6 @@ const HomeSrean = () => {
             different stages of their academic career and working in different geographical regions and allied disciplines. You can
             contact the SISAL Working Group <a href="https://pastglobalchanges.org/science/wg/sisal/people" target="_blank">here</a>.
           </p>
-
-          <p>
-            SISAL is releasing version 3 of the database in late-2023, the SISAL webApp will receive an update accordingly afterwards.
-          </p>
-
           <h2>Instructions / Usage</h2>
           <p>
             With the SISAL webApp one can query the SISALv2 database using a simple online tool accessible from any web-browser. It
@@ -93,7 +88,8 @@ const HomeSrean = () => {
             are not composites (i.e. time series based on more than one speleothem record) and which are <sup>230</sup>Th/U dated (see Sect. 2.1
             in <a href="https://essd.copernicus.org/articles/12/2579/2020/" target="_blank">Comas-Bru et al. 2020</a>). The original
             author-generated chronology is a default output and the user of the App has to choose at least one SISAL chronology to be
-            extracted - including uncertainties - for the queried records.
+            extracted - including uncertainties - for the queried records. The user now has the opportunity to select X_Ca and Sr_isotope 
+            data whether to be downloaded in the output files. This field can be left blank.
           </p>
           <h4>1.2 Data extraction  - 3<sup>rd</sup> step</h4>
           <p>
@@ -129,6 +125,11 @@ const HomeSrean = () => {
               SISAL chronology, regarding the whole available time interval, or shorter if filter is applied in the Basic querying part: 1<sup>st</sup> Step.
             </li>
           </ul>
+          <h3>3. Version history</h3>
+          <p>1.2. The SISAL webApp now queries the SISALv3 database <a href="https://doi.org/10.5194/essd-2023-364" target='_blank'>https://doi.org/10.5194/essd-2023-364</a> please do not forget to cite! <span className='text-muted'>- 15.12.2023.</span> </p>
+          <p>1.1. An interactive map has been added which allows the visual inspection of the sites queried. In addition, an option to filter for composite records has been introduced
+            <span className="text-muted">- 03.05.2023.</span></p>
+
           <Alert color='info'>
             <span>🛈</span>
             <span>When using the SISALwebApp please cite the app itself http://geochem.hu/SISAL_webApp/ AND the corresponding paper <strong>Hatvani IG, Kern Z, Tanos P, Wilhelm M, Lechleitner FA, Kaushal N
