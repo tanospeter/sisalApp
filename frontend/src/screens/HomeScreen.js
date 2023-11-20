@@ -1,12 +1,13 @@
 import './HomeScreen.css'
 import logo from '../pic/PAGES_logo.png'
 import { Alert } from 'reactstrap';
+import { NavLink } from 'react-router-dom'
 
 const HomeSrean = () => {
   return (
     <div className="homescreen">
       <div className="wrapper">
-          <Alert color="warning" className='mx-5 mt-4 text-center'>To access the SISAL webApp, click <a href="./step1">HERE</a>!</Alert>
+          <Alert color="warning" className='mx-5 mt-4 text-center'>To access the SISAL webApp, click <NavLink to="step1">HERE</NavLink>!</Alert>
         <div className="title">
           <h1>The SISAL webApp</h1>
           <p>
