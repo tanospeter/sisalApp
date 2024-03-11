@@ -94,7 +94,7 @@ const Step1Screen = () => {
             <span>🛈</span>
             <span>When using the SISALwebApp please cite the app itself https://geochem.hu/SISAL_webApp/ AND the corresponding paper <strong>
               Hatvani IG, Kern Z, Tanos P, Wilhelm M, Lechleitner FA, Kaushal N
-                (2023). The SISAL webApp: exploring the speleothem climate and environmental archives of the world. Quaternary Research 1-7. <a href="https://doi.org/10.1017/qua.2023.39">https://doi.org/10.1017/qua.2023.39</a>
+                (2024). The SISAL webApp: exploring the speleothem climate and environmental archives of the world. Quaternary Research 1-7. <a href="https://doi.org/10.1017/qua.2023.39">https://doi.org/10.1017/qua.2023.39</a>
             </strong> .</span>
           </Alert>
           <h2>Quering entity metadata</h2>
