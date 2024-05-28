@@ -33,14 +33,14 @@ const HomeSrean = () => {
             PAGES-SISAL <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank">product</a> page.
           </p>
           <p>
-            Trace element data in the database itself is available at stable isotope equivalent depths in mol/mol units. For trace element data that was
+            Trace element data in the database itself is available at stable isotope equivalent depths in mmol/mol units. For trace element data that was
             <ul>
               <li>measured at a different resolution than the stable isotopes (eg high resolution laser ablation data), the data has been downsampled to stable isotope equivalent depths, and the original high resolution data (where submitted by authors)</li>
               <li>measured in units other than mmol/mol, where data in the original measurement units have been provided by authors</li>
               <li>additional proxy element measurements have been made available by authors (eg Na/Ca etc)</li>
             </ul>
-            are available as standardised trace element data files in the repository.
-            Moreover, the <a href="http://dx.doi.org/10.5287/ora-2nanwp4rk">repository</a> contains all submitted cave maps and entity images in separate zip folders, as well as copyright information for the individual images and an entity scan "wishlist" which details best practices for entity scan images; (see Sect. 5.1 in Kaushal et al. 2024).
+            are available as standardised trace element data files in the <a href="http://dx.doi.org/10.5287/ora-2nanwp4rk">repository</a>.
+            Moreover, the repository contains all submitted cave maps and entity images in separate zip folders, as well as copyright information for the individual images and an entity scan "wishlist" which details best practices for entity scan images; (see Sect. 5.1 in SISALv3 <a href="https://doi.org/10.5194/essd-16-1933-2024">database paper</a>).
           </p>
           <p>
             The structure of the SISAL <a href="https://geochem.hu/SISAL_webApp/database" target="_blank">database</a> requires
@@ -63,8 +63,8 @@ const HomeSrean = () => {
             With the SISAL webApp one can query the SISALv2 database using a simple online tool accessible from any web-browser. It
             provides the user with the metadata of the queried speleothem records, their sample data (δ<sup>18</sup>O and δ<sup>13</sup>C) and dating
             information including the original author-generated - as well as SISAL-generated standardized - chronologies. For further
-            information on database versions, publications and how-to guides please visit
-            the <a href="http://dx.doi.org/10.5287/ora-2nanwp4rk" target="_blank">SISAL page at University of Oxford</a>.
+            information on database versions, publications and how-to guides please visit the
+            the <a href="http://dx.doi.org/10.5287/ora-2nanwp4rk" target="_blank">repository</a>.
           </p>
           <h3>1. Basic querying - 1<sup>st</sup> step</h3>
           <p>Basic querying provides the tool to extract SISAL database information based on the most fundamental filters. </p>
