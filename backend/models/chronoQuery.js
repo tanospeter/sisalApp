@@ -15,7 +15,7 @@ class SisalChronoQuery{
     })
     //console.log(chronoWithUncert)
 
-    let select = `select s.site_id, s.site_name, e.entity_id, e.entity_name, sa.depth_sample, oc.*, ${chronoWithUncert}, d13C.*, d18O.*`
+    let select = `select s.site_id, s.site_name, e.entity_id, e.entity_name, sa.depth_sample, sa.mineralogy, oc.*, ${chronoWithUncert}, d13C.*, d18O.*`
     
     let from = `\nfrom site s`
 
