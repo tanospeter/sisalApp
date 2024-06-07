@@ -311,7 +311,7 @@ const Datatable = ({data, query, interpAgeFrom, interpAgeTo}) => {
       return (            
         <div className="datatable">
           <h2>Filtered metadata</h2>
-          <div>          
+          <div className="filtered-metadata">          
             <Table responsive hover size="10">
               <thead>
                 <tr key="f"><th><Input 
