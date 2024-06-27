@@ -1,66 +1,58 @@
-import './Step1Screen.css'
-//import { BrowserRouter as Router, Routes , Route } from 'react-router-dom'
-import { useState, useEffect } from "react"
-import axios from 'axios'
-import Datatable from '../components/Datatable'
-
-//import XLSX from 'xlsx'
-//import {Link} from 'react-router-dom'
-import {
-  Form,
-  Row,
-  Col,
-  FormGroup,
-  Input,
-  Label,
-  Button,
-  Alert
-} from 'reactstrap';
-
+import './Step1Screen.css';
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import Datatable from '../components/Datatable';
+import { Form, Row, Col, FormGroup, Input, Label, Button, Alert } from 'reactstrap';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import Map from '../components/Map';
 
 const tempSpeleothemType = [
   { name: 'non-composite', isChecked: true },
   { name: 'composite', isChecked: false }
-]
+];
 
 const Step1Screen = () => {
+  const [email, setEmail] = useState("");
+  const [siteName, setSiteName] = useState("");
+  const [latFrom, setLatFrom] = useState("");
+  const [latTo, setLatTo] = useState("");
+  const [longFrom, setLongFrom] = useState("");
+  const [longTo, setLongTo] = useState("");
+  const [interpAgeFrom, setInterpAgeFrom] = useState("");
+  const [interpAgeTo, setInterpAgeTo] = useState("");
+  const [entityList, setEntityList] = useState([]);
+  const [query, setQuery] = useState([]);
+  const [speleothemType, setSpeleothemType] = useState(tempSpeleothemType);
 
-  const [email, setEmail] = useState("")
-  const [siteName, setSiteName] = useState("")
-  const [latFrom, setLatFrom] = useState("")
-  const [latTo, setLatTo] = useState("")
-  const [longFrom, setLongFrom] = useState("")
-  const [longTo, setLongTo] = useState("")
-  const [interpAgeFrom, setInterpAgeFrom] = useState("")
-  const [interpAgeTo, setInterpAgeTo] = useState("")
-
-  const [entityList, setEntityList] = useState([])
-  const [query, setQuery] = useState([])
-
-  const [speleothemType, setSpeleothemType] = useState([tempSpeleothemType])
   useEffect(() => {
-    setSpeleothemType(tempSpeleothemType)
-  }, [])
+    setSpeleothemType(tempSpeleothemType);
+  }, []);
+
+  const handleAreaSelected = useCallback((bounds) => {
+    console.log('Selected area bounds:', bounds);
+    setLatFrom(bounds.southWest.lat.toFixed(6));
+    setLatTo(bounds.northEast.lat.toFixed(6));
+    setLongFrom(bounds.southWest.lng.toFixed(6));
+    setLongTo(bounds.northEast.lng.toFixed(6));
+  });
 
   const sendQueryParams = () => {
-    setEntityList([])
-    const siteNameEmpty = siteName === ''
-    const latLonEmpty = latFrom === '' && latTo === '' && longFrom === '' && longTo === ''
-    const latLonIncomplete = !latLonEmpty && (latFrom === '' || latTo === '' || longFrom === '' || longTo === '' || parseInt(latFrom) > parseInt(latTo) || parseInt(longFrom) > parseInt(longTo))
-    const ageEmpty = interpAgeFrom === '' && interpAgeTo === ''
-    const ageIncomplete = !ageEmpty && (interpAgeFrom === '' || interpAgeTo === '' || parseInt(interpAgeFrom) > parseInt(interpAgeTo))
+    setEntityList([]);
+    const siteNameEmpty = siteName === '';
+    const latLonEmpty = latFrom === '' && latTo === '' && longFrom === '' && longTo === '';
+    const latLonIncomplete = !latLonEmpty && (latFrom === '' || latTo === '' || longFrom === '' || longTo === '' || parseInt(latFrom) > parseInt(latTo) || parseInt(longFrom) > parseInt(longTo));
+    const ageEmpty = interpAgeFrom === '' && interpAgeTo === '';
+    const ageIncomplete = !ageEmpty && (interpAgeFrom === '' || interpAgeTo === '' || parseInt(interpAgeFrom) > parseInt(interpAgeTo));
     if (siteNameEmpty && latLonEmpty && ageEmpty) {
-      alert("None of the query's filter parameters are specified correctly!\nPlease specify the site_name and/or Lat-Lon coordinates and/or interp_age interval and try again! Please see the user guide for instructions on the main page.")
+      alert("None of the query's filter parameters are specified correctly!\nPlease specify the site_name and/or Lat-Lon coordinates and/or interp_age interval and try again! Please see the user guide for instructions on the main page.");
     } else if (latLonIncomplete) {
-      alert("The coordinates are incorrect or some are missing! Please revise the coordinates, and try again! Default is global coverage from -90° to 90° and from -180° to 180°.")
+      alert("The coordinates are incorrect or some are missing! Please revise the coordinates, and try again! Default is global coverage from -90° to 90° and from -180° to 180°.");
     } else if (ageIncomplete) {
-      alert("The interp_age interval is incorrect or incomplete!\nPlease revise the beginning (younger) and end (older) of the interval, and try again!")
+      alert("The interp_age interval is incorrect or incomplete!\nPlease revise the beginning (younger) and end (older) of the interval, and try again!");
     } else if (speleothemType[0].isChecked === false && speleothemType[1].isChecked === false) {
-      alert("Please select at least one speleothem_type!")
+      alert("Please select at least one speleothem_type!");
     } else {
-      console.log(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`)
+      console.log(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`);
       axios.post(`${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getentitymeta`, {
         email: email,
         siteName: siteName,
@@ -69,22 +61,20 @@ const Step1Screen = () => {
         age: [interpAgeFrom, interpAgeTo],
         speleothemType: speleothemType
       }).then((response) => {
-        console.log(response.data)
-        setQuery(response.data.sql)
-        setEntityList(response.data.meta)
-      }).catch(error => console.log(error))
+        console.log(response.data);
+        setQuery(response.data.sql);
+        setEntityList(response.data.meta);
+      }).catch(error => console.log(error));
     }
-  }
+  };
 
   const selectSpeleothemType = (e) => {
-    const { name, checked } = e.target
-    console.log(name, checked, speleothemType)
+    const { name, checked } = e.target;
     let tmp = speleothemType.map((st) =>
       st.name === name ? { ...st, isChecked: checked } : st
-    )
-    console.log(tmp)
-    setSpeleothemType(tmp)
-  }
+    );
+    setSpeleothemType(tmp);
+  };
 
   return (
     <div className="Step1Screen">
@@ -113,7 +103,7 @@ const Step1Screen = () => {
                       placeholder="Email"
                       type="email"
                       onChange={(event) => {
-                        setEmail(event.target.value)
+                        setEmail(event.target.value);
                       }}
                     />
                     <Label for="Email">
@@ -122,8 +112,6 @@ const Step1Screen = () => {
                   </FormGroup>
                 </Col>
               </Row>
-
-
               <h5 className="filterTitle">Filter type 1 (Site)</h5>
               <Row>
                 <Col>
@@ -133,14 +121,12 @@ const Step1Screen = () => {
                       name="siteName"
                       placeholder="site_name"
                       onChange={(event) => {
-                        setSiteName(event.target.value)
+                        setSiteName(event.target.value);
                       }} />
                     <Label for="SiteName">site_name</Label>
                   </FormGroup>
                 </Col>
               </Row>
-
-
               <h5 className="filterTitle">Filter type 2 (Lat-Lon)</h5>
               <Row>
                 <Col md={6}>
@@ -149,8 +135,9 @@ const Step1Screen = () => {
                       id="LatFrom"
                       name="latFrom"
                       placeholder="Latitude from -90°"
+                      value={latFrom}
                       onChange={(event) => {
-                        setLatFrom(event.target.value)
+                        setLatFrom(event.target.value);
                       }} />
                     <Label for="LatFrom">Latitude from -90°</Label>
                   </FormGroup>
@@ -161,8 +148,9 @@ const Step1Screen = () => {
                       id="LatTo"
                       name="latTo"
                       placeholder="Latitude to 90°"
+                      value={latTo}
                       onChange={(event) => {
-                        setLatTo(event.target.value)
+                        setLatTo(event.target.value);
                       }} />
                     <Label for="LatTo">Latitude to 90°</Label>
                   </FormGroup>
@@ -175,8 +163,9 @@ const Step1Screen = () => {
                       id="LonFrom"
                       name="lonFrom"
                       placeholder="Longitude from -180°"
+                      value={longFrom}
                       onChange={(event) => {
-                        setLongFrom(event.target.value)
+                        setLongFrom(event.target.value);
                       }} />
                     <Label for="LonFrom">Longitude from -180°</Label>
                   </FormGroup>
@@ -187,14 +176,14 @@ const Step1Screen = () => {
                       id="LonTo"
                       name="lonTo"
                       placeholder="Longitude to 180°"
+                      value={longTo}
                       onChange={(event) => {
-                        setLongTo(event.target.value)
+                        setLongTo(event.target.value);
                       }} />
                     <Label for="LonTo">Longitude to 180°</Label>
                   </FormGroup>
                 </Col>
               </Row>
-
 
               <h5 className="filterTitle">Filter type 3 (interp_age)</h5>
               <p>Usage is mandatory for advanced querying!</p>
@@ -202,26 +191,26 @@ const Step1Screen = () => {
                 <Col md={6}>
                   <FormGroup floating>
                     <Input
-                      id="LatFrom"
-                      name="latFrom"
+                      id="InterpAgeFrom"
+                      name="interpAgeFrom"
                       placeholder="interp_age from (years BP)"
                       onChange={(event) => {
-                        setInterpAgeFrom(event.target.value)
+                        setInterpAgeFrom(event.target.value);
                       }} />
-                    <Label for="LatFrom">interp_age from (years BP)</Label>
+                    <Label for="InterpAgeFrom">interp_age from (years BP)</Label>
                   </FormGroup>
                 </Col>
                 <Col md={6}>
                   <FormGroup floating>
                     <Input
-                      id="LatTo"
-                      name="latTo"
-                      placeholder="Iterp_age to (years BP)"
+                      id="InterpAgeTo"
+                      name="interpAgeTo"
+                      placeholder="Interp_age to (years BP)"
                       value={interpAgeTo}
                       onChange={(event) => {
-                        setInterpAgeTo(event.target.value)
+                        setInterpAgeTo(event.target.value);
                       }} />
-                    <Label for="LatTo">interp_age to (years BP)</Label>
+                    <Label for="InterpAgeTo">interp_age to (years BP)</Label>
                   </FormGroup>
                 </Col>
               </Row>
@@ -271,10 +260,10 @@ const Step1Screen = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Map data={entityList} />
+        <Map data={entityList} onAreaSelected={handleAreaSelected} />
       </MapContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Step1Screen
+export default Step1Screen;
