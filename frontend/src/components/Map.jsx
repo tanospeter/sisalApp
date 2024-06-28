@@ -28,6 +28,8 @@ const Map = ({ data, onAreaSelected }) => {
   const [center, setCenter] = useState(markers.length === 0 ? map.getCenter() : markers[0].coordinates);
 
   useEffect(() => {
+    const maxLng = 180;
+    const minLng = -180;
 
     if (!map.hasLayer(drawnItemsRef.current)) {
       map.addLayer(drawnItemsRef.current);
@@ -45,6 +47,7 @@ const Map = ({ data, onAreaSelected }) => {
         },
         edit: {
           featureGroup: drawnItemsRef.current,
+          edit: false,
           remove: true, // Allow removal of drawn shapes
         }
       });
@@ -55,9 +58,16 @@ const Map = ({ data, onAreaSelected }) => {
       const { layerType, layer } = event;
 
       if (layerType === 'rectangle') {
-        const bounds = layer.getBounds();
-        const northEast = bounds.getNorthEast();
-        const southWest = bounds.getSouthWest();
+        let bounds = layer.getBounds();
+        let northEast = bounds.getNorthEast();
+        let southWest = bounds.getSouthWest();
+
+        // Adjust bounds if they exceed the limits
+        if (northEast.lng > maxLng) northEast.lng = maxLng;
+        if (southWest.lng < minLng) southWest.lng = minLng;
+
+        bounds = L.latLngBounds(southWest, northEast);
+        layer.setBounds(bounds);
 
         onAreaSelected({
           northEast: {

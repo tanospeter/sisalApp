@@ -30,10 +30,10 @@ const Step1Screen = () => {
 
   const handleAreaSelected = useCallback((bounds) => {
     console.log('Selected area bounds:', bounds);
-    setLatFrom(bounds.southWest.lat.toFixed(6));
-    setLatTo(bounds.northEast.lat.toFixed(6));
-    setLongFrom(bounds.southWest.lng.toFixed(6));
-    setLongTo(bounds.northEast.lng.toFixed(6));
+    setLatFrom(bounds.southWest.lat.toFixed(5));
+    setLatTo(bounds.northEast.lat.toFixed(5));
+    setLongFrom(bounds.southWest.lng.toFixed(5));
+    setLongTo(bounds.northEast.lng.toFixed(5));
   });
 
   const sendQueryParams = () => {
@@ -128,6 +128,7 @@ const Step1Screen = () => {
                 </Col>
               </Row>
               <h5 className="filterTitle">Filter type 2 (Lat-Lon)</h5>
+              <p>You can also use the rectangle tool on the map.</p>
               <Row>
                 <Col md={6}>
                   <FormGroup floating>
@@ -255,10 +256,11 @@ const Step1Screen = () => {
         </div>
       </div>
 
-      <MapContainer center={[51.505, -0.09]} zoom={3} style={{ height: '400px', width: '100%' }}>
+      <MapContainer center={[51.505, -0.09]} zoom={3} style={{ height: '400px', width: '100%' }} maxBounds={[[-90, -180],[90, 180]]}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          noWrap={true}
         />
         <Map data={entityList} onAreaSelected={handleAreaSelected} />
       </MapContainer>
