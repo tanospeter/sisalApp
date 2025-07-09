@@ -13,6 +13,7 @@ app.use(prefix+"/api/getentitymeta", require("./routes/getEntity"));
 app.use(prefix+"/api/getdatinginfo", require("./routes/getDatingInfo"));
 app.use(prefix+"/api/getsisalchrono", require("./routes/getSisalChrono"));
 app.use(prefix+"/api/getAdvancedRes", require("./routes/getAdvancedRes"));
+app.use(prefix+"/api/getMonv1", require("./routes/getMonv1"));
 
 app.use((err, req, res, next) => {
   console.log(err.stack);

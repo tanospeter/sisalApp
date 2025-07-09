@@ -2,13 +2,12 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'leaflet/dist/leaflet.css';
-//import {useState} from "react"
-//import axios from 'axios'
 
 // screens
 import HomeScreen from './screens/HomeScreen'
 import Step1Screen from './screens/Step1Screen'
-import Step2Screen from './screens/Step2Screen'
+import Monv1Screen from './screens/Monv1Screen'
+import Sisalmonv1EerScreen from './screens/SISALmonv1_eerScreen'
 import DatabaseScreen from './screens/DatabaseScreen'
 
 // components
@@ -23,9 +22,10 @@ function App() {
       <main className='content'>
         <Routes>
           <Route exact path="/" element={<HomeScreen />} />
-          <Route exact path="/step1" element={<Step1Screen />} />
-          <Route exact path="/step2" element={<Step2Screen />} />
-          <Route exact path="/database" element={<DatabaseScreen />} />
+          <Route exact path="/SISALv3_spel_database" element={<Step1Screen />} />
+          <Route exact path="/SISALmonv1_monit_database" element={<Monv1Screen />} />
+          <Route exact path="/SISALv3_EER" element={<DatabaseScreen />} />
+          <Route exact path="/SISALmonv1_EER" element={<Sisalmonv1EerScreen />} />
         </Routes>
       </main>
       <Footer />

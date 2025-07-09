@@ -33,25 +33,37 @@ const Navbar2 = () => {
                 width: 40
               }}
             />
-            SISALv3</NavLink>
+            SISAL webApp description </NavLink>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
             <NavItem className="navbar-query">
-              <NavLink to="step1" className="nav-link">Querying</NavLink>
+              <NavLink to="SISALv3_spel_database" className="nav-link">Querying SISALv3 spel. database</NavLink>
+            </NavItem>
+            <NavItem className="navbar-query">
+              <NavLink to="SISALmonv1_monit_database" className="nav-link">Querying SISALmonv1 monit. database</NavLink>
             </NavItem>
             <NavItem className="navbar-item">
-              <NavLink to="database" className="nav-link">
+              <NavLink to="SISALv3_EER" className="nav-link">
                 SISALv3 EER
               </NavLink>
             </NavItem>
+             <NavItem className="navbar-item">
+              <NavLink to="SISALmonv1_EER" className="nav-link">
+                SISALmonv1 EER
+              </NavLink>
+            </NavItem>
             <NavItem className="navbar-item">
-              <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank" className="nav-link">
+              <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank" className="nav-link" rel="noreferrer">
                 Publications
               </a>
             </NavItem>
           </Nav>
-          <NavbarText>PAST GLOBAL CHANGES</NavbarText>
+          <NavbarText className="navbar-item">
+            <a href="https://pastglobalchanges.org" className="nav-link" target="_blank" rel="noreferrer">
+              PAST GLOBAL CHANGES
+            </a>
+          </NavbarText>
         </Collapse>
       </Navbar>
     </div>

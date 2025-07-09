@@ -2,6 +2,7 @@ const entityQuery = require('../models/entityQuery')
 const datingQuery = require('../models/datingQuery')
 const chronoQuery = require('../models/chronoQuery')
 const advancedQuery = require('../models/advancedQuery')
+const monv1Query = require('../models/monv1Query')
 
 exports.EntityMetaQuery = async (req, res, next) => { 
   try {
@@ -24,7 +25,7 @@ exports.EntityMetaQuery = async (req, res, next) => {
       speleothemType
       )
          
-    await query.save()
+    // await query.save()
     
     let sql = query.queryBuilder()
     
@@ -166,3 +167,23 @@ exports.AdvancedQuery = async (req, res, next) =>{
     next(error)
   }
 }
+
+exports.Monv1Query = async (req, res, next) => {
+  try {
+    console.log(
+      `queryControllers.Monv1Query: ${JSON.stringify(req.body)}`
+    );
+    let { siteName, lat, lon } = req.body;
+
+    let query = new monv1Query(siteName, lat, lon);
+
+    let sql = query.queryBuilder();
+
+    const [meta, _] = await query.getMonv1(sql);
+
+    res.status(201).json({ meta, sql });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
