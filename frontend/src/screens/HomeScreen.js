@@ -138,7 +138,7 @@ const HomeScreen = () => {
           </ul>
           <h3>3. Version history</h3>
           <p>1.3. The SISAL webApp now enables spatial querying via selecting a bounding box on the map at the bottom of the page.<span class="text-muted">- 27.06.2024</span></p>
-          <p>1.2. The SISAL webApp now queries the SISALv3 database <a href="https://doi.org/10.5194/essd-16-1933-2024" target='_blank'>https://doi.org/10.5194/essd-16-1933-2024</a> please do not forget to cite! <span className='text-muted'>- 15.12.2023.</span> </p>
+          <p>1.2. The SISAL webApp now queries the SISALv3 database <a href="https://doi.org/10.5194/essd-16-1933-2024" target='_blank'>https://doi.org/10.5194/essd-16-1933-2024</a> please do not forget to cite! <span className='text-muted'>- 15.06.2024.</span> </p>
           <p>- where you list the repository items, also list that more trace elements datafiles, cave site map files, speleothem section image files etc. can be found in the repository (see the data availability section of the manuscript for details). </p>
           <p>1.1. An interactive map has been added which allows the visual inspection of the sites queried. In addition, an option to filter for composite records has been introduced
             <span className="text-muted">- 29.04.2023.</span></p>
