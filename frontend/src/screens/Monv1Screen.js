@@ -1,5 +1,5 @@
 import "./Step1Screen.css";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import axios from "axios";
 import Datatable from "../components/DatatableMonv1";
 import {
@@ -100,8 +100,7 @@ const Monv1Screen = () => {
           <h2>Quering entity metadata</h2>
           <p>
             Please specify the parameters of the query below. Make sure that at
-            least one of the parameters (Site Name, Lat-Lon Coordinates or
-            InterpAge time interval) is defined! If more than one of the above
+            least one of the parameters (Site Name or Lat-Lon Coordinates) is defined! If more than one of the above
             has been defined, they will be filled together for the result of the
             query. (So there is a logical AND connection between parameters).
           </p>

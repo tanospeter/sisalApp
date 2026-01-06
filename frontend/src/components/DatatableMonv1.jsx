@@ -3,13 +3,14 @@ import { Table, Button, Input, ButtonGroup } from "reactstrap";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import axios from "axios";
 
 function entity_id(entity) {
   return [
     entity.site_id,
     entity.cave_entity_id,
     entity.drip_entity_id,
-    entity.precip_site_name,
+    entity.precip_site_id,
   ].join("_");
 }
 
@@ -17,6 +18,12 @@ const Datatable = ({ data, query }) => {
   const [entities, setEntities] = useState([]);
 
   let columns = data[0] && Object.keys(data[0]);
+  columns = columns?.filter(
+    (col) =>
+      col !== "cave_entity_id" &&
+      col !== "drip_entity_id" &&
+      col !== "precip_site_id"
+  );
   let d = data;
 
   const handleOnDownload = (query, sql, title) => {
@@ -34,43 +41,133 @@ const Datatable = ({ data, query }) => {
     }
   };
 
-  const dowloadEntities = () => {
+  const dowloadEntities = (type) => {
     let selectedEntites = entities.filter((e) => e.isChecked === true);
     if (selectedEntites.length !== 0) {
-      handleOnDownload(selectedEntites, [{ sql: query }], "EntityList");
+      if (type === "monitoring") {
+        handleOnDownloadMonitoring(selectedEntites);
+      } else if (type === "metadata") {
+        handleOnDownload(selectedEntites, [{ sql: query }], "EntityList");
+      }
     } else {
       alert("Download request denied! Please select at least one entity!");
     }
   };
 
-  // minden munkalapra 1-1 tábla (excl. entity_link_reference), csak selected
-  const handleOnDownloadMonitoring = async () => {
-    const queryBySite = data.reduce((acc, obj) => {
-      if (!acc[obj.site_name]) {
-        acc[obj.site_name] = [];
-      }
-      acc[obj.site_name].push(obj);
-      return acc;
-    }, {});
+  const handleOnDownloadMonitoring = async (entities) => {
+    const entityIds = entities.map((entity) => {
+      return {
+        site_id: entity.site_id,
+        cave_entity_id: entity.cave_entity_id,
+        drip_entity_id: entity.drip_entity_id,
+        precip_site_id: entity.precip_site_id,
+      };
+    });
 
-    const zip = new JSZip();
+    let monitoringData = [];
 
-    await Promise.all(
-      Object.values(queryBySite).map(async (siteData) => {
-        const siteName = siteData[0].site_name;
-        let workBook = XLSX.utils.book_new();
-        const workSheet1 = XLSX.utils.json_to_sheet(siteData);
-        XLSX.utils.book_append_sheet(workBook, workSheet1, siteName);
-        // Generate XLSX as Uint8Array
-        const wbout = XLSX.write(workBook, { bookType: "xlsx", type: "array" });
-        zip.file(`${siteName}.xlsx`, wbout);
+    axios
+      .post(
+        `${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getMonv1/monitoring`,
+        { entityIds: entityIds }
+      )
+      .then((response) => {
+        monitoringData = response.data;
+        exportMonitoringDataToExcel(
+          monitoringData,
+          "Sisal_monv1_monitoring_data.xlsx"
+        );
       })
+      .catch((error) => console.log(error));
+  };
+
+  function addSheet(workbook, sheetName, data) {
+    // Ensure data is an array, wrapping single objects
+    const dataArray = Array.isArray(data)
+      ? data.length > 0
+        ? data
+        : [{}]
+      : [data || {}];
+
+    // Handle null/undefined data gracefully, create an empty sheet
+    if (dataArray.length === 1 && Object.keys(dataArray[0]).length === 0) {
+      // console.log(`No data for sheet: ${sheetName}. Creating empty sheet.`);
+      // Create a worksheet with a placeholder if data is empty
+      const emptyWs = XLSX.utils.json_to_sheet([
+        { Message: "No data available." },
+      ]);
+      XLSX.utils.book_append_sheet(workbook, emptyWs, sheetName);
+      return;
+    }
+
+    // Convert the array of objects to a worksheet
+    const worksheet = XLSX.utils.json_to_sheet(dataArray);
+
+    // Auto-fit columns
+    try {
+      const objectMaxLength = [];
+      // Get header lengths
+      const headers = Object.keys(dataArray[0]);
+      headers.forEach((header) => {
+        objectMaxLength.push(Math.max(10, header.length)); // Min width of 10 or header length
+      });
+
+      // Get data lengths
+      for (const row of dataArray) {
+        headers.forEach((header, i) => {
+          const value = row[header];
+          if (value != null) {
+            const length = value.toString().length;
+            if (objectMaxLength[i] < length) {
+              objectMaxLength[i] = length;
+            }
+          }
+        });
+      }
+      // Apply column widths (wch = width in characters)
+      worksheet["!cols"] = objectMaxLength.map((width) => ({ wch: width + 2 })); // Add 2 for padding
+    } catch (e) {
+      // Fallback in case of error (e.g., empty data array)
+      // console.warn("Could not auto-fit columns for sheet:", sheetName, e);
+    }
+    // --- End auto-fit ---
+
+    // Add the worksheet to the workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+  }
+
+  async function exportMonitoringDataToExcel(monitoringData, outputPath) {
+    // Create a new blank workbook
+    const workbook = XLSX.utils.book_new();
+
+    // --- Add a sheet for each piece of data ---
+    addSheet(workbook, "Site_Info", monitoringData.site_info);
+    addSheet(workbook, "Cave_Entity", monitoringData.cave_entity);
+    addSheet(workbook, "Climate", monitoringData.climate);
+
+    // Drip data is now denormalized
+    addSheet(workbook, "Drip_Iso_Samples", monitoringData.drip_iso_samples);
+    addSheet(workbook, "Drip_Rate_Samples", monitoringData.drip_rate_samples);
+    addSheet(
+      workbook,
+      "Drip_ModCarb_Samples",
+      monitoringData.drip_mod_carb_samples
     );
 
-    zip.generateAsync({ type: "blob" }).then((content) => {
-      saveAs(content, "Sisal_monv1_monitoring_data.zip");
-    });
-  };
+    // Precip data is now denormalized
+    addSheet(workbook, "Precip_Entities", monitoringData.precip_entities);
+    addSheet(workbook, "Precip_Samples", monitoringData.precip_samples);
+
+    // --- Save the file ---
+    try {
+      // Write the workbook to a file
+      XLSX.writeFile(workbook, outputPath);
+      // console.log(`Successfully exported monitoring data to ${outputPath}`);
+    } catch (error) {
+      console.error("Error exporting to Excel:", error);
+      throw error;
+    }
+  }
 
   const comparePropsAndHook = () => {
     let entitiesFromData = d.map((entity) => {
@@ -86,7 +183,6 @@ const Datatable = ({ data, query }) => {
   // Entity selector function for 'Filtered metadata' section
   const selectEntity = (e) => {
     const { name, checked } = e.target;
-    //console.log(name, checked)
     const isIdentical = comparePropsAndHook();
     if (!isIdentical) {
       // prop and hook are not identical
@@ -97,12 +193,10 @@ const Datatable = ({ data, query }) => {
         setEntities(tempEntity);
       } else {
         let tempEntity = d.map((entity) =>
-          //console.log(typeof entity.entity_id.toString(), typeof name, entity.entity_id == name) // true
           entity_id(entity) === name
             ? { ...entity, isChecked: checked }
             : entity
         );
-        //console.log(tempEntity.entity_id)
         setEntities(tempEntity);
       }
     } else {
@@ -114,12 +208,10 @@ const Datatable = ({ data, query }) => {
         setEntities(tempEntity);
       } else {
         let tempEntity = entities.map((entity) =>
-          //console.log(typeof entity.entity_id.toString(), typeof name, entity.entity_id == name) // true
           entity_id(entity) === name
             ? { ...entity, isChecked: checked }
             : entity
         );
-        //console.log(tempEntity.entity_id)
         setEntities(tempEntity);
       }
     }
@@ -168,14 +260,18 @@ const Datatable = ({ data, query }) => {
           </div>
           <div>
             <ButtonGroup>
-              <Button color="primary" outline onClick={dowloadEntities}>
+              <Button
+                color="primary"
+                outline
+                onClick={() => dowloadEntities("metadata")}
+              >
                 Download selected meta data
               </Button>
               <Button
                 className="downloadMetaDataBtn"
                 color="primary"
                 outline
-                onClick={handleOnDownloadMonitoring}
+                onClick={() => dowloadEntities("monitoring")}
               >
                 Download monitoring data
               </Button>
@@ -228,7 +324,7 @@ const Datatable = ({ data, query }) => {
                 className="downloadMetaDataBtn"
                 color="primary"
                 outline
-                onClick={dowloadEntities}
+                onClick={() => dowloadEntities("metadata")}
               >
                 Download selected meta data
               </Button>
@@ -236,7 +332,7 @@ const Datatable = ({ data, query }) => {
                 className="downloadMetaDataBtn"
                 color="primary"
                 outline
-                onClick={handleOnDownloadMonitoring}
+                onClick={() => dowloadEntities("monitoring")}
               >
                 Download monitoring data
               </Button>

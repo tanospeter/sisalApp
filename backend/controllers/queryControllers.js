@@ -6,7 +6,7 @@ const monv1Query = require('../models/monv1Query')
 
 exports.EntityMetaQuery = async (req, res, next) => { 
   try {
-    console.log(`queryControllers.EntityMetaQuery: ${JSON.stringify(req.body)}`)
+    // console.log(`queryControllers.EntityMetaQuery: ${JSON.stringify(req.body)}`)
     let {
       email,
       siteName,
@@ -58,7 +58,7 @@ exports.DatingQuery = async (req, res, next) =>{
 }
 
 exports.SisalChronosQuery = async (req, res, next) => {
-  console.log(req.body)
+  // console.log(req.body)
   try {
     let {
       entity_ids,
@@ -83,7 +83,7 @@ exports.SisalChronosQuery = async (req, res, next) => {
 
 exports.AdvancedQuery = async (req, res, next) =>{
   try {    
-    console.log(req.body.params)
+    // console.log(req.body.params)
     
     let query = new advancedQuery(req.body.params)
 
@@ -94,18 +94,18 @@ exports.AdvancedQuery = async (req, res, next) =>{
     const [chrono, ___] = await query.runAdvancedQuery(sql.sqlChrono)
 
     let filteredEntityIdsByDating = query.countDateByEntity (req.body.params.selectedEntity_ids, req.body.params.minDate, req.body.params.selectedInterpAgeRange, dating)
-    console.log(`filteredEntityIdsByDating:${filteredEntityIdsByDating}`)
+    // console.log(`filteredEntityIdsByDating:${filteredEntityIdsByDating}`)
     let filteredEntityIdsByChrono = query.chronoFiltering(chrono,req.body.params.maxGap,req.body.params.selectedEntity_ids,req.body.params.selectedChrono)
-    console.log(`filteredEntityIdsByChrono:${filteredEntityIdsByChrono}`)
+    // console.log(`filteredEntityIdsByChrono:${filteredEntityIdsByChrono}`)
     //let filteredEntityIdsByAdvancedFilters = filteredEntityIdsByDating.concat(filteredEntityIdsByChrono)
     let filteredEntityIdsByAdvancedFilters = filteredEntityIdsByDating.filter(element => filteredEntityIdsByChrono.includes(element))
-    console.log(`filteredEntityIdsByAdvancedFilters: ${filteredEntityIdsByAdvancedFilters}`)
+    // console.log(`filteredEntityIdsByAdvancedFilters: ${filteredEntityIdsByAdvancedFilters}`)
     
     filteredEntityIdsByAdvancedFilters = filteredEntityIdsByAdvancedFilters.filter((item,index)=>{
       return (filteredEntityIdsByAdvancedFilters.indexOf(item) == index)
     })
 
-    console.log(filteredEntityIdsByAdvancedFilters)
+    // console.log(filteredEntityIdsByAdvancedFilters)
 
     let reportInfo = {
       selectedEntity_ids : req.body.params.selectedEntity_ids,
@@ -181,7 +181,19 @@ exports.Monv1Query = async (req, res, next) => {
 
     const [meta, _] = await query.getMonv1(sql);
 
-    res.status(201).json({ meta, sql });
+    res.status(200).json({ meta, sql });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+exports.Monv1QueryMonitoring = async (req, res, next) => {
+  try {
+    const query = new monv1Query();
+    const entityIds = req.body.entityIds;
+    const tables = await query.getMonitoringData(entityIds);
+    res.status(200).json(tables);
   } catch (error) {
     console.log(error);
     next(error);

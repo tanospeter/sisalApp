@@ -2,11 +2,18 @@ const express = require('express')
 const queryControllers = require('../controllers/queryControllers')
 const router = express.Router();
 
-//@desc GET entity metadata or dating info
-//@route POST - /api/getentitymeta
+//@desc GET monv1 data
+//@route POST - /api/getmonv1
 //@access public
 router
   .route("/")
   .post(queryControllers.Monv1Query)
+
+//@desc GET monitoring data from all tables
+//@route POST - /api/getmonv1/monitoring
+//@access public
+router
+  .route("/monitoring")
+  .post(queryControllers.Monv1QueryMonitoring)
 
 module.exports = router
