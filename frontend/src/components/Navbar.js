@@ -41,7 +41,7 @@ const Navbar2 = () => {
               <NavLink to="SISALv3_spel_database" className="nav-link">Querying SISALv3 spel. database</NavLink>
             </NavItem>
             <NavItem className="navbar-query">
-              <NavLink to="SISALmonv1_monit_database" className="nav-link">Querying SISALmonv1 monit. database</NavLink>
+              <NavLink to="SISALmonv1_monit_database" className="nav-link">Querying SISAL_monv1 monit. database</NavLink>
             </NavItem>
             <NavItem className="navbar-item">
               <NavLink to="SISALv3_EER" className="nav-link">
@@ -50,7 +50,7 @@ const Navbar2 = () => {
             </NavItem>
              <NavItem className="navbar-item">
               <NavLink to="SISALmonv1_EER" className="nav-link">
-                SISALmonv1 EER
+                SISAL_monv1 EER
               </NavLink>
             </NavItem>
             <NavItem className="navbar-item">

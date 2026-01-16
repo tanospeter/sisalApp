@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Table, Button, Input, ButtonGroup } from "reactstrap";
 import * as XLSX from "xlsx";
 import JSZip from "jszip";
@@ -16,20 +16,27 @@ function entity_id(entity) {
 
 const Datatable = ({ data, query }) => {
   const [entities, setEntities] = useState([]);
+  const [expandedGroups, setExpandedGroups] = useState([]);
 
-  let columns = data[0] && Object.keys(data[0]);
-  columns = columns?.filter(
-    (col) =>
-      col !== "cave_entity_id" &&
-      col !== "drip_entity_id" &&
-      col !== "precip_site_id"
-  );
-  let d = data;
+  useEffect(() => {
+    setEntities(data.map((entity) => ({ ...entity, isChecked: false })));
+    setExpandedGroups([]);
+  }, [data]);
 
-  const handleOnDownload = (query, sql, title) => {
-    if (query.length <= 30000) {
+  const columns = useMemo(() => {
+    const cols = data[0] && Object.keys(data[0]);
+    return cols?.filter(
+      (col) =>
+        col !== "cave_entity_id" &&
+        col !== "drip_entity_id" &&
+        col !== "precip_site_id"
+    );
+  }, [data]);
+
+  const handleOnDownload = (dataArray, sql, title) => {
+    if (dataArray.length <= 30000) {
       var workBook = XLSX.utils.book_new(),
-        workSheet1 = XLSX.utils.json_to_sheet(query),
+        workSheet1 = XLSX.utils.json_to_sheet(dataArray),
         workSheet2 = XLSX.utils.json_to_sheet(sql);
       XLSX.utils.book_append_sheet(workBook, workSheet1, title);
       XLSX.utils.book_append_sheet(workBook, workSheet2, "SQL query");
@@ -55,16 +62,12 @@ const Datatable = ({ data, query }) => {
   };
 
   const handleOnDownloadMonitoring = async (entities) => {
-    const entityIds = entities.map((entity) => {
-      return {
-        site_id: entity.site_id,
-        cave_entity_id: entity.cave_entity_id,
-        drip_entity_id: entity.drip_entity_id,
-        precip_site_id: entity.precip_site_id,
-      };
-    });
-
-    let monitoringData = [];
+    const entityIds = entities.map((entity) => ({
+      site_id: entity.site_id,
+      cave_entity_id: entity.cave_entity_id,
+      drip_entity_id: entity.drip_entity_id,
+      precip_site_id: entity.precip_site_id,
+    }));
 
     axios
       .post(
@@ -72,9 +75,8 @@ const Datatable = ({ data, query }) => {
         { entityIds: entityIds }
       )
       .then((response) => {
-        monitoringData = response.data;
         exportMonitoringDataToExcel(
-          monitoringData,
+          response.data,
           "Sisal_monv1_monitoring_data.xlsx"
         );
       })
@@ -140,27 +142,38 @@ const Datatable = ({ data, query }) => {
     // Create a new blank workbook
     const workbook = XLSX.utils.book_new();
 
-    // --- Add a sheet for each piece of data ---
-    addSheet(workbook, "Site_Info", monitoringData.site_info);
-    addSheet(workbook, "Cave_Entity", monitoringData.cave_entity);
-    addSheet(workbook, "Climate", monitoringData.climate);
+    // Helper check to prevent crashes if data is missing
+    const safeAdd = (sheetName, data) => {
+      if (data && data.length > 0) {
+        addSheet(workbook, sheetName, data);
+      }
+    };
 
-    // Drip data is now denormalized
-    addSheet(workbook, "Drip_Iso_Samples", monitoringData.drip_iso_samples);
-    addSheet(workbook, "Drip_Rate_Samples", monitoringData.drip_rate_samples);
-    addSheet(
-      workbook,
-      "Drip_ModCarb_Samples",
-      monitoringData.drip_mod_carb_samples
-    );
+    // --- 1. Site & Climate ---
+    safeAdd("Site_Info", monitoringData.site_info);
+    safeAdd("Climate", monitoringData.climate);
 
-    // Precip data is now denormalized
-    addSheet(workbook, "Precip_Entities", monitoringData.precip_entities);
-    addSheet(workbook, "Precip_Samples", monitoringData.precip_samples);
+    // --- 2. Entities (Metadata) ---
+    // Note: Backend key changed from 'cave_entity' to 'cave_entities'
+    safeAdd("Cave_Entities", monitoringData.cave_entities);
+
+    // NEW: Drip entities are now separate from samples
+    safeAdd("Drip_Entities", monitoringData.drip_entities);
+
+    safeAdd("Precip_Entities", monitoringData.precip_entities);
+
+    // --- 3. Samples (Data) ---
+    safeAdd("Drip_Iso_Samples", monitoringData.drip_iso_samples);
+    safeAdd("Drip_Rate_Samples", monitoringData.drip_rate_samples);
+    safeAdd("Drip_ModCarb_Samples", monitoringData.drip_mod_carb_samples);
+    safeAdd("Precip_Samples", monitoringData.precip_samples);
+
+    // --- 4. References (NEW) ---
+    // This sheet will contain the unified list with 'link_type' and 'citation'
+    safeAdd("References", monitoringData.references);
 
     // --- Save the file ---
     try {
-      // Write the workbook to a file
       XLSX.writeFile(workbook, outputPath);
       // console.log(`Successfully exported monitoring data to ${outputPath}`);
     } catch (error) {
@@ -169,180 +182,189 @@ const Datatable = ({ data, query }) => {
     }
   }
 
-  const comparePropsAndHook = () => {
-    let entitiesFromData = d.map((entity) => {
-      return entity_id(entity);
-    });
-    let entitiesFromEntitiesHook = entities.map((entity) => {
-      return entity_id(entity);
-    });
-
-    return entitiesFromData.toString() === entitiesFromEntitiesHook.toString();
-  };
-
   // Entity selector function for 'Filtered metadata' section
-  const selectEntity = (e) => {
-    const { name, checked } = e.target;
-    const isIdentical = comparePropsAndHook();
-    if (!isIdentical) {
-      // prop and hook are not identical
-      if (name === "allSelect") {
-        let tempEntity = d.map((entity) => {
-          return { ...entity, isChecked: checked };
-        });
-        setEntities(tempEntity);
-      } else {
-        let tempEntity = d.map((entity) =>
-          entity_id(entity) === name
-            ? { ...entity, isChecked: checked }
-            : entity
-        );
-        setEntities(tempEntity);
+  const selectEntity = useCallback(
+    (e) => {
+      const { name, checked } = e.target;
+
+      const tempEntity =
+        name === "allSelect"
+          ? entities.map((entity) => ({ ...entity, isChecked: checked }))
+          : entities.map((entity) =>
+              entity_id(entity) === name
+                ? { ...entity, isChecked: checked }
+                : entity
+            );
+
+      setEntities(tempEntity);
+    },
+    [entities]
+  );
+
+  // Group entities by site_name and cave_entity_name
+  const groupedEntities = useMemo(() => {
+    const groups = {};
+    entities.forEach((entity) => {
+      const key = `${entity.site_name || "N/A"}_${
+        entity.cave_entity_name || "N/A"
+      }`;
+      if (!groups[key]) {
+        groups[key] = [];
       }
+      groups[key].push(entity);
+    });
+    return groups;
+  }, [entities]);
+
+  const toggleGroup = (groupKey) => {
+    if (expandedGroups.includes(groupKey)) {
+      setExpandedGroups(expandedGroups.filter((key) => key !== groupKey));
     } else {
-      //prop and hook are identical
-      if (name === "allSelect") {
-        let tempEntity = entities.map((entity) => {
-          return { ...entity, isChecked: checked };
-        });
-        setEntities(tempEntity);
-      } else {
-        let tempEntity = entities.map((entity) =>
-          entity_id(entity) === name
-            ? { ...entity, isChecked: checked }
-            : entity
-        );
-        setEntities(tempEntity);
-      }
+      setExpandedGroups([...expandedGroups, groupKey]);
     }
   };
 
   if (columns) {
-    const isIdentical = comparePropsAndHook();
-    if (!isIdentical) {
-      return (
-        <div className="datatable">
-          <h2>Filtered metadata</h2>
-          <div>
-            <Table responsive hover size="10">
-              <thead>
-                <tr key="h">
-                  <th>
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="allSelect"
-                      onChange={selectEntity}
-                    />
-                  </th>
-                  {d[0] && columns.map((heading) => <th>{heading}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {d.map((row) => (
-                  <tr key={entity_id(row)}>
-                    <td>
-                      <Input
-                        type="checkbox"
-                        className="form-check-input"
-                        name={entity_id(row)}
-                        checked={row?.isChecked || false}
-                        onChange={selectEntity}
-                      />
-                    </td>{" "}
-                    {columns.map((column) => (
-                      <td>{row[column]}</td>
-                    ))}
-                  </tr>
+    return (
+      <div className="datatable">
+        <h2>Filtered metadata</h2>
+        <div
+          style={{
+            maxHeight: "80vh",
+            overflowY: "auto",
+            overflowX: "auto",
+            border: "1px solid #ddd",
+          }}
+        >
+          <Table hover size="10" style={{ marginBottom: 0 }}>
+            <thead
+              style={{
+                position: "sticky",
+                top: 0,
+                backgroundColor: "#fff",
+                zIndex: 1,
+              }}
+            >
+              <tr key="h">
+                <th>
+                  <Input
+                    type="checkbox"
+                    className="form-check-input"
+                    name="allSelect"
+                    onChange={selectEntity}
+                  />
+                </th>
+                <th></th>
+                <th>Site Name</th>
+                <th>Cave Entity Name</th>
+                {columns.map((heading) => (
+                  <th key={heading}>{heading}</th>
                 ))}
-              </tbody>
-            </Table>
-          </div>
-          <div>
-            <ButtonGroup>
-              <Button
-                color="primary"
-                outline
-                onClick={() => dowloadEntities("metadata")}
-              >
-                Download selected meta data
-              </Button>
-              <Button
-                className="downloadMetaDataBtn"
-                color="primary"
-                outline
-                onClick={() => dowloadEntities("monitoring")}
-              >
-                Download monitoring data
-              </Button>
-            </ButtonGroup>
-          </div>
+              </tr>
+            </thead>
+            <tbody>
+              {Object.keys(groupedEntities).map((groupKey) => {
+                const isExpanded = expandedGroups.includes(groupKey);
+                const groupEntities = groupedEntities[groupKey];
+                const groupEntity = groupEntities[0];
+                const allChecked = groupEntities.every((e) => e.isChecked);
+                const someChecked = groupEntities.some((e) => e.isChecked);
+
+                return (
+                  <React.Fragment key={groupKey}>
+                    {/* Group Header Row */}
+                    <tr style={{ backgroundColor: "#f5f5f5" }}>
+                      <td>
+                        <Input
+                          type="checkbox"
+                          className="form-check-input"
+                          name={`group_${groupKey}`}
+                          checked={allChecked}
+                          indeterminate={someChecked && !allChecked}
+                          onChange={(e) => {
+                            const { checked } = e.target;
+                            const updated = entities.map((entity) =>
+                              groupEntities.includes(entity)
+                                ? { ...entity, isChecked: checked }
+                                : entity
+                            );
+                            setEntities(updated);
+                          }}
+                        />
+                      </td>
+                      <td>
+                        <Button
+                          color="primary"
+                          size="sm"
+                          onClick={() => toggleGroup(groupKey)}
+                        >
+                          {isExpanded ? "−" : "+"}
+                        </Button>
+                      </td>
+                      <td style={{ fontWeight: "bold" }}>
+                        {groupEntity.site_name || "N/A"}
+                      </td>
+                      <td style={{ fontWeight: "bold" }}>
+                        {groupEntity.cave_entity_name || "N/A"}
+                      </td>
+                      {columns.slice(2).map((col) => (
+                        <td key={col}></td>
+                      ))}
+                    </tr>
+
+                    {/* Expanded Detail Rows */}
+                    {isExpanded &&
+                      groupEntities.map((row) => (
+                        <tr
+                          key={entity_id(row)}
+                          style={{ backgroundColor: "#fafafa" }}
+                        >
+                          <td></td>
+                          <td>
+                            <Input
+                              type="checkbox"
+                              className="form-check-input"
+                              name={entity_id(row)}
+                              checked={row?.isChecked || false}
+                              onChange={selectEntity}
+                            />
+                          </td>
+                          <td>{row.site_name || "N/A"}</td>
+                          <td>{row.cave_entity_name || "N/A"}</td>
+                          {columns.map((column) => (
+                            <td key={column}>{row[column]}</td>
+                          ))}
+                        </tr>
+                      ))}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </Table>
         </div>
-      );
-    } else {
-      return (
-        <div className="datatable">
-          <h2>Filtered metadata</h2>
-          <div>
-            <Table responsive hover size="10">
-              <thead>
-                <tr key="h">
-                  <th>
-                    <Input
-                      type="checkbox"
-                      className="form-check-input"
-                      name="allSelect"
-                      onChange={selectEntity}
-                    />
-                  </th>
-                  {d[0] && columns.map((heading) => <th>{heading}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {entities.map((row) => (
-                  <tr key={entity_id(row)}>
-                    <td>
-                      <Input
-                        type="checkbox"
-                        className="form-check-input"
-                        name={entity_id(row)}
-                        checked={row?.isChecked || false}
-                        onChange={selectEntity}
-                      />
-                    </td>{" "}
-                    {columns.map((column) => (
-                      <td>{row[column]}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </div>
-          <div>
-            <ButtonGroup>
-              <Button
-                className="downloadMetaDataBtn"
-                color="primary"
-                outline
-                onClick={() => dowloadEntities("metadata")}
-              >
-                Download selected meta data
-              </Button>
-              <Button
-                className="downloadMetaDataBtn"
-                color="primary"
-                outline
-                onClick={() => dowloadEntities("monitoring")}
-              >
-                Download monitoring data
-              </Button>
-            </ButtonGroup>
-          </div>
+        <div>
+          <ButtonGroup>
+            <Button
+              color="primary"
+              outline
+              onClick={() => dowloadEntities("metadata")}
+            >
+              Download selected meta data
+            </Button>
+            <Button
+              className="downloadMetaDataBtn"
+              color="primary"
+              outline
+              onClick={() => dowloadEntities("monitoring")}
+            >
+              Download monitoring data
+            </Button>
+          </ButtonGroup>
         </div>
-      );
-    }
+      </div>
+    );
   } else {
-    if (query.length !== 0) {
+    if (query && query.length !== 0) {
       return (
         <div className="datatable">
           <h2>No data retrieved!</h2>

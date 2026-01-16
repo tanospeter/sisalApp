@@ -35,6 +35,12 @@ const Monv1Screen = () => {
     setLongTo(bounds.northEast.lng.toFixed(5));
   });
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      sendQueryParams();
+    }
+  };
+
   const sendQueryParams = () => {
     setIsLoading(true);
     setEntityList([]);
@@ -117,6 +123,7 @@ const Monv1Screen = () => {
                       onChange={(event) => {
                         setSiteName(event.target.value);
                       }}
+                      onKeyDown={handleKeyDown}
                     />
                     <Label for="SiteName">site_name</Label>
                   </FormGroup>
@@ -136,6 +143,7 @@ const Monv1Screen = () => {
                       onChange={(event) => {
                         setLatFrom(event.target.value);
                       }}
+                      onKeyDown={handleKeyDown}
                     />
                     <Label for="LatFrom">Latitude from -90°</Label>
                   </FormGroup>
@@ -150,6 +158,7 @@ const Monv1Screen = () => {
                       onChange={(event) => {
                         setLatTo(event.target.value);
                       }}
+                      onKeyDown={handleKeyDown}
                     />
                     <Label for="LatTo">Latitude to 90°</Label>
                   </FormGroup>
@@ -166,6 +175,7 @@ const Monv1Screen = () => {
                       onChange={(event) => {
                         setLongFrom(event.target.value);
                       }}
+                      onKeyDown={handleKeyDown}
                     />
                     <Label for="LonFrom">Longitude from -180°</Label>
                   </FormGroup>
@@ -180,6 +190,7 @@ const Monv1Screen = () => {
                       onChange={(event) => {
                         setLongTo(event.target.value);
                       }}
+                      onKeyDown={handleKeyDown}
                     />
                     <Label for="LonTo">Longitude to 180°</Label>
                   </FormGroup>
