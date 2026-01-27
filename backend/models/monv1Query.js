@@ -16,7 +16,7 @@ class Monv1Query {
     cave_entity.cave_entity_name,
     cave_entity.cave_entity_location,
     cave_entity.cave_entity_contact,
-    drip_entity.*, s.latitude, s.longitude
+    drip_entity.*, s.latitude, s.longitude, s.elevation
     FROM site s
     LEFT JOIN site_link_precip sp_link ON s.site_id = sp_link.site_id
     LEFT JOIN precip_site precip ON precip.precip_site_id = sp_link.precip_site_id

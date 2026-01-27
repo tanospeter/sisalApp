@@ -1,14 +1,10 @@
 import "./SISALmonv1_eerScreen.css";
-import { ReactComponent as ER } from "../pic/Sisal_monv1_structure_diagram.svg";
+import ER from "../pic/EER_monv1_db_v8.0.png";
 
 const DatabaseScreen = () => {
   return (
     <div className="svgContainer">
-      <ER
-      className="svgFullWidth"
-        viewBox="0 0 2810 2560"
-        preserveAspectRatio="xMidYMid meet"
-      />
+      <img src={ER} alt="Sisal Monitor EER" className="svgFullWidth" />
     </div>
   );
 };

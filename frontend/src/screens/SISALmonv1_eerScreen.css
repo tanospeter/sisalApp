@@ -9,11 +9,13 @@ body {
   width: 98%;
   padding: 0;
   margin: 30px 10px 50px 10px;
+
+  display: flex;
+  justify-content: center;
 }
 
 .svgFullWidth {
   display: block;
-  width: 100%;
-  height: auto;
   max-width: 100%;
+  height: auto;
 }

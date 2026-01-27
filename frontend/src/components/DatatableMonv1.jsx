@@ -14,6 +14,14 @@ function entity_id(entity) {
   ].join("_");
 }
 
+const keyColumns = [
+  "site_name",
+  "site_id",
+  "latitude",
+  "longitude",
+  "elevation",
+];
+
 const Datatable = ({ data, query }) => {
   const [entities, setEntities] = useState([]);
   const [expandedGroups, setExpandedGroups] = useState([]);
@@ -29,7 +37,7 @@ const Datatable = ({ data, query }) => {
       (col) =>
         col !== "cave_entity_id" &&
         col !== "drip_entity_id" &&
-        col !== "precip_site_id"
+        col !== "precip_site_id",
     );
   }, [data]);
 
@@ -43,7 +51,7 @@ const Datatable = ({ data, query }) => {
       XLSX.writeFile(workBook, `${title}.xlsx`);
     } else {
       alert(
-        "Download request denied! In the case of queries that result in a high number of samples > 30,000 lines could take up to multiple minutes. Therefore, for such tasks use the MySQL database or the flat csv files located https://researchdata.reading.ac.uk/256/. The SISAL App is limited to providing 30,000 lines of output. Another option is to reduce the number of selected entities in the Filtered metadata list, or move to the Advanced querying to narrow the output."
+        "Download request denied! In the case of queries that result in a high number of samples > 30,000 lines could take up to multiple minutes. Therefore, for such tasks use the MySQL database or the flat csv files located https://researchdata.reading.ac.uk/256/. The SISAL App is limited to providing 30,000 lines of output. Another option is to reduce the number of selected entities in the Filtered metadata list, or move to the Advanced querying to narrow the output.",
       );
     }
   };
@@ -72,12 +80,12 @@ const Datatable = ({ data, query }) => {
     axios
       .post(
         `${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getMonv1/monitoring`,
-        { entityIds: entityIds }
+        { entityIds: entityIds },
       )
       .then((response) => {
         exportMonitoringDataToExcel(
           response.data,
-          "Sisal_monv1_monitoring_data.xlsx"
+          "Sisal_monv1_monitoring_data.xlsx",
         );
       })
       .catch((error) => console.log(error));
@@ -168,14 +176,13 @@ const Datatable = ({ data, query }) => {
     safeAdd("Drip_ModCarb_Samples", monitoringData.drip_mod_carb_samples);
     safeAdd("Precip_Samples", monitoringData.precip_samples);
 
-    // --- 4. References (NEW) ---
+    // --- 4. References ---
     // This sheet will contain the unified list with 'link_type' and 'citation'
     safeAdd("References", monitoringData.references);
 
     // --- Save the file ---
     try {
       XLSX.writeFile(workbook, outputPath);
-      // console.log(`Successfully exported monitoring data to ${outputPath}`);
     } catch (error) {
       console.error("Error exporting to Excel:", error);
       throw error;
@@ -193,26 +200,26 @@ const Datatable = ({ data, query }) => {
           : entities.map((entity) =>
               entity_id(entity) === name
                 ? { ...entity, isChecked: checked }
-                : entity
+                : entity,
             );
 
       setEntities(tempEntity);
     },
-    [entities]
+    [entities],
   );
 
-  // Group entities by site_name and cave_entity_name
   const groupedEntities = useMemo(() => {
     const groups = {};
+
     entities.forEach((entity) => {
-      const key = `${entity.site_name || "N/A"}_${
-        entity.cave_entity_name || "N/A"
-      }`;
+      const key = keyColumns.map((col) => entity[col] || "N/A").join("_");
+
       if (!groups[key]) {
         groups[key] = [];
       }
       groups[key].push(entity);
     });
+
     return groups;
   }, [entities]);
 
@@ -255,11 +262,15 @@ const Datatable = ({ data, query }) => {
                   />
                 </th>
                 <th></th>
-                <th>Site Name</th>
-                <th>Cave Entity Name</th>
-                {columns.map((heading) => (
-                  <th key={heading}>{heading}</th>
+                <th># metadata</th>
+                {keyColumns.map((col) => (
+                  <th key={col}>{col}</th>
                 ))}
+                {columns
+                  .filter((column) => !keyColumns.includes(column))
+                  .map((column) => (
+                    <th key={column}>{column}</th>
+                  ))}
               </tr>
             </thead>
             <tbody>
@@ -286,7 +297,7 @@ const Datatable = ({ data, query }) => {
                             const updated = entities.map((entity) =>
                               groupEntities.includes(entity)
                                 ? { ...entity, isChecked: checked }
-                                : entity
+                                : entity,
                             );
                             setEntities(updated);
                           }}
@@ -301,14 +312,11 @@ const Datatable = ({ data, query }) => {
                           {isExpanded ? "−" : "+"}
                         </Button>
                       </td>
-                      <td style={{ fontWeight: "bold" }}>
-                        {groupEntity.site_name || "N/A"}
-                      </td>
-                      <td style={{ fontWeight: "bold" }}>
-                        {groupEntity.cave_entity_name || "N/A"}
-                      </td>
-                      {columns.slice(2).map((col) => (
-                        <td key={col}></td>
+                      <td>{groupEntities.length}</td>
+                      {keyColumns.map((col) => (
+                        <td style={{ fontWeight: "bold" }}>
+                          {groupEntity[col]}
+                        </td>
                       ))}
                     </tr>
 
@@ -329,11 +337,15 @@ const Datatable = ({ data, query }) => {
                               onChange={selectEntity}
                             />
                           </td>
-                          <td>{row.site_name || "N/A"}</td>
-                          <td>{row.cave_entity_name || "N/A"}</td>
-                          {columns.map((column) => (
-                            <td key={column}>{row[column]}</td>
+                          <td></td>
+                          {keyColumns.map((col) => (
+                            <td>{row[col]}</td>
                           ))}
+                          {columns
+                            .filter((column) => !keyColumns.includes(column))
+                            .map((column) => (
+                              <td>{row[column]}</td>
+                            ))}
                         </tr>
                       ))}
                   </React.Fragment>
