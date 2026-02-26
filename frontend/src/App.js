@@ -7,8 +7,8 @@ import 'leaflet/dist/leaflet.css';
 import HomeScreen from './screens/HomeScreen'
 import Step1Screen from './screens/Step1Screen'
 import Monv1Screen from './screens/Monv1Screen'
-import Sisalmonv1EerScreen from './screens/SISALmonv1_eerScreen'
-import DatabaseScreen from './screens/DatabaseScreen'
+import SisalMonv1DescriptionScreen from './screens/Sisal_monv1DescriptionScreen'
+import Sisalv3DescriptionScreen from './screens/Sisalv3DescriptionScreen'
 
 // components
 import Navbar from './components/Navbar'
@@ -24,8 +24,8 @@ function App() {
           <Route exact path="/" element={<HomeScreen />} />
           <Route exact path="/SISALv3_spel_database" element={<Step1Screen />} />
           <Route exact path="/SISALmonv1_monit_database" element={<Monv1Screen />} />
-          <Route exact path="/SISALv3_EER" element={<DatabaseScreen />} />
-          <Route exact path="/SISALmonv1_EER" element={<Sisalmonv1EerScreen />} />
+          <Route exact path="/SISALv3_EER" element={<Sisalv3DescriptionScreen />} />
+          <Route exact path="/SISALmonv1_EER" element={<SisalMonv1DescriptionScreen />} />
         </Routes>
       </main>
       <Footer />

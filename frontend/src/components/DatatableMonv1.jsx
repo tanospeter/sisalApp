@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Table, Button, Input, ButtonGroup } from "reactstrap";
 import * as XLSX from "xlsx";
-import JSZip from "jszip";
-import { saveAs } from "file-saver";
 import axios from "axios";
 
 function entity_id(entity) {

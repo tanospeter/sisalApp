@@ -1,0 +1,248 @@
+import "./Sisalv3DescriptionScreen.css";
+import eer from "../pic/sisalv3_eer.png";
+
+const Sisalv3DescriptionScreen = () => {
+  return (
+    <div className="pageContainer">
+      <h1>The SISAL webApp with the SISALv3 database</h1>
+      <p></p>
+      <h2>Overview</h2>
+      <p>
+        The{" "}
+        <a
+          href="https://essd.copernicus.org/preprints/essd-2023-364/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          SISALv3 database
+        </a>{" "}
+        created by the PAGES-SISAL Working Group contains speleothem data from
+        365 sites from across the globe, including spatiotemporal coverage for
+        stable oxygen (892) and carbon (620) isotope records and trace elements:
+        95 Mg/Ca, 85 Sr/Ca, 52 Ba/Ca, 25 U/Ca, 29 P/Ca and 14 Sr-isotope
+        records. The database provides increased access to records, extensive
+        metadata and has enabled regional-to-global scale analysis of climatic
+        patterns using a variety of approaches. Some examples can be seen in the
+        PAGES-SISAL{" "}
+        <a
+          href="https://pastglobalchanges.org/taxonomy/term/119/publications"
+          target="_blank"
+          rel="noreferrer"
+        >
+          product
+        </a>{" "}
+        page.
+      </p>
+
+      <p>
+        Trace element data in the database itself is available at stable isotope
+        equivalent depths in mmol/mol units. For trace element data that was
+        <ul>
+          <li>
+            measured at a different resolution than the stable isotopes (eg high
+            resolution laser ablation data), the data has been downsampled to
+            stable isotope equivalent depths, and the original high resolution
+            data (where submitted by authors)
+          </li>
+          <li>
+            measured in units other than mmol/mol, where data in the original
+            measurement units have been provided by authors
+          </li>
+          <li>
+            additional proxy element measurements have been made available by
+            authors (eg Na/Ca etc)
+          </li>
+        </ul>
+        are available as standardised trace element data files in the{" "}
+        <a
+          href="http://dx.doi.org/10.5287/ora-2nanwp4rk"
+          target="_blank"
+          rel="noreferrer"
+        >
+          repository
+        </a>
+        . Moreover, the repository contains all submitted cave maps and entity
+        images in separate zip folders, as well as copyright information for the
+        individual images and an entity scan "wishlist" which details best
+        practices for entity scan images; (see Sect. 5.1 in SISALv3{" "}
+        <a
+          href="https://doi.org/10.5194/essd-16-1933-2024"
+          target="_blank"
+          rel="noreferrer"
+        >
+          database paper
+        </a>
+        ).
+      </p>
+
+      <h2>Instructions / Usage</h2>
+      <p>
+        With the SISAL webApp one can query the SISALv2 database using a simple
+        online tool accessible from any web-browser. It provides the user with
+        the metadata of the queried speleothem records, their sample data (δ
+        <sup>18</sup>O and δ<sup>13</sup>C) and dating information including the
+        original author-generated - as well as SISAL-generated standardized -
+        chronologies. For further information on database versions, publications
+        and how-to guides please visit the the{" "}
+        <a
+          href="http://dx.doi.org/10.5287/ora-2nanwp4rk"
+          target="_blank"
+          rel="noreferrer"
+        >
+          repository
+        </a>
+        .
+      </p>
+
+      <h3>
+        1. Basic querying - 1<sup>st</sup> step
+      </h3>
+      <p>
+        Basic querying provides the tool to extract SISAL database information
+        based on the most fundamental filters.
+      </p>
+      <p>
+        After providing an email address (recommended for query logging
+        purposes) the user can choose to query based on 'Site name' or within
+        spatial - (latitude and longitude limits) and / or within temporal
+        constraints (interp_age).
+      </p>
+      <p>
+        At least one of the following “Filter types” must be correctly filled
+        out.
+        <ul>
+          <li>Site name (site_name)</li>
+          <li>
+            Latitude and Longitude (from - to; default is global coverage values
+            from -90 to 90 and from -180 to 180). In the first column the
+            southern and western boundaries should be provided for latitude and
+            longitude respectively. Latitude in degrees decimal (N= +, S= -) and
+            longitude in degrees decimal (E= +, W= -). Other formats are not
+            accepted, the App will return no results.
+          </li>
+          <li>
+            interp_age (from younger - to older) according to the original
+            author-generated age model expressed in year BP, where BP refers to
+            “before present”, where present is 1950 CE. For details see Sect.
+            2.2 and Table S9 of{" "}
+            <a
+              href="https://essd.copernicus.org/articles/10/1687/2018/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Atsawawaranunt et al. (2018)
+            </a>
+            .
+          </li>
+        </ul>
+      </p>
+      <p>
+        The user can chose from either querying only non-composite records (tick
+        'Non-Composite' check-box), querying only composite records (tick
+        'Composite' check-box) or both (tick both 'Non-Composite' and
+        'Composite' check-boxes).
+      </p>
+      <p>
+        Please note, in case of large output tables (maximized in 30,000 lines),
+        querying may take up to minutes.
+      </p>
+
+      <h4>
+        1.1 Selection based on the metadata - 2<sup>nd</sup> step
+      </h4>
+      <p>
+        Now a subset of records can be selected based on their metadata (e.g.
+        mineralogy). Besides the author-generated chronologies alternative
+        age-depth models (with corresponding uncertainties) were provided by
+        SISAL (
+        <a
+          href="https://essd.copernicus.org/articles/12/2579/2020/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Comas-Bru et al. 2020
+        </a>
+        ) for records that are not composites (i.e. time series based on more
+        than one speleothem record) and which are <sup>230</sup>Th/U dated (see
+        Sect. 2.1 in{" "}
+        <a
+          href="https://essd.copernicus.org/articles/12/2579/2020/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Comas-Bru et al. 2020
+        </a>
+        ). The original author-generated chronology is a default output and the
+        user of the App has to choose at least one SISAL chronology to be
+        extracted - including uncertainties - for the queried records. The user
+        now has the opportunity to select X_Ca and Sr_isotope data whether to be
+        downloaded in the output files. This field can be left blank.
+      </p>
+
+      <h4>
+        1.2 Data extraction - 3<sup>rd</sup> step
+      </h4>
+      <p>
+        By pressing the three download buttons at the bottom of the page one can
+        download the (i) metadata of the selected records, (ii) their dating
+        information, (iii) selected chronologies and the sample data in three
+        separate *.xlsx files.
+      </p>
+      <p>
+        As an additional output, the SQL codes will be provided by the app to
+        help the user get a deeper insight into how the database is queried. It
+        is our clear intention to make the SISAL webApp a stepping stone in the
+        usage of the SISAL database (and other databases like it).
+      </p>
+      <p>
+        The extracted Sample data is trimmed according to the temporal
+        constraints if applied in 'Filter type 3 (interp_age)', while the
+        complete dating information table is given for the selected record(s)
+        meeting the filter criteria applied. The list of speleothem records in
+        the database will appear including their site and entity metadata
+        fulfilling the search criteria provided by the user.
+      </p>
+
+      <h3>2. Advanced querying</h3>
+      <p>
+        Advanced querying provides the tool to extract SISAL database
+        information based on available radiometric ages and sample data
+        resolution. This option is available after one Basic filter is applied
+        and a corresponding list of records/data received.
+      </p>
+      <p>
+        Two filters can be applied and combined.
+        <ul>
+          <li>
+            minimum number of radiometric ages for the chosen record(s)
+            regarding the whole available time interval, or shorter if filter is
+            applied in the Basic querying part: 1<sup>st</sup> Step. Note that
+            only those ages are considered, which were 'date_used ≠ no' in the
+            database.
+          </li>
+          <li>
+            maximum allowed 'age gap' (hiatus and/or sampling step) in the
+            chosen original chronology (interp_age), or in another chosen SISAL
+            chronology, regarding the whole available time interval, or shorter
+            if filter is applied in the Basic querying part: 1<sup>st</sup>{" "}
+            Step.
+          </li>
+        </ul>
+      </p>
+
+      <img src={eer} alt="The structure of the SISAL database version 3"></img>
+
+      <p>
+        The structure of the SISAL database version 3. The colours refer to the
+        format of that field: Enum, Int, Varchar, Double or Decimal. For trace
+        element records, as series of identical tables was generated (labelled
+        X_Ca where X stands for the specific element: Mg, Sr, Ba, U, P). More
+        information on the list of predefined menus can be found in Kaushal et
+        al. (2024). The diagram was modified after Kaushal et al. (2024): Figure
+        1.
+      </p>
+    </div>
+  );
+};
+
+export default Sisalv3DescriptionScreen;

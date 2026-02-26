@@ -1,7 +1,7 @@
-import './Navbar.css'
-import { NavLink } from 'react-router-dom'
-import React, { useState } from 'react';
-import logo from '../pic/fav.png'
+import "./Navbar.css";
+import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import logo from "../pic/fav.png";
 import {
   Collapse,
   Navbar,
@@ -9,7 +9,7 @@ import {
   Nav,
   NavItem,
   NavbarText,
-} from 'reactstrap';
+} from "reactstrap";
 
 const Navbar2 = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,52 +24,70 @@ const Navbar2 = () => {
         dark={true}
         light={false}
       >
-        <NavLink to="/" className="navbar-brand" >
-            <img
-              alt="logo"
-              src={logo}
-              style={{
-                height: 40,
-                width: 40
-              }}
-            />
-            SISAL webApp description </NavLink>
+        <NavLink to="/" className="navbar-brand">
+          <img
+            alt="logo"
+            src={logo}
+            style={{
+              height: 40,
+              width: 40,
+            }}
+          />
+          SISAL webApp description{" "}
+        </NavLink>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
-            <NavItem className="navbar-query">
-              <NavLink to="SISALv3_spel_database" className="nav-link">Querying SISALv3 spel. database</NavLink>
+            <NavItem className="navbar-query navbar-query-container">
+              <div className="navbar-query-title">SISALv3</div>
+              <div className="navbar-query-links">
+                <NavLink to="SISALv3_spel_database" className="nav-link">
+                  Querying
+                </NavLink>
+                <NavLink to="SISALv3_EER" className="nav-link">
+                  Description
+                </NavLink>
+              </div>
             </NavItem>
-            <NavItem className="navbar-query">
-              <NavLink to="SISALmonv1_monit_database" className="nav-link">Querying SISAL_monv1 monit. database</NavLink>
+
+            <NavItem className="navbar-query navbar-query-container">
+              <div className="navbar-query-title">SISAL_monV1</div>
+              <div className="navbar-query-links">
+                <NavLink to="SISALmonv1_monit_database" className="nav-link">
+                  Querying
+                </NavLink>
+                <NavLink to="SISALmonv1_EER" className="nav-link">
+                  Description
+                </NavLink>
+              </div>
             </NavItem>
-            <NavItem className="navbar-item">
-              <NavLink to="SISALv3_EER" className="nav-link">
-                SISALv3 EER
-              </NavLink>
-            </NavItem>
-             <NavItem className="navbar-item">
-              <NavLink to="SISALmonv1_EER" className="nav-link">
-                SISAL_monv1 EER
-              </NavLink>
-            </NavItem>
-            <NavItem className="navbar-item">
-              <a href="https://pastglobalchanges.org/taxonomy/term/119/publications" target="_blank" className="nav-link" rel="noreferrer">
+
+            <NavItem className="navbar-item navbar-item-centered">
+              <a
+                href="https://pastglobalchanges.org/taxonomy/term/119/publications"
+                target="_blank"
+                className="nav-link"
+                rel="noreferrer"
+              >
                 Publications
               </a>
             </NavItem>
           </Nav>
           <NavbarText className="navbar-item">
-            <a href="https://pastglobalchanges.org" className="nav-link" target="_blank" rel="noreferrer">
+            <a
+              href="https://pastglobalchanges.org"
+              className="nav-link"
+              target="_blank"
+              rel="noreferrer"
+            >
               PAST GLOBAL CHANGES
             </a>
           </NavbarText>
         </Collapse>
       </Navbar>
     </div>
-  )
-}
-
+  );
+};
 
 /*const Navbar = () => {
   
@@ -99,4 +117,4 @@ const Navbar2 = () => {
     </nav>
   )
 }*/
-export default Navbar2
+export default Navbar2;

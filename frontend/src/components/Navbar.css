@@ -38,3 +38,41 @@
   color: rgb(255, 136, 0);
   border-color:  rgb(255, 136, 0);
 }
+
+.navbar-query-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid orange;
+}
+
+.navbar-query-title {
+  color: orange;
+  width: 100%;
+  text-align: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid orange;
+}
+
+.navbar-query-links {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar-query-links .nav-link {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem;
+  border-right: 1px solid orange;
+}
+
+.navbar-query-links .nav-link:last-child {
+  border-right: none;
+}
+
+.navbar-item-centered {
+  padding-left: 0.5rem;
+  display: flex;
+  align-items: center;
+}
