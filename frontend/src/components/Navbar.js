@@ -38,9 +38,9 @@ const Navbar2 = () => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
-            <NavItem className="navbar-query navbar-query-container">
-              <div className="navbar-query-title">SISALv3</div>
-              <div className="navbar-query-links">
+            <NavItem className="navbar-query navbar-query-container dropdown">
+              <div className="navbar-query-title dropdown-toggle">SISALv3</div>
+              <div className="navbar-query-links  dropdown-menu">
                 <NavLink to="SISALv3_spel_database" className="nav-link">
                   Querying
                 </NavLink>
@@ -50,9 +50,9 @@ const Navbar2 = () => {
               </div>
             </NavItem>
 
-            <NavItem className="navbar-query navbar-query-container">
-              <div className="navbar-query-title">SISAL_monV1</div>
-              <div className="navbar-query-links">
+            <NavItem className="navbar-query navbar-query-container dropdown">
+              <div className="navbar-query-title dropdown-toggle">SISAL_monV1</div>
+              <div className="navbar-query-links dropdown-menu">
                 <NavLink to="SISALmonv1_monit_database" className="nav-link">
                   Querying
                 </NavLink>

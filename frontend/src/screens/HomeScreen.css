@@ -10,12 +10,12 @@
 }
 
 .intro img {
-	display: flex;
-	justify-content: center;
-	margin: auto;
-	padding-bottom: 1rem;
+	float: right;
+	margin: 0 0 1rem 2rem;
+	width: 40%;
 }
 
 .title {
 	margin: 5rem 0 2rem 0;
+	text-align: center;
 }

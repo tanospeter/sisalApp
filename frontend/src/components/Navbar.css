@@ -1,10 +1,7 @@
+/* Márka stílus */
 .navbar-brand {
   color: rgb(148, 70, 236);
   font-weight: 700;
-}
-
-.navbar-brand.active {
-  color: rgb(148, 70, 236);
 }
 
 .navbar-brand:hover {
@@ -12,67 +9,58 @@
 }
 
 .navbar-brand img {
-  margin-right: 0.5rem
+  margin-right: 0.5rem;
 }
 
-.navbar-query {
-  border: 1px solid orange;
-}
-
-.navbar-item .nav-link {
-  border: 1px solid rgba(0, 0, 0,0);
-}
-
-.navbar-query .nav-link {
-  color: orange;
-  font-weight: 500;
-}
-
-
-.navbar-query .nav-link.active {
-  color: orange;
-  font-weight: 500;
-}
-
-.navbar-query:hover .nav-link {
-  color: rgb(255, 136, 0);
-  border-color:  rgb(255, 136, 0);
-}
-
-.navbar-query-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid orange;
-}
-
+/* Nav linkek a dropdownon belül */
 .navbar-query-title {
   color: orange;
   width: 100%;
   text-align: center;
   padding: 0.5rem;
-  border-bottom: 1px solid orange;
+  border: 1px solid orange;
+  border-radius: 4px;
+  cursor: pointer; /* kattinthatónak látszik */
 }
 
-.navbar-query-links {
-  display: flex;
-  align-items: center;
-  width: 100%;
+.navbar-query {
+  margin-right: 0.5rem;
 }
 
-.navbar-query-links .nav-link {
-  flex: 1;
-  text-align: center;
-  padding: 0.5rem;
-  border-right: 1px solid orange;
+.navbar-query .nav-link {
+  color: orange;
+  font-weight: 500;
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
 }
 
-.navbar-query-links .nav-link:last-child {
-  border-right: none;
+.navbar-query .nav-link:hover{
+  color: rgb(255, 136, 0) !important;
 }
 
-.navbar-item-centered {
-  padding-left: 0.5rem;
-  display: flex;
-  align-items: center;
+/* Dropdown logika */
+.dropdown {
+  position: relative; /* a menü pozicionálásához */
+}
+
+.dropdown-menu {
+  display: none;       /* alapból rejtve */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  min-width: 150px;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu .nav-link {
+  color: black !important;
+  padding: 0.5rem 1rem;
 }

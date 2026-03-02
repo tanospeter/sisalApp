@@ -15,7 +15,7 @@ const HomeScreen = () => {
         </div>
         <div className="intro">
           <h2>Overview</h2>
-          <a href="https://pastglobalchanges.org/science/wg/sisal/intro">
+          <a href="https://pastglobalchanges.org/science/wg/sisal/intro" target="_blank" rel="noreferrer">
             <img src={logo} alt="" />
           </a>
           <p>
