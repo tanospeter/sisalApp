@@ -82,10 +82,16 @@ const Step1Screen = () => {
         <div className="box">
           <Alert color='info'>
             <span>🛈</span>
-            <span>When using the SISALwebApp please cite the app itself https://geochem.hu/SISAL_webApp/ AND the corresponding paper <strong>
-            Hatvani IG, Kern Z, Tanos P, Wilhelm M, Lechleitner FA, Kaushal N (2024). The SISAL webApp: exploring the speleothem
+            <span>When using the SISALwebApp please cite the app itself https://geochem.hu/SISAL_webApp/ AND the corresponding papers <br></br>
+              <strong>
+                - Hatvani IG, Kern Z, Tanos P, Wilhelm M, Lechleitner FA, Kaushal N (2024). The SISAL webApp: exploring the speleothem
                 climate and environmental archives of the world. Quaternary Research 118, 211-217. <a href="https://doi.org/10.1017/qua.2023.39">https://doi.org/10.1017/qua.2023.39</a>
-            </strong> .</span>
+              </strong><br></br>
+              <strong>
+                - Kaushal, N., Lechleitner, F. A., Wilhelm, M., et al., and SISAL Working Group members: SISALv3: a global speleothem stable isotope 
+                and trace element database, Earth Syst. Sci. Data, 16, 1933–1963, <a href="https://doi.org/10.5194/essd-16-1933-2024">https://doi.org/10.5194/essd-16-1933-2024</a>, 2024.
+              </strong>
+            </span>
           </Alert>
           <h2>Quering entity metadata</h2>
           <p>Please specify the parameters of the query below. Make sure that at least one of the parameters
@@ -128,7 +134,7 @@ const Step1Screen = () => {
                 </Col>
               </Row>
               <h5 className="filterTitle">Filter type 2 (Lat-Lon)</h5>
-              <p>You can also use the rectangle tool on the map.</p>
+              <p>You can also use the rectangle tool on the map to set the lat-lon region and press 'Get entity list' to obtain the results.</p>
               <Row>
                 <Col md={6}>
                   <FormGroup floating>
@@ -256,7 +262,7 @@ const Step1Screen = () => {
         </div>
       </div>
 
-      <MapContainer center={[51.505, -0.09]} zoom={3} style={{ height: '400px', width: '100%' }} maxBounds={[[-90, -180],[90, 180]]}>
+      <MapContainer center={[51.505, -0.09]} zoom={3} style={{ height: '400px', width: '100%' }} maxBounds={[[-90, -180], [90, 180]]}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -90,17 +90,22 @@ const Monv1Screen = () => {
             <span>🛈</span>
             <span>
               When using the SISALwebApp please cite the app itself
-              https://geochem.hu/SISAL_webApp/ AND the corresponding paper{" "}
+              https://geochem.hu/SISAL_webApp/ AND the corresponding paper
+              <br></br>
               <strong>
-                Hatvani IG, Kern Z, Tanos P, Wilhelm M, Lechleitner FA, Kaushal
+                - Hatvani IG, Kern Z, Tanos P, Wilhelm M, Lechleitner FA, Kaushal
                 N (2024). The SISAL webApp: exploring the speleothem climate and
                 environmental archives of the world. Quaternary Research 118,
                 211-217.{" "}
                 <a href="https://doi.org/10.1017/qua.2023.39">
                   https://doi.org/10.1017/qua.2023.39
                 </a>
-              </strong>{" "}
-              .
+              </strong>
+              <br></br>
+              <strong>
+                - Treble P., et al., and SISAL Working Group members:  SISAL_monv1: a global database of 
+                cave monitoring observations, Earth Syst. Sci. Data Disc., 2026.
+              </strong>
             </span>
           </Alert>
           <h2>Quering entity metadata</h2>
@@ -131,7 +136,7 @@ const Monv1Screen = () => {
               </Row>
 
               <h5 className="filterTitle">Filter type 2 (Lat-Lon)</h5>
-              <p>You can also use the rectangle tool on the map.</p>
+              <p>You can also use the rectangle tool on the map to set the lat-lon region and press 'Get entity list' to obtain the results.</p>
               <Row>
                 <Col md={6}>
                   <FormGroup floating>
