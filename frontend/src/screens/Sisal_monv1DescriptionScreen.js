@@ -16,7 +16,7 @@ const Monv1DescriptionScreen = () => {
         >
           SISAL_monv1 database
         </a>{" "}
-        created by the PAGES-SISAL Working Group contains datasets from 75
+        created by the PAGES-SISAL Working Group contains dripwater isotope datasets from 75
         caves, with summary information including meta-data on location,
         elevation, cave depth, lithology, measurement methods and citations for
         original publications. Speleothem records previously curated by SISAL in
