@@ -13,8 +13,8 @@ function entity_id(entity) {
 }
 
 const keyColumns = [
-  "site_name",
   "site_id",
+  "site_name",
   "latitude",
   "longitude",
   "elevation",
@@ -33,10 +33,24 @@ const Datatable = ({ data, query }) => {
     const cols = data[0] && Object.keys(data[0]);
     return cols?.filter(
       (col) =>
-        col !== "cave_entity_id" &&
-        col !== "drip_entity_id" &&
-        col !== "precip_site_id",
+        col === "cave_entity_name" ||
+        col === "drip_entity_name" ||
+        col === "precip_site_name",
     );
+  }, [data]);
+
+  const distinctCounts = useMemo(() => {
+    const counts = {};
+    if (data && data.length > 0) {
+      const allColumns = Object.keys(data[0]);
+      allColumns.forEach((col) => {
+        const distinctValues = new Set(
+          data.map((row) => row[col]).filter((val) => val !== null && val !== undefined)
+        );
+        counts[col] = distinctValues.size;
+      });
+    }
+    return counts;
   }, [data]);
 
   const handleOnDownload = (dataArray, sql, title) => {
@@ -262,12 +276,12 @@ const Datatable = ({ data, query }) => {
                 <th></th>
                 <th># metadata</th>
                 {keyColumns.map((col) => (
-                  <th key={col}>{col}</th>
+                  <th key={col}>{col} ({distinctCounts[col] || 0})</th>
                 ))}
                 {columns
                   .filter((column) => !keyColumns.includes(column))
                   .map((column) => (
-                    <th key={column}>{column}</th>
+                    <th key={column}>{column} ({distinctCounts[column] || 0})</th>
                   ))}
               </tr>
             </thead>
