@@ -77,7 +77,7 @@ const Sisalv3DescriptionScreen = () => {
 
       <h2>Instructions / Usage</h2>
       <p>
-        With the SISAL webApp one can query the SISALv2 database using a simple
+        With the SISAL webApp one can query the SISALv3 database using a simple
         online tool accessible from any web-browser. It provides the user with
         the metadata of the queried speleothem records, their sample data (δ
         <sup>18</sup>O and δ<sup>13</sup>C) and dating information including the
@@ -91,7 +91,8 @@ const Sisalv3DescriptionScreen = () => {
         >
           repository
         </a>
-        .
+        . If mistakes are spotted in the current version of the database, please 
+        submit a request to change it to SISAL ( sisal.database@gmail.com). 
       </p>
 
       <h3>
