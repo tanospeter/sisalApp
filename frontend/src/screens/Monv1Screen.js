@@ -103,8 +103,13 @@ const Monv1Screen = () => {
               </strong>
               <br></br>
               <strong>
-                - Treble P., et al., and SISAL Working Group members:  SISAL_monv1: a global database of 
-                cave monitoring observations, Earth Syst. Sci. Data Disc., 2026.
+                - Treble, P. C., Zang, Y., Kaushal, N., Hatvani, I. G., Tanos, P., Kern, Z., Baker, A., 
+                Hartmann, A., Lechleitner, F. A., Belanger, B., Daudt de Oliveira, B., Sinclair, W., 
+                Riechelmann, D. F. C., Hidas, A., Yoshimura, K., Comas-Bru, L., and the SISAL working 
+                group members: SISAL_monv1: a global database of cave monitoring observations, Earth 
+                Syst. Sci. Data Discuss. [preprint],{" "}
+                <a href="https://doi.org/10.5194/essd-2026-31">https://doi.org/10.5194/essd-2026-31</a>, 
+                in review, 2026.
               </strong>
             </span>
           </Alert>
