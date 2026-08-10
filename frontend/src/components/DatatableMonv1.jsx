@@ -9,6 +9,8 @@ function entity_id(entity) {
     entity.cave_entity_id,
     entity.drip_entity_id,
     entity.precip_site_id,
+    entity.drip_iso_sample_id,
+    entity.precip_sample_id,
   ].join("_");
 }
 
@@ -35,7 +37,11 @@ const Datatable = ({ data, query }) => {
       (col) =>
         col === "cave_entity_name" ||
         col === "drip_entity_name" ||
-        col === "precip_site_name",
+        col === "precip_site_name" ||
+        col === "drip_iso_start_yyyy" ||
+        col === "drip_iso_end_yyyy" ||
+        col === "precip_start_yyyy" ||
+        col === "precip_end_yyyy"
     );
   }, [data]);
 
@@ -250,6 +256,7 @@ const Datatable = ({ data, query }) => {
         <div
           style={{
             maxHeight: "80vh",
+            maxWidth: "80vw",
             overflowY: "auto",
             overflowX: "auto",
             border: "1px solid #ddd",
@@ -303,7 +310,7 @@ const Datatable = ({ data, query }) => {
                           className="form-check-input"
                           name={`group_${groupKey}`}
                           checked={allChecked}
-                          indeterminate={someChecked && !allChecked}
+                          indeterminate={someChecked && !allChecked ? true : undefined}
                           onChange={(e) => {
                             const { checked } = e.target;
                             const updated = entities.map((entity) =>

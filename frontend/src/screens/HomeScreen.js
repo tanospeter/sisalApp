@@ -90,12 +90,12 @@ const HomeScreen = () => {
           <p>
             1.4. The SISAL webApp hosts and enables the querying of the SISAL_monv1 database{" "}
             <a href="https://doi.org/10.5194/essd-2026-31">https://doi.org/10.5194/essd-2026-31</a>{" "}
-            following the well-known logic of the SISALwebApp. <span class="text-muted">- 28.01.2026</span>
+            following the well-known logic of the SISALwebApp. <span className="text-muted">- 28.01.2026</span>
           </p>
           <p>
             1.3. The SISAL webApp now enables spatial querying via selecting a
             bounding box on the map at the bottom of the page.{" "}
-            <span class="text-muted">- 27.06.2024</span>
+            <span className="text-muted">- 27.06.2024</span>
           </p>
           <p>
             1.2. The SISAL webApp now queries the SISALv3 database{" "}

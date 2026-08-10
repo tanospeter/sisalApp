@@ -16,12 +16,19 @@ class Monv1Query {
     cave_entity.cave_entity_name,
     cave_entity.cave_entity_location,
     cave_entity.cave_entity_contact,
-    drip_entity.*, s.latitude, s.longitude, s.elevation
+    drip_entity.*, 
+    drip_iso_sample.drip_iso_start_yyyy,
+    drip_iso_sample.drip_iso_end_yyyy,
+    precip_sample.precip_start_yyyy,
+    precip_sample.precip_end_yyyy,
+    s.latitude, s.longitude, s.elevation
     FROM site s
     LEFT JOIN site_link_precip sp_link ON s.site_id = sp_link.site_id
     LEFT JOIN precip_site precip ON precip.precip_site_id = sp_link.precip_site_id
+    LEFT JOIN precip_sample ON sp_link.precip_entity_id = precip_sample.precip_entity_id
     LEFT JOIN cave_entity ON s.site_id = cave_entity.site_id
     LEFT JOIN drip_entity ON s.site_id = drip_entity.site_id
+    LEFT JOIN drip_iso_sample ON drip_entity.drip_entity_id = drip_iso_sample.drip_entity_id
     WHERE 1 = 1`;
 
     const siteNameFilled = this.siteName != "";
