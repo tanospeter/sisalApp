@@ -2,6 +2,7 @@ import "./Step1Screen.css";
 import { useState, useCallback } from "react";
 import axios from "axios";
 import Datatable from "../components/DatatableMonv1";
+import MonitoringOverview from "../components/MonitoringOverview";
 import {
   Form,
   Row,
@@ -24,6 +25,7 @@ const Monv1Screen = () => {
   const [longTo, setLongTo] = useState("");
 
   const [entityList, setEntityList] = useState([]);
+  const [overviewData, setOverviewData] = useState([]);
   const [query, setQuery] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,6 +46,14 @@ const Monv1Screen = () => {
   const sendQueryParams = () => {
     setIsLoading(true);
     setEntityList([]);
+    setOverviewData([]);
+
+    const payload = {
+      siteName: siteName,
+      lat: [latFrom, latTo],
+      lon: [longFrom, longTo],
+    };
+
     const siteNameEmpty = siteName === "";
     const latLonEmpty =
       latFrom === "" && latTo === "" && longFrom === "" && longTo === "";
@@ -55,31 +65,40 @@ const Monv1Screen = () => {
         longTo === "" ||
         parseInt(latFrom) > parseInt(latTo) ||
         parseInt(longFrom) > parseInt(longTo));
+
     if (siteNameEmpty && latLonEmpty) {
       alert(
         "None of the query's filter parameters are specified correctly!\nPlease specify the site_name and/or Lat-Lon coordinates and/or interp_age interval and try again! Please see the user guide for instructions on the main page."
       );
-    } else if (latLonIncomplete) {
+      setIsLoading(false);
+      return;
+    }
+
+    if (latLonIncomplete) {
       alert(
         "The coordinates are incorrect or some are missing! Please revise the coordinates, and try again! Default is global coverage from -90° to 90° and from -180° to 180°."
       );
-    } else {
-      axios
-        .post(
-          `${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getMonv1`,
-          {
-            siteName: siteName,
-            lat: [latFrom, latTo],
-            lon: [longFrom, longTo],
-          }
-        )
-        .then((response) => {
-          setQuery(response.data.sql);
-          setEntityList(response.data.meta);
-        })
-        .catch((error) => console.log(error))
-        .finally(() => setIsLoading(false));
+      setIsLoading(false);
+      return;
     }
+
+    Promise.all([
+      axios.post(
+        `${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getMonv1`,
+        payload
+      ),
+      axios.post(
+        `${process.env.REACT_APP_HTTP_PROTOCOL}://${process.env.REACT_APP_SERVER_IP}:${process.env.REACT_APP_SERVER_PORT}/${process.env.REACT_APP_SERVER_API}/getMonv1/overview`,
+        payload
+      ),
+    ])
+      .then(([metaResponse, overviewResponse]) => {
+        setQuery(metaResponse.data.sql);
+        setEntityList(metaResponse.data.meta);
+        setOverviewData(Array.isArray(overviewResponse.data) ? overviewResponse.data : []);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -217,10 +236,16 @@ const Monv1Screen = () => {
         <div className="box">
           {isLoading ? (
             <Spinner color="secondary" className="m-5">Loading...</Spinner>
-          ) : entityList && entityList.length ? (
-            <Datatable data={entityList} query={query} />
           ) : (
-            ""
+            <>
+              {overviewData && overviewData.length > 0 && (
+                <MonitoringOverview data={overviewData} />
+              )}
+
+              {entityList && entityList.length ? (
+                <Datatable data={entityList} query={query} />
+              ) : null}
+            </>
           )}
         </div>
       </div>

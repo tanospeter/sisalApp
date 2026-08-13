@@ -9,8 +9,6 @@ function entity_id(entity) {
     entity.cave_entity_id,
     entity.drip_entity_id,
     entity.precip_site_id,
-    entity.drip_iso_sample_id,
-    entity.precip_sample_id,
   ].join("_");
 }
 
@@ -37,11 +35,7 @@ const Datatable = ({ data, query }) => {
       (col) =>
         col === "cave_entity_name" ||
         col === "drip_entity_name" ||
-        col === "precip_site_name" ||
-        col === "drip_iso_start_yyyy" ||
-        col === "drip_iso_end_yyyy" ||
-        col === "precip_start_yyyy" ||
-        col === "precip_end_yyyy"
+        col === "precip_site_name",
     );
   }, [data]);
 

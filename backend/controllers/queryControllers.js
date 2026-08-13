@@ -199,3 +199,15 @@ exports.Monv1QueryMonitoring = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.Monv1QueryOverview = async (req, res, next) => {
+  try {
+    const { siteName, lat, lon } = req.body;
+    const query = new monv1Query(siteName, lat, lon);
+    const overview = await query.getMonitoringOverview(siteName, lat, lon);
+    res.status(200).json(overview);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};

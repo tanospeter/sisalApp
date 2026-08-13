@@ -16,19 +16,13 @@ class Monv1Query {
     cave_entity.cave_entity_name,
     cave_entity.cave_entity_location,
     cave_entity.cave_entity_contact,
-    drip_entity.*, 
-    drip_iso_sample.drip_iso_start_yyyy,
-    drip_iso_sample.drip_iso_end_yyyy,
-    precip_sample.precip_start_yyyy,
-    precip_sample.precip_end_yyyy,
+    drip_entity.*,
     s.latitude, s.longitude, s.elevation
     FROM site s
     LEFT JOIN site_link_precip sp_link ON s.site_id = sp_link.site_id
     LEFT JOIN precip_site precip ON precip.precip_site_id = sp_link.precip_site_id
-    LEFT JOIN precip_sample ON sp_link.precip_entity_id = precip_sample.precip_entity_id
     LEFT JOIN cave_entity ON s.site_id = cave_entity.site_id
     LEFT JOIN drip_entity ON s.site_id = drip_entity.site_id
-    LEFT JOIN drip_iso_sample ON drip_entity.drip_entity_id = drip_iso_sample.drip_entity_id
     WHERE 1 = 1`;
 
     const siteNameFilled = this.siteName != "";
@@ -65,6 +59,164 @@ class Monv1Query {
       return db.execute(sql);
     } catch (error) {
       error.log(error);
+    }
+  }
+
+  async getMonitoringOverview(siteName = "", lat = ["", ""], lon = ["", ""]) {
+    try {
+      const siteNameFilled = siteName != null && siteName !== "";
+      const latLonFilled =
+        Array.isArray(lat) &&
+        Array.isArray(lon) &&
+        lat[0] !== "" &&
+        lat[1] !== "" &&
+        lon[0] !== "" &&
+        lon[1] !== "";
+
+      const siteFilters = [];
+      if (siteNameFilled) {
+        siteFilters.push(`LOWER(site_name) LIKE LOWER('%${siteName}%')`);
+      }
+      if (latLonFilled) {
+        siteFilters.push(`latitude BETWEEN ${lat[0]} AND ${lat[1]}`);
+        siteFilters.push(`longitude BETWEEN ${lon[0]} AND ${lon[1]}`);
+      }
+
+      const siteFilterSql = siteFilters.length
+        ? `WHERE ${siteFilters.join(" AND ")}`
+        : "";
+
+      const sql = `
+        WITH site_filtered AS (
+          SELECT site_id, site_name, latitude, longitude
+          FROM site
+          ${siteFilterSql}
+        ),
+        precip_dates AS (
+          SELECT
+            ps.precip_entity_id,
+            COALESCE(
+              STR_TO_DATE(CONCAT(CAST(ps.precip_start_yyyy AS UNSIGNED), '-', CAST(ps.precip_start_mm AS UNSIGNED), '-', CAST(ps.precip_start_dd AS UNSIGNED)), '%Y-%m-%d'),
+              STR_TO_DATE(CONCAT(CAST(ps.precip_start_yyyy AS UNSIGNED), '-', CAST(ps.precip_start_mm AS UNSIGNED), '-01'), '%Y-%m-%d'),
+              STR_TO_DATE(CONCAT(CAST(ps.precip_start_yyyy AS UNSIGNED), '-01-01'), '%Y-%m-%d')
+            ) AS sample_start_date,
+            COALESCE(
+              STR_TO_DATE(CONCAT(CAST(ps.precip_end_yyyy AS UNSIGNED), '-', CAST(ps.precip_end_mm AS UNSIGNED), '-', CAST(ps.precip_end_dd AS UNSIGNED)), '%Y-%m-%d'),
+              LAST_DAY(STR_TO_DATE(CONCAT(CAST(ps.precip_end_yyyy AS UNSIGNED), '-', CAST(ps.precip_end_mm AS UNSIGNED), '-01'), '%Y-%m-%d')),
+              STR_TO_DATE(CONCAT(CAST(ps.precip_end_yyyy AS UNSIGNED), '-12-31'), '%Y-%m-%d')
+            ) AS sample_end_date
+          FROM precip_sample ps
+        ),
+        drip_iso_dates AS (
+          SELECT
+            d.drip_entity_id,
+            COALESCE(
+              STR_TO_DATE(CONCAT(CAST(d.drip_iso_start_yyyy AS UNSIGNED), '-', CAST(d.drip_iso_start_mm AS UNSIGNED), '-', CAST(d.drip_iso_start_dd AS UNSIGNED)), '%Y-%m-%d'),
+              STR_TO_DATE(CONCAT(CAST(d.drip_iso_start_yyyy AS UNSIGNED), '-', CAST(d.drip_iso_start_mm AS UNSIGNED), '-01'), '%Y-%m-%d'),
+              STR_TO_DATE(CONCAT(CAST(d.drip_iso_start_yyyy AS UNSIGNED), '-01-01'), '%Y-%m-%d')
+            ) AS sample_start_date,
+            COALESCE(
+              STR_TO_DATE(CONCAT(CAST(d.drip_iso_end_yyyy AS UNSIGNED), '-', CAST(d.drip_iso_end_mm AS UNSIGNED), '-', CAST(d.drip_iso_end_dd AS UNSIGNED)), '%Y-%m-%d'),
+              LAST_DAY(STR_TO_DATE(CONCAT(CAST(d.drip_iso_end_yyyy AS UNSIGNED), '-', CAST(d.drip_iso_end_mm AS UNSIGNED), '-01'), '%Y-%m-%d')),
+              STR_TO_DATE(CONCAT(CAST(d.drip_iso_end_yyyy AS UNSIGNED), '-12-31'), '%Y-%m-%d')
+            ) AS sample_end_date
+          FROM drip_iso_sample d
+        ),
+        drip_rate_dates AS (
+          SELECT
+            d.drip_entity_id,
+            COALESCE(
+              STR_TO_DATE(CONCAT(CAST(d.drip_rate_start_yyyy AS UNSIGNED), '-', CAST(d.drip_rate_start_mm AS UNSIGNED), '-', CAST(d.drip_rate_start_dd AS UNSIGNED)), '%Y-%m-%d'),
+              STR_TO_DATE(CONCAT(CAST(d.drip_rate_start_yyyy AS UNSIGNED), '-', CAST(d.drip_rate_start_mm AS UNSIGNED), '-01'), '%Y-%m-%d'),
+              STR_TO_DATE(CONCAT(CAST(d.drip_rate_start_yyyy AS UNSIGNED), '-01-01'), '%Y-%m-%d')
+            ) AS sample_start_date,
+            COALESCE(
+              STR_TO_DATE(CONCAT(CAST(d.drip_rate_end_yyyy AS UNSIGNED), '-', CAST(d.drip_rate_end_mm AS UNSIGNED), '-', CAST(d.drip_rate_end_dd AS UNSIGNED)), '%Y-%m-%d'),
+              LAST_DAY(STR_TO_DATE(CONCAT(CAST(d.drip_rate_end_yyyy AS UNSIGNED), '-', CAST(d.drip_rate_end_mm AS UNSIGNED), '-01'), '%Y-%m-%d')),
+              STR_TO_DATE(CONCAT(CAST(d.drip_rate_end_yyyy AS UNSIGNED), '-12-31'), '%Y-%m-%d')
+            ) AS sample_end_date
+          FROM drip_rate_sample d
+        ),
+        mod_carb_dates AS (
+          SELECT
+            m.drip_entity_id,
+            COALESCE(
+              STR_TO_DATE(CONCAT(CAST(m.mod_carb_start_yyyy AS UNSIGNED), '-', CAST(m.mod_carb_start_mm AS UNSIGNED), '-', CAST(m.mod_carb_start_dd AS UNSIGNED)), '%Y-%m-%d'),
+              STR_TO_DATE(CONCAT(CAST(m.mod_carb_start_yyyy AS UNSIGNED), '-', CAST(m.mod_carb_start_mm AS UNSIGNED), '-01'), '%Y-%m-%d'),
+              STR_TO_DATE(CONCAT(CAST(m.mod_carb_start_yyyy AS UNSIGNED), '-01-01'), '%Y-%m-%d')
+            ) AS sample_start_date,
+            COALESCE(
+              STR_TO_DATE(CONCAT(CAST(m.mod_carb_end_yyyy AS UNSIGNED), '-', CAST(m.mod_carb_end_mm AS UNSIGNED), '-', CAST(m.mod_carb_end_dd AS UNSIGNED)), '%Y-%m-%d'),
+              LAST_DAY(STR_TO_DATE(CONCAT(CAST(m.mod_carb_end_yyyy AS UNSIGNED), '-', CAST(m.mod_carb_end_mm AS UNSIGNED), '-01'), '%Y-%m-%d')),
+              STR_TO_DATE(CONCAT(CAST(m.mod_carb_end_yyyy AS UNSIGNED), '-12-31'), '%Y-%m-%d')
+            ) AS sample_end_date
+          FROM mod_carb_sample m
+        )
+        SELECT
+          'precip_iso' AS data_type,
+          sf.site_id,
+          sf.site_name,
+          COUNT(*) AS n_samples,
+          MIN(pd.sample_start_date) AS start_date,
+          MAX(pd.sample_end_date) AS end_date,
+          ROUND(DATEDIFF(MAX(pd.sample_end_date), MIN(pd.sample_start_date)) / 365.25, 1) AS duration_years
+        FROM precip_dates pd
+        JOIN precip_entity pe ON pe.precip_entity_id = pd.precip_entity_id
+        JOIN site_link_precip sl ON sl.precip_entity_id = pe.precip_entity_id
+        JOIN site_filtered sf ON sf.site_id = sl.site_id
+        GROUP BY sf.site_id, sf.site_name
+
+        UNION ALL
+
+        SELECT
+          'drip_iso' AS data_type,
+          sf.site_id,
+          sf.site_name,
+          COUNT(*) AS n_samples,
+          MIN(dd.sample_start_date) AS start_date,
+          MAX(dd.sample_end_date) AS end_date,
+          ROUND(DATEDIFF(MAX(dd.sample_end_date), MIN(dd.sample_start_date)) / 365.25, 1) AS duration_years
+        FROM drip_iso_dates dd
+        JOIN drip_entity de ON de.drip_entity_id = dd.drip_entity_id
+        JOIN site_filtered sf ON sf.site_id = de.site_id
+        GROUP BY sf.site_id, sf.site_name
+
+        UNION ALL
+
+        SELECT
+          'drip_rate' AS data_type,
+          sf.site_id,
+          sf.site_name,
+          COUNT(*) AS n_samples,
+          MIN(rd.sample_start_date) AS start_date,
+          MAX(rd.sample_end_date) AS end_date,
+          ROUND(DATEDIFF(MAX(rd.sample_end_date), MIN(rd.sample_start_date)) / 365.25, 1) AS duration_years
+        FROM drip_rate_dates rd
+        JOIN drip_entity de ON de.drip_entity_id = rd.drip_entity_id
+        JOIN site_filtered sf ON sf.site_id = de.site_id
+        GROUP BY sf.site_id, sf.site_name
+
+        UNION ALL
+
+        SELECT
+          'mod_carb' AS data_type,
+          sf.site_id,
+          sf.site_name,
+          COUNT(*) AS n_samples,
+          MIN(md.sample_start_date) AS start_date,
+          MAX(md.sample_end_date) AS end_date,
+          ROUND(DATEDIFF(MAX(md.sample_end_date), MIN(md.sample_start_date)) / 365.25, 1) AS duration_years
+        FROM mod_carb_dates md
+        JOIN drip_entity de ON de.drip_entity_id = md.drip_entity_id
+        JOIN site_filtered sf ON sf.site_id = de.site_id
+        GROUP BY sf.site_id, sf.site_name
+        ORDER BY site_name, data_type;`;
+
+      const [overviewData] = await db.query(sql);
+      return overviewData;
+    } catch (error) {
+      console.error("Error creating monitoring overview view:", error);
+      throw error;
     }
   }
 
@@ -120,7 +272,7 @@ class Monv1Query {
            FROM site s 
            LEFT JOIN notes n ON s.site_id = n.site_id 
            WHERE s.site_id IN (?)`,
-          siteIds
+          siteIds,
         ),
 
         // --- Q2: Climate Data ---
@@ -129,13 +281,13 @@ class Monv1Query {
         // --- Q3: Cave Entity Metadata ---
         runQuery(
           `SELECT * FROM cave_entity WHERE cave_entity_id IN (?)`,
-          caveEntityIds
+          caveEntityIds,
         ),
 
         // --- Q4: Drip Entity Metadata (Crucial: Fetches entities even without samples) ---
         runQuery(
           `SELECT * FROM drip_entity WHERE drip_entity_id IN (?)`,
-          dripEntityIds
+          dripEntityIds,
         ),
 
         // --- Q5: Drip Samples (Raw Data Only - Normalized) ---
@@ -143,15 +295,15 @@ class Monv1Query {
         // We match them in JS later using 'drip_entity_id'.
         runQuery(
           `SELECT * FROM drip_iso_sample WHERE drip_entity_id IN (?)`,
-          dripEntityIds
+          dripEntityIds,
         ),
         runQuery(
           `SELECT * FROM drip_rate_sample WHERE drip_entity_id IN (?)`,
-          dripEntityIds
+          dripEntityIds,
         ),
         runQuery(
           `SELECT * FROM mod_carb_sample WHERE drip_entity_id IN (?)`,
-          dripEntityIds
+          dripEntityIds,
         ),
 
         // --- Q6: Precip Entity Metadata ---
@@ -167,7 +319,7 @@ class Monv1Query {
            INNER JOIN site_link_precip sp_link ON pem.precip_entity_id = sp_link.precip_entity_id
            INNER JOIN precip_site psm ON psm.precip_site_id = sp_link.precip_site_id
            WHERE sp_link.site_id IN (?)`,
-          siteIds
+          siteIds,
         ),
 
         // --- Q7: Precip Samples ---
@@ -176,7 +328,7 @@ class Monv1Query {
           `SELECT ps.* FROM precip_sample ps
            INNER JOIN site_link_precip sp_link ON ps.precip_entity_id = sp_link.precip_entity_id
            WHERE sp_link.site_id IN (?)`,
-          siteIds
+          siteIds,
         ),
 
         // --- Q8: Unified References (Denormalized) ---
@@ -247,7 +399,7 @@ class Monv1Query {
             caveEntityIds.length ? caveEntityIds : [0],
             dripEntityIds.length ? dripEntityIds : [0],
             precipEntityIds.length ? precipEntityIds : [0],
-          ]
+          ],
         ),
       ]);
 
