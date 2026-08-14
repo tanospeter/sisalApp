@@ -4,15 +4,19 @@ import { Table } from "reactstrap";
 const formatDate = (value) => {
   if (!value) return "-";
 
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
+  if (typeof value === "string") {
+    return value.includes("T") ? value.slice(0, 10) : value;
+  }
 
-  return date.toISOString().slice(0, 10);
+  return String(value);
 };
 
 const formatYears = (value) => {
   if (value === null || value === undefined || value === "") return "-";
-  return Number(value).toFixed(1);
+
+  const num = Number(value);
+  if (!Number.isFinite(num)) return String(value);
+  return Number.isInteger(num) ? String(num) : num.toFixed(1);
 };
 
 const MonitoringOverview = ({ data = [] }) => {

@@ -95,61 +95,133 @@ class Monv1Query {
         precip_dates AS (
           SELECT
             ps.precip_entity_id,
-            COALESCE(
-              STR_TO_DATE(CONCAT(CAST(ps.precip_start_yyyy AS UNSIGNED), '-', CAST(ps.precip_start_mm AS UNSIGNED), '-', CAST(ps.precip_start_dd AS UNSIGNED)), '%Y-%m-%d'),
-              STR_TO_DATE(CONCAT(CAST(ps.precip_start_yyyy AS UNSIGNED), '-', CAST(ps.precip_start_mm AS UNSIGNED), '-01'), '%Y-%m-%d'),
-              STR_TO_DATE(CONCAT(CAST(ps.precip_start_yyyy AS UNSIGNED), '-01-01'), '%Y-%m-%d')
-            ) AS sample_start_date,
-            COALESCE(
-              STR_TO_DATE(CONCAT(CAST(ps.precip_end_yyyy AS UNSIGNED), '-', CAST(ps.precip_end_mm AS UNSIGNED), '-', CAST(ps.precip_end_dd AS UNSIGNED)), '%Y-%m-%d'),
-              LAST_DAY(STR_TO_DATE(CONCAT(CAST(ps.precip_end_yyyy AS UNSIGNED), '-', CAST(ps.precip_end_mm AS UNSIGNED), '-01'), '%Y-%m-%d')),
-              STR_TO_DATE(CONCAT(CAST(ps.precip_end_yyyy AS UNSIGNED), '-12-31'), '%Y-%m-%d')
-            ) AS sample_end_date
+            CASE
+              WHEN ps.precip_start_yyyy IS NOT NULL
+                AND ps.precip_start_mm IS NOT NULL
+                AND ps.precip_start_dd IS NOT NULL
+                THEN CONCAT(
+                  CAST(ps.precip_start_yyyy AS CHAR), '-',
+                  LPAD(CAST(ps.precip_start_mm AS CHAR), 2, '0'), '-',
+                  LPAD(CAST(ps.precip_start_dd AS CHAR), 2, '0')
+                )
+              WHEN ps.precip_start_yyyy IS NOT NULL
+                THEN CAST(ps.precip_start_yyyy AS CHAR)
+              ELSE NULL
+            END AS sample_start_date,
+            CASE
+              WHEN ps.precip_end_yyyy IS NOT NULL
+                AND ps.precip_end_mm IS NOT NULL
+                AND ps.precip_end_dd IS NOT NULL
+                THEN CONCAT(
+                  CAST(ps.precip_end_yyyy AS CHAR), '-',
+                  LPAD(CAST(ps.precip_end_mm AS CHAR), 2, '0'), '-',
+                  LPAD(CAST(ps.precip_end_dd AS CHAR), 2, '0')
+                )
+              WHEN ps.precip_end_yyyy IS NOT NULL
+                THEN CAST(ps.precip_end_yyyy AS CHAR)
+              ELSE NULL
+            END AS sample_end_date,
+            CAST(ps.precip_start_yyyy AS SIGNED) AS sample_start_year,
+            CAST(ps.precip_end_yyyy AS SIGNED) AS sample_end_year
           FROM precip_sample ps
         ),
         drip_iso_dates AS (
           SELECT
             d.drip_entity_id,
-            COALESCE(
-              STR_TO_DATE(CONCAT(CAST(d.drip_iso_start_yyyy AS UNSIGNED), '-', CAST(d.drip_iso_start_mm AS UNSIGNED), '-', CAST(d.drip_iso_start_dd AS UNSIGNED)), '%Y-%m-%d'),
-              STR_TO_DATE(CONCAT(CAST(d.drip_iso_start_yyyy AS UNSIGNED), '-', CAST(d.drip_iso_start_mm AS UNSIGNED), '-01'), '%Y-%m-%d'),
-              STR_TO_DATE(CONCAT(CAST(d.drip_iso_start_yyyy AS UNSIGNED), '-01-01'), '%Y-%m-%d')
-            ) AS sample_start_date,
-            COALESCE(
-              STR_TO_DATE(CONCAT(CAST(d.drip_iso_end_yyyy AS UNSIGNED), '-', CAST(d.drip_iso_end_mm AS UNSIGNED), '-', CAST(d.drip_iso_end_dd AS UNSIGNED)), '%Y-%m-%d'),
-              LAST_DAY(STR_TO_DATE(CONCAT(CAST(d.drip_iso_end_yyyy AS UNSIGNED), '-', CAST(d.drip_iso_end_mm AS UNSIGNED), '-01'), '%Y-%m-%d')),
-              STR_TO_DATE(CONCAT(CAST(d.drip_iso_end_yyyy AS UNSIGNED), '-12-31'), '%Y-%m-%d')
-            ) AS sample_end_date
+            CASE
+              WHEN d.drip_iso_start_yyyy IS NOT NULL
+                AND d.drip_iso_start_mm IS NOT NULL
+                AND d.drip_iso_start_dd IS NOT NULL
+                THEN CONCAT(
+                  CAST(d.drip_iso_start_yyyy AS CHAR), '-',
+                  LPAD(CAST(d.drip_iso_start_mm AS CHAR), 2, '0'), '-',
+                  LPAD(CAST(d.drip_iso_start_dd AS CHAR), 2, '0')
+                )
+              WHEN d.drip_iso_start_yyyy IS NOT NULL
+                THEN CAST(d.drip_iso_start_yyyy AS CHAR)
+              ELSE NULL
+            END AS sample_start_date,
+            CASE
+              WHEN d.drip_iso_end_yyyy IS NOT NULL
+                AND d.drip_iso_end_mm IS NOT NULL
+                AND d.drip_iso_end_dd IS NOT NULL
+                THEN CONCAT(
+                  CAST(d.drip_iso_end_yyyy AS CHAR), '-',
+                  LPAD(CAST(d.drip_iso_end_mm AS CHAR), 2, '0'), '-',
+                  LPAD(CAST(d.drip_iso_end_dd AS CHAR), 2, '0')
+                )
+              WHEN d.drip_iso_end_yyyy IS NOT NULL
+                THEN CAST(d.drip_iso_end_yyyy AS CHAR)
+              ELSE NULL
+            END AS sample_end_date,
+            CAST(d.drip_iso_start_yyyy AS SIGNED) AS sample_start_year,
+            CAST(d.drip_iso_end_yyyy AS SIGNED) AS sample_end_year
           FROM drip_iso_sample d
         ),
         drip_rate_dates AS (
           SELECT
             d.drip_entity_id,
-            COALESCE(
-              STR_TO_DATE(CONCAT(CAST(d.drip_rate_start_yyyy AS UNSIGNED), '-', CAST(d.drip_rate_start_mm AS UNSIGNED), '-', CAST(d.drip_rate_start_dd AS UNSIGNED)), '%Y-%m-%d'),
-              STR_TO_DATE(CONCAT(CAST(d.drip_rate_start_yyyy AS UNSIGNED), '-', CAST(d.drip_rate_start_mm AS UNSIGNED), '-01'), '%Y-%m-%d'),
-              STR_TO_DATE(CONCAT(CAST(d.drip_rate_start_yyyy AS UNSIGNED), '-01-01'), '%Y-%m-%d')
-            ) AS sample_start_date,
-            COALESCE(
-              STR_TO_DATE(CONCAT(CAST(d.drip_rate_end_yyyy AS UNSIGNED), '-', CAST(d.drip_rate_end_mm AS UNSIGNED), '-', CAST(d.drip_rate_end_dd AS UNSIGNED)), '%Y-%m-%d'),
-              LAST_DAY(STR_TO_DATE(CONCAT(CAST(d.drip_rate_end_yyyy AS UNSIGNED), '-', CAST(d.drip_rate_end_mm AS UNSIGNED), '-01'), '%Y-%m-%d')),
-              STR_TO_DATE(CONCAT(CAST(d.drip_rate_end_yyyy AS UNSIGNED), '-12-31'), '%Y-%m-%d')
-            ) AS sample_end_date
+            CASE
+              WHEN d.drip_rate_start_yyyy IS NOT NULL
+                AND d.drip_rate_start_mm IS NOT NULL
+                AND d.drip_rate_start_dd IS NOT NULL
+                THEN CONCAT(
+                  CAST(d.drip_rate_start_yyyy AS CHAR), '-',
+                  LPAD(CAST(d.drip_rate_start_mm AS CHAR), 2, '0'), '-',
+                  LPAD(CAST(d.drip_rate_start_dd AS CHAR), 2, '0')
+                )
+              WHEN d.drip_rate_start_yyyy IS NOT NULL
+                THEN CAST(d.drip_rate_start_yyyy AS CHAR)
+              ELSE NULL
+            END AS sample_start_date,
+            CASE
+              WHEN d.drip_rate_end_yyyy IS NOT NULL
+                AND d.drip_rate_end_mm IS NOT NULL
+                AND d.drip_rate_end_dd IS NOT NULL
+                THEN CONCAT(
+                  CAST(d.drip_rate_end_yyyy AS CHAR), '-',
+                  LPAD(CAST(d.drip_rate_end_mm AS CHAR), 2, '0'), '-',
+                  LPAD(CAST(d.drip_rate_end_dd AS CHAR), 2, '0')
+                )
+              WHEN d.drip_rate_end_yyyy IS NOT NULL
+                THEN CAST(d.drip_rate_end_yyyy AS CHAR)
+              ELSE NULL
+            END AS sample_end_date,
+            CAST(d.drip_rate_start_yyyy AS SIGNED) AS sample_start_year,
+            CAST(d.drip_rate_end_yyyy AS SIGNED) AS sample_end_year
           FROM drip_rate_sample d
         ),
         mod_carb_dates AS (
           SELECT
             m.drip_entity_id,
-            COALESCE(
-              STR_TO_DATE(CONCAT(CAST(m.mod_carb_start_yyyy AS UNSIGNED), '-', CAST(m.mod_carb_start_mm AS UNSIGNED), '-', CAST(m.mod_carb_start_dd AS UNSIGNED)), '%Y-%m-%d'),
-              STR_TO_DATE(CONCAT(CAST(m.mod_carb_start_yyyy AS UNSIGNED), '-', CAST(m.mod_carb_start_mm AS UNSIGNED), '-01'), '%Y-%m-%d'),
-              STR_TO_DATE(CONCAT(CAST(m.mod_carb_start_yyyy AS UNSIGNED), '-01-01'), '%Y-%m-%d')
-            ) AS sample_start_date,
-            COALESCE(
-              STR_TO_DATE(CONCAT(CAST(m.mod_carb_end_yyyy AS UNSIGNED), '-', CAST(m.mod_carb_end_mm AS UNSIGNED), '-', CAST(m.mod_carb_end_dd AS UNSIGNED)), '%Y-%m-%d'),
-              LAST_DAY(STR_TO_DATE(CONCAT(CAST(m.mod_carb_end_yyyy AS UNSIGNED), '-', CAST(m.mod_carb_end_mm AS UNSIGNED), '-01'), '%Y-%m-%d')),
-              STR_TO_DATE(CONCAT(CAST(m.mod_carb_end_yyyy AS UNSIGNED), '-12-31'), '%Y-%m-%d')
-            ) AS sample_end_date
+            CASE
+              WHEN m.mod_carb_start_yyyy IS NOT NULL
+                AND m.mod_carb_start_mm IS NOT NULL
+                AND m.mod_carb_start_dd IS NOT NULL
+                THEN CONCAT(
+                  CAST(m.mod_carb_start_yyyy AS CHAR), '-',
+                  LPAD(CAST(m.mod_carb_start_mm AS CHAR), 2, '0'), '-',
+                  LPAD(CAST(m.mod_carb_start_dd AS CHAR), 2, '0')
+                )
+              WHEN m.mod_carb_start_yyyy IS NOT NULL
+                THEN CAST(m.mod_carb_start_yyyy AS CHAR)
+              ELSE NULL
+            END AS sample_start_date,
+            CASE
+              WHEN m.mod_carb_end_yyyy IS NOT NULL
+                AND m.mod_carb_end_mm IS NOT NULL
+                AND m.mod_carb_end_dd IS NOT NULL
+                THEN CONCAT(
+                  CAST(m.mod_carb_end_yyyy AS CHAR), '-',
+                  LPAD(CAST(m.mod_carb_end_mm AS CHAR), 2, '0'), '-',
+                  LPAD(CAST(m.mod_carb_end_dd AS CHAR), 2, '0')
+                )
+              WHEN m.mod_carb_end_yyyy IS NOT NULL
+                THEN CAST(m.mod_carb_end_yyyy AS CHAR)
+              ELSE NULL
+            END AS sample_end_date,
+            CAST(m.mod_carb_start_yyyy AS SIGNED) AS sample_start_year,
+            CAST(m.mod_carb_end_yyyy AS SIGNED) AS sample_end_year
           FROM mod_carb_sample m
         )
         SELECT
@@ -159,7 +231,12 @@ class Monv1Query {
           COUNT(*) AS n_samples,
           MIN(pd.sample_start_date) AS start_date,
           MAX(pd.sample_end_date) AS end_date,
-          ROUND(DATEDIFF(MAX(pd.sample_end_date), MIN(pd.sample_start_date)) / 365.25, 1) AS duration_years
+          CASE
+            WHEN MIN(pd.sample_start_date) REGEXP '^[0-9]{4}$'
+              OR MAX(pd.sample_end_date) REGEXP '^[0-9]{4}$'
+              THEN MAX(pd.sample_end_year) - MIN(pd.sample_start_year)
+            ELSE ROUND(DATEDIFF(MAX(pd.sample_end_date), MIN(pd.sample_start_date)) / 365.25, 1)
+          END AS duration_years
         FROM precip_dates pd
         JOIN precip_entity pe ON pe.precip_entity_id = pd.precip_entity_id
         JOIN site_link_precip sl ON sl.precip_entity_id = pe.precip_entity_id
@@ -175,7 +252,12 @@ class Monv1Query {
           COUNT(*) AS n_samples,
           MIN(dd.sample_start_date) AS start_date,
           MAX(dd.sample_end_date) AS end_date,
-          ROUND(DATEDIFF(MAX(dd.sample_end_date), MIN(dd.sample_start_date)) / 365.25, 1) AS duration_years
+          CASE
+            WHEN MIN(dd.sample_start_date) REGEXP '^[0-9]{4}$'
+              OR MAX(dd.sample_end_date) REGEXP '^[0-9]{4}$'
+              THEN MAX(dd.sample_end_year) - MIN(dd.sample_start_year)
+            ELSE ROUND(DATEDIFF(MAX(dd.sample_end_date), MIN(dd.sample_start_date)) / 365.25, 1)
+          END AS duration_years
         FROM drip_iso_dates dd
         JOIN drip_entity de ON de.drip_entity_id = dd.drip_entity_id
         JOIN site_filtered sf ON sf.site_id = de.site_id
@@ -190,7 +272,12 @@ class Monv1Query {
           COUNT(*) AS n_samples,
           MIN(rd.sample_start_date) AS start_date,
           MAX(rd.sample_end_date) AS end_date,
-          ROUND(DATEDIFF(MAX(rd.sample_end_date), MIN(rd.sample_start_date)) / 365.25, 1) AS duration_years
+          CASE
+            WHEN MIN(rd.sample_start_date) REGEXP '^[0-9]{4}$'
+              OR MAX(rd.sample_end_date) REGEXP '^[0-9]{4}$'
+              THEN MAX(rd.sample_end_year) - MIN(rd.sample_start_year)
+            ELSE ROUND(DATEDIFF(MAX(rd.sample_end_date), MIN(rd.sample_start_date)) / 365.25, 1)
+          END AS duration_years
         FROM drip_rate_dates rd
         JOIN drip_entity de ON de.drip_entity_id = rd.drip_entity_id
         JOIN site_filtered sf ON sf.site_id = de.site_id
@@ -205,7 +292,12 @@ class Monv1Query {
           COUNT(*) AS n_samples,
           MIN(md.sample_start_date) AS start_date,
           MAX(md.sample_end_date) AS end_date,
-          ROUND(DATEDIFF(MAX(md.sample_end_date), MIN(md.sample_start_date)) / 365.25, 1) AS duration_years
+          CASE
+            WHEN MIN(md.sample_start_date) REGEXP '^[0-9]{4}$'
+              OR MAX(md.sample_end_date) REGEXP '^[0-9]{4}$'
+              THEN MAX(md.sample_end_year) - MIN(md.sample_start_year)
+            ELSE ROUND(DATEDIFF(MAX(md.sample_end_date), MIN(md.sample_start_date)) / 365.25, 1)
+          END AS duration_years
         FROM mod_carb_dates md
         JOIN drip_entity de ON de.drip_entity_id = md.drip_entity_id
         JOIN site_filtered sf ON sf.site_id = de.site_id
