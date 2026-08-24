@@ -88,8 +88,8 @@ const HomeScreen = () => {
 
           <h3>Version history</h3>
           <p>
-            2.1 The outputs of the SISAL_monv1 database queries were extended with a 
-            Monitoring duration overview table{" "}
+            2.1 The outputs of the SISAL_monv1 database queries were extended with a  {" "}
+            <em>Monitoring duration overview</em> table{" "}
             <span className="text-muted">- 24.08.2026</span>
           </p>
           <p>
