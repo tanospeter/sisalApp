@@ -88,9 +88,15 @@ const HomeScreen = () => {
 
           <h3>Version history</h3>
           <p>
-            1.4. The SISAL webApp hosts and enables the querying of the SISAL_monv1 database{" "}
-            <a href="https://doi.org/10.5194/essd-2026-31">https://doi.org/10.5194/essd-2026-31</a>{" "}
-            following the well-known logic of the SISALwebApp. <span className="text-muted">- 28.01.2026</span>
+            2.1 The outputs of the SISAL_monv1 database queries were extended with a 
+            Monitoring duration overview table{" "}
+            <span className="text-muted">- 24.08.2026</span>
+          </p>
+          <p>
+            2.0 SISAL_monv1 database {" "}
+            <a href="https://doi.org/10.5194/essd-2026-31">https://doi.org/10.5194/essd-2026-31</a> {" "}
+            following the well-known logic of the SISALwebApp.  {" "}
+            <span className="text-muted">- 28.01.2026</span>
           </p>
           <p>
             1.3. The SISAL webApp now enables spatial querying via selecting a
