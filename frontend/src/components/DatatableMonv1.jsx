@@ -55,8 +55,11 @@ const Datatable = ({ data, query }) => {
 
   const handleOnDownload = (dataArray, sql, title) => {
     if (dataArray.length <= 30000) {
+      const filteredDataArray = dataArray
+        .map(({ isChecked, ...item }) => item);
+
       var workBook = XLSX.utils.book_new(),
-        workSheet1 = XLSX.utils.json_to_sheet(dataArray),
+        workSheet1 = XLSX.utils.json_to_sheet(filteredDataArray),
         workSheet2 = XLSX.utils.json_to_sheet(sql);
       XLSX.utils.book_append_sheet(workBook, workSheet1, title);
       XLSX.utils.book_append_sheet(workBook, workSheet2, "SQL query");
