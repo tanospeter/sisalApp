@@ -109,7 +109,7 @@ const Monv1Screen = () => {
             <span>🛈</span>
             <span>
               When using the SISALwebApp please cite the app itself
-              https://geochem.hu/SISAL_webApp/ AND the corresponding paper
+              https://geochem.hu/SISAL_webApp/ AND the corresponding papers
               <br></br>
               <strong>
                 - Hatvani IG, Kern Z, Tanos P, Wilhelm M, Lechleitner FA, Kaushal
@@ -129,6 +129,14 @@ const Monv1Screen = () => {
                 Syst. Sci. Data Discuss. [preprint],{" "}
                 <a href="https://doi.org/10.5194/essd-2026-31">https://doi.org/10.5194/essd-2026-31</a>, 
                 in review, 2026.
+              </strong>
+              <br></br>
+              <strong>
+                -Treble, P. C., et al.: SISAL_monv1 database,{" "}
+                <a href="https://doi.org/10.5158/ARP/29W5J3">
+                  https://doi.org/10.5158/ARP/29W5J3
+                </a>
+                , 2026.
               </strong>
             </span>
           </Alert>

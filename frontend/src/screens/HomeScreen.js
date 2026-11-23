@@ -94,7 +94,7 @@ const HomeScreen = () => {
           </p>
           <p>
             2.0 SISAL_monv1 database {" "}
-            <a href="https://doi.org/10.5194/essd-2026-31">https://doi.org/10.5194/essd-2026-31</a> {" "}
+            <a href="https://doi.org/10.5194/essd-18-8667-2026">https://doi.org/10.5194/essd-18-8667-2026</a> {" "}
             following the well-known logic of the SISALwebApp.  {" "}
             <span className="text-muted">- 28.01.2026</span>
           </p>

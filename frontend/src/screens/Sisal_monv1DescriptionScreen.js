@@ -28,16 +28,15 @@ const Monv1DescriptionScreen = () => {
         climate model products are also included in the database.
       </p>
       <p>
-        The draft version of the database can be found at{" "}
+        The database can be found at{" "}
         <a
-          href="https://repo.researchdata.hu/privateurl.xhtml?token=43a43257-f06e-4dc5-9e96-6603eabe775f"
+          href="https://doi.org/10.5158/ARP/29W5J3"
           target="_blank"
           rel="noreferrer"
         >
-          https://repo.researchdata.hu/privateurl.xhtml?token=43a43257-f06e-4dc5-9e96-6603eabe775f
+          https://doi.org/10.5158/ARP/29W5J3
         </a>
-        , which will be available under doi: 10.5158/ARP/29W5J3 upon
-        publication.
+        .
       </p>
 
       <h2>Instructions / Usage</h2>
@@ -70,7 +69,7 @@ const Monv1DescriptionScreen = () => {
         For further information on database versions, publications and how-to
         guides please visit the{" "}
         <a
-          href="https://repo.researchdata.hu/privateurl.xhtml?token=43a43257-f06e-4dc5-9e96-6603eabe775f"
+          href="https://doi.org/10.5158/ARP/29W5J3"
           target="_blank"
           rel="noreferrer"
         >
@@ -78,11 +77,11 @@ const Monv1DescriptionScreen = () => {
         </a>{" "}
         and the related GitHub site:
         <a
-          href="https://github.com/istvan60/SISAL_monv1/tree/main"
+          href="https://github.com/istvan60/SISAL_monv1/tree/essd-2026"
           target="_blank"
           rel="noreferrer"
         >
-          https://github.com/istvan60/SISAL_monv1/tree/main
+          https://github.com/istvan60/SISAL_monv1/tree/essd-2026
         </a>
         .
       </p>
